@@ -1,13 +1,37 @@
-apply plugin: "java-gradle-plugin"
-apply plugin: "groovy"
-apply plugin: "idea"
+/*
+ * gradlew -i publishPluginToBintray -PBINTRAY_USER=[username] -PBINTRAY_API_KEY=[api-key]
+ */
+plugins {
+  id "java-gradle-plugin"
+  id "groovy"
+  id "idea"
+  id "nu.studer.plugindev" version "1.0.3"
+}
 
 group = "at.bxm.gradleplugins"
-version = "1.0-SNAPSHOT"
+version = "0.1.DEV"
 
-repositories {
-  mavenCentral()
+plugindev {
+  pluginId "at.bxm.svntools"
+  pluginImplementationClass "at.bxm.gradleplugins.svntools.SvnToolsPlugin"
+  pluginDescription "Provides various Subversion tasks that operate on a local SVN workspace"
+  pluginLicenses "MIT"
+  pluginTags "subversion", "svn", "svnkit"
+  authorId "martoe"
+  authorName "Martin Ehrnhoefer"
+  authorEmail "martin@ehrnhoefer.com"
+  projectUrl "https://github.com/martoe/gradle-svntools-plugin"
+  projectInceptionYear "2014"
+  done()
 }
+
+bintray {
+  user = "$BINTRAY_USER"
+  key = "$BINTRAY_API_KEY"
+  pkg.repo = "gradle-plugins"
+}
+
+bintrayUpload.dependsOn check
 
 dependencies {
   compile "org.codehaus.groovy:groovy-all:2.3.6"
