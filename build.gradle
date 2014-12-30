@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "at.bxm.gradleplugins"
-version = "0.2.DEV"
+version = "0.3.DEV"
 
 dependencies {
   compile "org.codehaus.groovy:groovy-all:2.3.6"

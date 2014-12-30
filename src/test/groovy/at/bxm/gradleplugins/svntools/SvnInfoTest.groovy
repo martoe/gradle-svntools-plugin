@@ -80,4 +80,48 @@ class SvnInfoTest extends Specification implements SvnTestSupport {
     project.hasProperty("myProp")
     !project.hasProperty("svnData")
   }
+
+  def "execute on a single file at trunk"() {
+    given: "an SVN workspace at trunk"
+    createLocalRepo()
+    def workspace = checkoutTrunk()
+
+    when: "running the SvnInfo task"
+    def project = projectWithPlugin()
+    def task = project.tasks["svnInfo"] as SvnInfo
+    task.sourcePath = new File(workspace, "test.txt")
+    task.execute()
+
+    then: "SVN data are available"
+    project.ext.svnData.trunk == "trunk"
+  }
+  def "execute on a single file at a branch"() {
+    given: "an SVN workspace at a branch"
+    createLocalRepo()
+    def workspace = checkoutBranch()
+
+    when: "running the SvnInfo task"
+    def project = projectWithPlugin()
+    def task = project.tasks["svnInfo"] as SvnInfo
+    task.sourcePath = new File(workspace, "test.txt")
+    task.execute()
+
+    then: "SVN data are available"
+    project.ext.svnData.branch == "test-branch"
+  }
+
+  def "execute on a single file at a tag"() {
+    given: "an SVN workspace at a tag"
+    createLocalRepo()
+    def workspace = checkoutTag()
+
+    when: "running the SvnInfo task"
+    def project = projectWithPlugin()
+    def task = project.tasks["svnInfo"] as SvnInfo
+    task.sourcePath = new File(workspace, "test.txt")
+    task.execute()
+
+    then: "SVN data are available"
+    project.ext.svnData.tag == "test-tag"
+  }
 }
