@@ -1,7 +1,7 @@
 /**
  * Publishing to Bintray (see https://github.com/etiennestuder/gradle-plugindev-plugin/):
  *
- * gradlew -i publishPluginToBintray -PBINTRAY_USER=[username] -PBINTRAY_API_KEY=[api-key]
+ * gradlew -i publishPluginToBintray -PbintrayUser=[username] -PbintrayApiKey=[api-key]
  */
 plugins {
   id "java-gradle-plugin"
@@ -35,13 +35,14 @@ plugindev {
   done()
 }
 
-bintray {
-  user = "$BINTRAY_USER"
-  key = "$BINTRAY_API_KEY"
-  pkg.repo = "gradle-plugins"
+if (project.hasProperty("bintrayUser")) {
+  bintray {
+    user = "$bintrayUser"
+    key = "$bintrayApiKey"
+    pkg.repo = "gradle-plugins"
+  }
+  bintrayUpload.dependsOn check
 }
-
-bintrayUpload.dependsOn check
 
 if (version.endsWith("-SNAPSHOT") && project.hasProperty("ignoreTestFailures")) {
   test {
