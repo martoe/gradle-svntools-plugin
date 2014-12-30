@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "at.bxm.gradleplugins"
-version = "0.4-SNAPSHOT"
+version = "0.4"
 
 dependencies {
   compile "org.codehaus.groovy:groovy-all:2.3.6"
@@ -26,7 +26,7 @@ plugindev {
   pluginImplementationClass "at.bxm.gradleplugins.svntools.SvnToolsPlugin"
   pluginDescription "Provides various Subversion tasks that operate on a local SVN workspace"
   pluginLicenses "MIT"
-  pluginTags "subversion", "svn", "svnkit"
+  pluginTags "subversion", "svn", "svnkit", "scm"
   authorId "martoe"
   authorName "Martin Ehrnhoefer"
   authorEmail "martin@ehrnhoefer.com"
@@ -44,7 +44,7 @@ if (project.hasProperty("bintrayUser")) {
   bintrayUpload.dependsOn check
 }
 
-if (version.endsWith("-SNAPSHOT") && project.hasProperty("ignoreTestFailures")) {
+if (project.hasProperty("ignoreTestFailures")) {
   test {
     ignoreFailures = ignoreTestFailures == "true"
   }

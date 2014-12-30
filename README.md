@@ -19,9 +19,6 @@ A [Gradle](http://www.gradle.org) plugin (based on [SVNKit](http://svnkit.com/))
 
     buildscript {
       repositories {
-        maven {
-          url "http://dl.bintray.com/martoe/gradle-plugins"
-        }
         jcenter()
       }
       dependencies {
