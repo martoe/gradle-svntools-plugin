@@ -1,4 +1,6 @@
-/*
+/**
+ * Publishing to Bintray (see https://github.com/etiennestuder/gradle-plugindev-plugin/):
+ *
  * gradlew -i publishPluginToBintray -PBINTRAY_USER=[username] -PBINTRAY_API_KEY=[api-key]
  */
 plugins {
@@ -9,7 +11,15 @@ plugins {
 }
 
 group = "at.bxm.gradleplugins"
-version = "0.1.DEV"
+version = "0.2.DEV"
+
+dependencies {
+  compile "org.codehaus.groovy:groovy-all:2.3.6"
+  compile "org.tmatesoft.svnkit:svnkit:1.8.5"
+  testCompile("org.spockframework:spock-core:0.7-groovy-2.0") {
+    exclude group: "org.codehaus.groovy"
+  }
+}
 
 plugindev {
   pluginId "at.bxm.svntools"
@@ -32,14 +42,6 @@ bintray {
 }
 
 bintrayUpload.dependsOn check
-
-dependencies {
-  compile "org.codehaus.groovy:groovy-all:2.3.6"
-  compile "org.tmatesoft.svnkit:svnkit:1.8.5"
-  testCompile("org.spockframework:spock-core:0.7-groovy-2.0") {
-    exclude group: "org.codehaus.groovy"
-  }
-}
 
 if (version.endsWith("-SNAPSHOT") && project.hasProperty("ignoreTestFailures")) {
   test {
