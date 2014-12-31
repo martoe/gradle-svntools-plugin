@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "at.bxm.gradleplugins"
-version = "0.4"
+version = "0.5-SNAPSHOT"
 
 dependencies {
   compile "org.codehaus.groovy:groovy-all:2.3.6"
@@ -21,7 +21,7 @@ dependencies {
   }
 }
 
-plugindev {
+plugindev { // https://github.com/etiennestuder/gradle-plugindev-plugin
   pluginId "at.bxm.svntools"
   pluginImplementationClass "at.bxm.gradleplugins.svntools.SvnToolsPlugin"
   pluginDescription "Provides various Subversion tasks that operate on a local SVN workspace"
@@ -35,14 +35,26 @@ plugindev {
   done()
 }
 
-if (project.hasProperty("bintrayUser")) {
-  bintray {
+bintray { // https://github.com/bintray/gradle-bintray-plugin
+  if (project.hasProperty("bintrayUser")) {
     user = "$bintrayUser"
     key = "$bintrayApiKey"
-    pkg.repo = "gradle-plugins"
+  } else {
+    user = "dummy"
+    key = "dummy"
+    dryRun = true
   }
-  bintrayUpload.dependsOn check
+  pkg {
+    repo = "gradle-plugins"
+    version {
+      name = project.version
+      //desc = "Version description shown at the Gradle plugin portal"
+      released = new Date()
+      vcsTag = "v$project.version"
+    }
+  }
 }
+bintrayUpload.dependsOn check
 
 if (project.hasProperty("ignoreTestFailures")) {
   test {

@@ -1,7 +1,10 @@
 # gradle-svntools-plugin
 
-A [Gradle](http://www.gradle.org) plugin (based on [SVNKit](http://svnkit.com/)) that provides various Subversion-related tasks.
+A [Gradle](https://www.gradle.org) plugin (based on [SVNKit](http://svnkit.com/)) that provides various Subversion-related tasks.
 [![Build Status](https://travis-ci.org/martoe/gradle-svntools-plugin.png)](https://travis-ci.org/martoe/gradle-svntools-plugin)
+
+Binaries are hosted at [Bintray](https://bintray.com/martoe/gradle-plugins/gradle-svntools-plugin/)
+and are available at the [jcenter Maven repo](https://bintray.com/bintray/jcenter/)
 
 ## Use-case examples
 
@@ -11,18 +14,22 @@ A [Gradle](http://www.gradle.org) plugin (based on [SVNKit](http://svnkit.com/))
 
 ## Applying the plugin
 
-### Using the [Gradle plugins DSL](http://www.gradle.org/docs/current/userguide/plugins.html#sec:plugins_block) (Gradle 2.1 and above)
+(see also the [Gradle plugin portal](https://plugins.gradle.org/plugin/at.bxm.svntools/) page)
 
-**TODO** (submission pending)
+### Using the [Gradle plugins DSL](https://www.gradle.org/docs/current/userguide/plugins.html#sec:plugins_block) (Gradle 2.1 and above)
 
-### Using an [external dependency](http://www.gradle.org/docs/current/userguide/organizing_build_logic.html#sec:external_dependencies)
+    plugins {
+      id "at.bxm.svntools" version "0.4"
+    }
+
+### Using an [external dependency](https://www.gradle.org/docs/current/userguide/organizing_build_logic.html#sec:external_dependencies)
 
     buildscript {
       repositories {
         jcenter()
       }
       dependencies {
-        classpath "at.bxm.gradleplugins:gradle-svntools-plugin:0.3.DEV"
+        classpath "at.bxm.gradleplugins:gradle-svntools-plugin:0.4"
       }
     }
     apply plugin: "at.bxm.svntools"
@@ -47,8 +54,10 @@ The object is added as an "extra property" to the Gradle project and may be acce
 
 This Gradle script creates a `svn.properties` file that contains the SVN URL and revision, and adds it to the JAR artifact:
 
-    apply plugin: "java"
-    apply plugin: "at.bxm.svntools"
+    plugins {
+      id "java"
+      id "at.bxm.svntools" version "0.4"
+    }
 
     task svnStatus(dependsOn: svnInfo) << {
       def props = new Properties()
