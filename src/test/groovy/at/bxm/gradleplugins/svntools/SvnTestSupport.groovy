@@ -1,15 +1,13 @@
 package at.bxm.gradleplugins.svntools
 
-import static org.junit.Assert.*
-
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
-import org.junit.*
 import org.tmatesoft.svn.core.*
 import org.tmatesoft.svn.core.io.*
 import org.tmatesoft.svn.core.wc.*
+import spock.lang.Specification
 
-trait SvnTestSupport {
+class SvnTestSupport extends Specification {
 
   private File tempDir
   private SVNClientManager clientManager
@@ -66,19 +64,13 @@ trait SvnTestSupport {
     return workspaceDir
   }
 
-  @Before
-  void initTempDir() {
+  def setup() {
     tempDir = new File(System.getProperty("java.io.tmpdir") + "/svntest-" + System.currentTimeMillis())
     clientManager = SVNClientManager.newInstance()
-    if (!tempDir.mkdir()) {
-      fail "Could not create directory $tempDir.absolutePath"
-    }
+    assert tempDir.mkdir(), "Could not create directory $tempDir.absolutePath"
   }
 
-  @After
-  void deleteTempDir() {
-    if (!tempDir.deleteDir()) {
-      fail "Could not delete directory $tempDir.absolutePath"
-    }
+  def cleanup() {
+    assert tempDir.deleteDir(), "Could not delete directory $tempDir.absolutePath"
   }
 }

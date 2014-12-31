@@ -71,9 +71,18 @@ This Gradle script creates a `svn.properties` file that contains the SVN URL and
       from(projectDir, { include "svn.properties" })
     }
 
-## svnCommit
+## svnCommit (at.bxm.gradleplugins.svntools.SvnCommit)
 
-under development
+Commits a list of files (and directories) within the current SVN workspace.
+
+### Configuration
+
+* **source**: A list of files and directories that should be committed.
+              If these are not under version control already, they will be added first.
+              If this list is empty of the files contain no modifications, no commit will be executed.
+* **commitMessage**: An optional commit message.
+* **username**: The SVN username - leave empty if no authentication is required (default: `$project.svntools.username`)
+* **password**: The SVN password - leave empty if no authentication is required (default: `project.svntools.password`)
 
 ## svnTag
 

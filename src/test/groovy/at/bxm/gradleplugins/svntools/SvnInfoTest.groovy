@@ -1,8 +1,6 @@
 package at.bxm.gradleplugins.svntools
 
-import spock.lang.Specification
-
-class SvnInfoTest extends Specification implements SvnTestSupport {
+class SvnInfoTest extends SvnTestSupport {
 
   def "execute at trunk"() {
     given: "an SVN workspace at trunk"
@@ -95,6 +93,7 @@ class SvnInfoTest extends Specification implements SvnTestSupport {
     then: "SVN data are available"
     project.ext.svnData.trunk == "trunk"
   }
+
   def "execute on a single file at a branch"() {
     given: "an SVN workspace at a branch"
     createLocalRepo()
