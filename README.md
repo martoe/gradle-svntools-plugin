@@ -19,7 +19,7 @@ and are available at the [jcenter Maven repo](https://bintray.com/bintray/jcente
 ### Using the [Gradle plugins DSL](https://www.gradle.org/docs/current/userguide/plugins.html#sec:plugins_block) (Gradle 2.1 and above)
 
     plugins {
-      id "at.bxm.svntools" version "0.4"
+      id "at.bxm.svntools" version "0.5"
     }
 
 ### Using an [external dependency](https://www.gradle.org/docs/current/userguide/organizing_build_logic.html#sec:external_dependencies)
@@ -29,7 +29,7 @@ and are available at the [jcenter Maven repo](https://bintray.com/bintray/jcente
         jcenter()
       }
       dependencies {
-        classpath "at.bxm.gradleplugins:gradle-svntools-plugin:0.4"
+        classpath "at.bxm.gradleplugins:gradle-svntools-plugin:0.5"
       }
     }
     apply plugin: "at.bxm.svntools"
@@ -56,7 +56,7 @@ This Gradle script creates a `svn.properties` file that contains the SVN URL and
 
     plugins {
       id "java"
-      id "at.bxm.svntools" version "0.4"
+      id "at.bxm.svntools" version "0.5"
     }
 
     task svnStatus(dependsOn: svnInfo) << {
