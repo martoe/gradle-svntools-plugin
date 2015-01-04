@@ -2,7 +2,6 @@ package at.bxm.gradleplugins.svntools
 
 import org.gradle.api.*
 import org.gradle.api.tasks.TaskAction
-import org.tmatesoft.svn.core.SVNURL
 import org.tmatesoft.svn.core.wc.SVNRevision
 
 /** Provides information about the current SVN workspace */
@@ -25,21 +24,20 @@ class SvnInfo extends SvnBaseTask {
       result.revisionNumber = info.revision.number
       result.url = info.URL
       result.repositoryRootUrl = info.repositoryRootURL
-      if (isTrunk(info.URL)) {
-        result.trunk = "trunk"
-        logger.info "Working copy is on trunk at revision $result.revisionNumber"
-      } else {
-        result.branch = getBranchName(info.URL)
-        if (result.branch) {
+      try {
+        def svnPath = SvnPath.parse info.URL
+        if (svnPath.trunk) {
+          result.trunk = "trunk"
+          logger.info "Working copy is on trunk at revision $result.revisionNumber"
+        } else if (svnPath.branch) {
+          result.branch = svnPath.branchName
           logger.info "Working copy is on branch $result.branch at revision $result.revisionNumber"
-        } else {
-          result.tag = getTagName(info.URL)
-          if (result.tag) {
-            logger.info "Working copy is on tag $result.tag at revision $result.revisionNumber"
-          } else {
-            logger.warn "SVN path has an unexpected layout: $info.URL.path"
-          }
+        } else if (svnPath.tag) {
+          result.tag = svnPath.tagName
+          logger.info "Working copy is on tag $result.tag at revision $result.revisionNumber"
         }
+      } catch (MalformedURLException e) {
+        logger.warn "SVN path has an unexpected layout: $e.message"
       }
     } catch (Exception e) {
       if (ignoreErrors) {
@@ -48,29 +46,5 @@ class SvnInfo extends SvnBaseTask {
         throw new InvalidUserDataException("Could not execute svn-info on $srcPath.absolutePath ($e.message)", e)
       }
     }
-  }
-
-  private static boolean isTrunk(SVNURL url) {
-    url.path.endsWith("/trunk") || url.path =~ '^.+/trunk/(.+)$'
-  }
-
-  private static String getBranchName(SVNURL url) {
-    def matcher = url.path =~ '^.+/branches/(.+)$'
-    if (matcher) {
-      def branchPath = matcher[0][1] as String
-      def endOfBranchName = branchPath.indexOf "/"
-      return endOfBranchName > 0 ? branchPath.substring(0, endOfBranchName) : branchPath
-    }
-    return null
-  }
-
-  private static String getTagName(SVNURL url) {
-    def matcher = url.path =~ '^.+/tags/(.+)$'
-    if (matcher) {
-      def tagPath = matcher[0][1] as String
-      def endOfTagName = tagPath.indexOf "/"
-      return endOfTagName > 0 ? tagPath.substring(0, endOfTagName) : tagPath
-    }
-    return null
   }
 }
