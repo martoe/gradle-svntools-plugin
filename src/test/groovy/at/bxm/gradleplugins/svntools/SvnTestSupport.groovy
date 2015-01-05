@@ -7,7 +7,7 @@ import org.tmatesoft.svn.core.io.*
 import org.tmatesoft.svn.core.wc.*
 import spock.lang.Specification
 
-class SvnTestSupport extends Specification {
+abstract class SvnTestSupport extends Specification {
 
   private File tempDir
   private SVNClientManager clientManager
@@ -62,6 +62,14 @@ class SvnTestSupport extends Specification {
     def workspaceDir = new File(tempDir, "workspace")
     clientManager.updateClient.doCheckout(localRepoUrl.appendPath(path, false), workspaceDir, SVNRevision.UNDEFINED, SVNRevision.HEAD, SVNDepth.INFINITY, false)
     return workspaceDir
+  }
+
+  void switchLocalRepo(String path) {
+    clientManager.updateClient.doSwitch(new File(tempDir, "workspace"), localRepoUrl.appendPath(path, false), SVNRevision.UNDEFINED, SVNRevision.HEAD, SVNDepth.INFINITY, false, false)
+  }
+
+  long getRevision(File file) {
+    clientManager.WCClient.doInfo(file, SVNRevision.WORKING).revision.number
   }
 
   def setup() {

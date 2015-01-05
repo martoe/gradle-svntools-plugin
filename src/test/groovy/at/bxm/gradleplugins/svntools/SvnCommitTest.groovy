@@ -5,16 +5,15 @@ import org.gradle.api.tasks.TaskExecutionException
 
 class SvnCommitTest extends SvnTestSupport {
 
-  // commit without changes
-  // commit a new file inside a new directory
-
   File workspace
   Project project
+  SvnCommit task
 
   def setup() {
     createLocalRepo()
     workspace = checkoutTrunk()
     project = projectWithPlugin()
+    task = project.tasks["svnCommit"] as SvnCommit
   }
 
   def "commit a new file"() {
@@ -22,7 +21,6 @@ class SvnCommitTest extends SvnTestSupport {
     def newFile = newFile("newfile.txt")
 
     when: "running the SvnCommit task"
-    def task = project.tasks["svnCommit"] as SvnCommit
     task.source << newFile
     task.execute()
 
@@ -36,7 +34,6 @@ class SvnCommitTest extends SvnTestSupport {
     file.text = "new file"
 
     when: "running the SvnCommit task"
-    def task = project.tasks["svnCommit"] as SvnCommit
     task.source << file
     task.execute()
 
@@ -46,7 +43,6 @@ class SvnCommitTest extends SvnTestSupport {
 
   def "empty commit"() {
     when: "running the SvnCommit task"
-    def task = project.tasks["svnCommit"] as SvnCommit
     task.execute()
 
     then: "no new revision"
@@ -58,7 +54,6 @@ class SvnCommitTest extends SvnTestSupport {
     def file = existingFile("test.txt")
 
     when: "running the SvnCommit task"
-    def task = project.tasks["svnCommit"] as SvnCommit
     task.source << file
     task.execute()
 
@@ -71,7 +66,6 @@ class SvnCommitTest extends SvnTestSupport {
     def newFile = newFile("newfile.txt", new File(workspace, "newdir"))
 
     when: "running the SvnCommit task"
-    def task = project.tasks["svnCommit"] as SvnCommit
     task.source << newFile
     task.execute()
 
@@ -85,7 +79,6 @@ class SvnCommitTest extends SvnTestSupport {
     def newFile = newFile("newfile.txt", newDir)
 
     when: "running the SvnCommit task"
-    def task = project.tasks["svnCommit"] as SvnCommit
     task.source << newDir << newFile
     task.execute()
 
@@ -105,12 +98,5 @@ class SvnCommitTest extends SvnTestSupport {
     def file = new File(workspace, name)
     assert file.exists(), "$file.absolutePath doesn't exist"
     return file
-  }
-
-  private long getRevision(File file) {
-    def task = project.tasks["svnInfo"] as SvnInfo
-    task.sourcePath = file
-    task.execute()
-    return project.ext.svnData.revisionNumber
   }
 }

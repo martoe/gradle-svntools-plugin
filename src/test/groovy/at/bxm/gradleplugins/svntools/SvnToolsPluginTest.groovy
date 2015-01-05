@@ -7,8 +7,9 @@ class SvnToolsPluginTest extends SvnTestSupport {
     def project = projectWithPlugin()
 
     then: "tasks are defined"
-    projectWithPlugin().tasks.size() == 2
-    projectWithPlugin().tasks["svnInfo"] instanceof SvnInfo
-    projectWithPlugin().tasks["svnCommit"] instanceof SvnCommit
+    project.tasks.size() == 3
+    project.tasks["svnInfo"] instanceof SvnInfo
+    project.tasks["svnCommit"] instanceof SvnCommit
+    project.tasks["svnTag"] instanceof SvnTag
   }
 }

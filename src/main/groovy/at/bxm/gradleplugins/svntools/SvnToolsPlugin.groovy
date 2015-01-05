@@ -8,6 +8,7 @@ class SvnToolsPlugin implements Plugin<Project> {
   void apply(Project project) {
     createSvnInfoTask project
     createSvnCommitTask project
+    createSvnTagTask project
   }
 
   private static Task createSvnInfoTask(Project project) {
@@ -16,6 +17,10 @@ class SvnToolsPlugin implements Plugin<Project> {
 
   private static Task createSvnCommitTask(Project project) {
     addTask(project, "svnCommit", SvnCommit, "Commits a list of files to SVN")
+  }
+
+  private static Task createSvnTagTask(Project project) {
+    addTask(project, "svnTag", SvnTag, "Creates an SVN tag based on a local SVN workspace")
   }
 
   private static Task addTask(Project project, String name, Class<? extends DefaultTask> type, String description) {
