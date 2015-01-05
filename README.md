@@ -48,7 +48,7 @@ The object is added as an "extra property" to the Gradle project and may be acce
 * **targetPropertyName**: The name of the project extra property that will receive the resulting SvnData object (default: `svnData`)
 * **ignoreErrors**: Continue the build if the specified path doesn't contain SVN data (default: `false`)
 * **username**: The SVN username - leave empty if no authentication is required (default: `$project.svntools.username`)
-* **password**: The SVN password - leave empty if no authentication is required (default: `project.svntools.password`)
+* **password**: The SVN password - leave empty if no authentication is required (default: `$project.svntools.password`)
 
 ### Example
 
@@ -82,8 +82,26 @@ Commits a list of files (and directories) within the current SVN workspace.
               If this list is empty of the files contain no modifications, no commit will be executed.
 * **commitMessage**: An optional commit message.
 * **username**: The SVN username - leave empty if no authentication is required (default: `$project.svntools.username`)
-* **password**: The SVN password - leave empty if no authentication is required (default: `project.svntools.password`)
+* **password**: The SVN password - leave empty if no authentication is required (default: `$project.svntools.password`)
 
-## svnTag
+### Example
 
-under development
+**to do**
+
+## svnTag (at.bxm.gradleplugins.svntools.SvnTag)
+
+**under development - not yet released**
+
+Creates an SVN tag based on a local SVN workspace.
+
+### Configuration
+
+* **workspaceDir**: Local workspace that should be tagged (default: `$project.projectDir`)
+* **tagName**: Name of the SVN tag (required, no default)
+* **commitMessage**: An optional commit message.
+* **username**: The SVN username - leave empty if no authentication is required (default: `$project.svntools.username`)
+* **password**: The SVN password - leave empty if no authentication is required (default: `$project.svntools.password`)
+
+### Example
+
+**to do**
