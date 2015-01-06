@@ -4,7 +4,9 @@ A [Gradle](https://www.gradle.org) plugin (based on [SVNKit](http://svnkit.com/)
 [![Build Status](https://travis-ci.org/martoe/gradle-svntools-plugin.png)](https://travis-ci.org/martoe/gradle-svntools-plugin)
 
 Binaries are hosted at [Bintray](https://bintray.com/martoe/gradle-plugins/gradle-svntools-plugin/)
-and are available at the [jcenter Maven repo](https://bintray.com/bintray/jcenter/)
+and are available at the [jcenter Maven repo](https://bintray.com/bintray/jcenter/).
+
+Please report bugs and feature requests at the [Github issue page](https://github.com/martoe/gradle-svntools-plugin/issues).
 
 ## Use-case examples
 
@@ -90,8 +92,6 @@ Commits a list of files (and directories) within the current SVN workspace.
 
 ## svnTag (at.bxm.gradleplugins.svntools.SvnTag)
 
-**under development - not yet released**
-
 Creates an SVN tag based on a local SVN workspace.
 
 ### Configuration
@@ -104,4 +104,17 @@ Creates an SVN tag based on a local SVN workspace.
 
 ### Example
 
-**to do**
+The `release` task creates an SVN tag using the current version number:
+
+    plugins {
+      id "at.bxm.svntools" version "0.5"
+    }
+
+    version = "1.0"
+
+    task release(dependsOn: svnTag)
+
+    svnTag {
+      tagName = "v$project.version"
+      commitMessage = "Release version $project.version"
+    }
