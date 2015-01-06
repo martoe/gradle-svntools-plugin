@@ -21,7 +21,7 @@ Please report bugs and feature requests at the [Github issue page](https://githu
 ### Using the [Gradle plugins DSL](https://www.gradle.org/docs/current/userguide/plugins.html#sec:plugins_block) (Gradle 2.1 and above)
 
     plugins {
-      id "at.bxm.svntools" version "0.5"
+      id "at.bxm.svntools" version "0.6"
     }
 
 ### Using an [external dependency](https://www.gradle.org/docs/current/userguide/organizing_build_logic.html#sec:external_dependencies)
@@ -31,7 +31,7 @@ Please report bugs and feature requests at the [Github issue page](https://githu
         jcenter()
       }
       dependencies {
-        classpath "at.bxm.gradleplugins:gradle-svntools-plugin:0.5"
+        classpath "at.bxm.gradleplugins:gradle-svntools-plugin:0.6"
       }
     }
     apply plugin: "at.bxm.svntools"
@@ -58,7 +58,7 @@ This Gradle script creates a `svn.properties` file that contains the SVN URL and
 
     plugins {
       id "java"
-      id "at.bxm.svntools" version "0.5"
+      id "at.bxm.svntools" version "0.6"
     }
 
     task svnStatus(dependsOn: svnInfo) << {
@@ -107,7 +107,7 @@ Creates an SVN tag based on a local SVN workspace.
 The `release` task creates an SVN tag using the current version number:
 
     plugins {
-      id "at.bxm.svntools" version "0.5"
+      id "at.bxm.svntools" version "0.6"
     }
 
     version = "1.0"

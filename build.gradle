@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "at.bxm.gradleplugins"
-version = "0.6-SNAPSHOT"
+version = "0.6"
 
 dependencies {
   compile "org.codehaus.groovy:groovy-all:2.3.6"
@@ -48,7 +48,7 @@ bintray { // https://github.com/bintray/gradle-bintray-plugin
     repo = "gradle-plugins"
     version {
       name = project.version
-      //desc = "Version description shown at the Gradle plugin portal"
+      desc = "svnTag task implemented"
       released = new Date().format("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")
       vcsTag = "v$project.version"
     }
