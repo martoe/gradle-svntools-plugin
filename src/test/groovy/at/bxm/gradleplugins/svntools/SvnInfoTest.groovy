@@ -1,5 +1,7 @@
 package at.bxm.gradleplugins.svntools
 
+import org.gradle.api.tasks.TaskExecutionException
+
 class SvnInfoTest extends SvnTestSupport {
 
   def "execute at trunk"() {
@@ -122,5 +124,18 @@ class SvnInfoTest extends SvnTestSupport {
 
     then: "SVN data are available"
     project.ext.svnData.tag == "test-tag"
+  }
+
+  def "execute outside of a workspace"() {
+    given: "no SVN workspace"
+
+    when: "running the SvnInfo task"
+    def project = projectWithPlugin()
+    def task = project.tasks["svnInfo"] as SvnInfo
+    task.sourcePath = tempDir
+    task.execute()
+
+    then: "SVN data are available"
+    thrown TaskExecutionException
   }
 }

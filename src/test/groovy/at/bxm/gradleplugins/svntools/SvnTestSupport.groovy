@@ -9,12 +9,16 @@ import spock.lang.Specification
 
 abstract class SvnTestSupport extends Specification {
 
-  private File tempDir
+  File tempDir
   private SVNClientManager clientManager
   private SVNURL localRepoUrl
 
-  Project projectWithPlugin() {
-    def project = ProjectBuilder.builder().build()
+  Project projectWithPlugin(File projectDir) {
+    def projectBuilder = ProjectBuilder.builder()
+    if (projectDir) {
+      projectBuilder.withProjectDir(projectDir)
+    }
+    def project = projectBuilder.build()
     project.apply plugin: "at.bxm.svntools"
     return project
   }

@@ -6,6 +6,7 @@ class SvnToolsPlugin implements Plugin<Project> {
 
   @Override
   void apply(Project project) {
+    project.extensions.create("svntools", SvnToolsPluginExtension, project)
     createSvnInfoTask project
     createSvnCommitTask project
     createSvnTagTask project

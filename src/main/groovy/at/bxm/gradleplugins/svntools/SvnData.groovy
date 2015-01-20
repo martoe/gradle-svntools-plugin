@@ -4,7 +4,7 @@ import groovy.transform.ToString
 
 @ToString(includePackage = false, includeNames = true, ignoreNulls = true)
 class SvnData {
-  long revisionNumber
+  long revisionNumber = -1
   String url
   String repositoryRootUrl
   String trunk

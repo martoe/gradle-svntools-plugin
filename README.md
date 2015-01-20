@@ -37,11 +37,38 @@ Please report bugs and feature requests at the [Github issue page](https://githu
     apply plugin: "at.bxm.svntools"
 
 
-# Tasks
+# Usage
+
+## General Configuration (since 0.7-SNAPSHOT)
+
+The `svntools` block (implemented by `at.bxm.gradleplugins.svntools.SvnToolsPluginExtension`) can be used to
+
+* specify default values for some configuration properties:
+    * **username**: The SVN username - leave empty if no authentication is required (default: `$project.svntools.username`)
+    * **password**: The SVN password - leave empty if no authentication is required (default: `$project.svntools.password`)
+* access information about the current SVN workspace (a `at.bxm.gradleplugins.svntools.SvnData` object):
+    * **info.revisionNumber**
+    * **info.url**
+    * **info.repositoryRootUrl**
+    * **info.trunk**
+    * **info.branch**
+    * **info.tag**
+
+### Example
+
+    svntools {
+      username = "john"
+      password = "secret"
+    }
+
+    task info << {
+      println "Current revision is $svntools.info.revisionNumber"
+    }
+
 
 ## svnInfo (at.bxm.gradleplugins.svntools.SvnInfo)
 
-Creates a `at.bxm.gradleplugins.svntools.SvnData` object that contains information about the current SVN workspace.
+Creates a `at.bxm.gradleplugins.svntools.SvnData` object (see above) that contains information about an SVN workspace.
 The object is added as an "extra property" to the Gradle project and may be accessed with `$project.svnData`.
 
 ### Configuration
