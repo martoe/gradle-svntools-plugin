@@ -1,11 +1,20 @@
 # gradle-svntools-plugin
 
-A [Gradle](https://www.gradle.org) plugin (based on [SVNKit](http://svnkit.com/)) that provides various Subversion-related tasks.
+A [Gradle](https://www.gradle.org) plugin that provides various Subversion-related tasks.
 [![Build Status](https://travis-ci.org/martoe/gradle-svntools-plugin.png)](https://travis-ci.org/martoe/gradle-svntools-plugin)
+
+Here is a very short build script that prints out the SVN revision:
+
+    apply plugin: "at.bxm.svntools"
+    task info << {
+      println "Current revision is $svntools.info.revisionNumber"
+    }
+
+The implementation is based on [SVNKit](http://svnkit.com/), which means that **no SVN commandline client is required**
+and any working copy format (up to version 1.8) is supported.
 
 Binaries are hosted at [Bintray](https://bintray.com/martoe/gradle-plugins/gradle-svntools-plugin/)
 and are available at the [jcenter Maven repo](https://bintray.com/bintray/jcenter/).
-
 Please report bugs and feature requests at the [Github issue page](https://github.com/martoe/gradle-svntools-plugin/issues).
 
 ## Use-case examples
@@ -56,6 +65,8 @@ The `svntools` block (implemented by `at.bxm.gradleplugins.svntools.SvnToolsPlug
     * **info.tag** "true" if the SVN URL refers to a tag
 
 ### Example
+
+    apply plugin: "at.bxm.svntools"
 
     svntools {
       username = "john"
