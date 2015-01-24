@@ -21,7 +21,7 @@ Please report bugs and feature requests at the [Github issue page](https://githu
 ### Using the [Gradle plugins DSL](https://www.gradle.org/docs/current/userguide/plugins.html#sec:plugins_block) (Gradle 2.1 and above)
 
     plugins {
-      id "at.bxm.svntools" version "0.6"
+      id "at.bxm.svntools" version "1.0"
     }
 
 ### Using an [external dependency](https://www.gradle.org/docs/current/userguide/organizing_build_logic.html#sec:external_dependencies)
@@ -31,7 +31,7 @@ Please report bugs and feature requests at the [Github issue page](https://githu
         jcenter()
       }
       dependencies {
-        classpath "at.bxm.gradleplugins:gradle-svntools-plugin:0.6"
+        classpath "at.bxm.gradleplugins:gradle-svntools-plugin:1.0"
       }
     }
     apply plugin: "at.bxm.svntools"
@@ -39,18 +39,18 @@ Please report bugs and feature requests at the [Github issue page](https://githu
 
 # Usage
 
-## General Configuration (since 0.7-SNAPSHOT)
+## General Configuration
 
 The `svntools` block (implemented by `at.bxm.gradleplugins.svntools.SvnToolsPluginExtension`) can be used to
 
 * specify default values for some configuration properties:
     * **username**: The SVN username - leave empty if no authentication is required (default: `$project.svntools.username`)
     * **password**: The SVN password - leave empty if no authentication is required (default: `$project.svntools.password`)
-* access information about the current SVN workspace (a `at.bxm.gradleplugins.svntools.SvnData` object):
-    * **info.revisionNumber**
-    * **info.url** The complete SVN URL of the chechked-out project
+* access information about the current SVN workspace (an `at.bxm.gradleplugins.svntools.SvnData` object):
+    * **info.revisionNumber** The SVN revision number
+    * **info.url** The complete SVN URL of the checked-out project
     * **info.repositoryRootUrl** The root URL of the SVN repository
-    * **info.name** Either "trunk", the name of the current branch, or the name of the current tag (i.e. the path segment succeeding the "tags" segment)
+    * **info.name** Either "trunk", the name of the current branch, or the name of the current tag
     * **info.trunk** "true" if the SVN URL refers to a trunk
     * **info.branch** "true" if the SVN URL refers to a branch
     * **info.tag** "true" if the SVN URL refers to a tag
@@ -67,9 +67,10 @@ The `svntools` block (implemented by `at.bxm.gradleplugins.svntools.SvnToolsPlug
     }
 
 
-## svnInfo (at.bxm.gradleplugins.svntools.SvnInfo)
+## SvnInfo task (at.bxm.gradleplugins.svntools.SvnInfo)
 
-Creates a `at.bxm.gradleplugins.svntools.SvnData` object (see above) that contains information about an SVN workspace.
+Creates a `at.bxm.gradleplugins.svntools.SvnData` object (see above) that contains information about a file or directory
+within an SVN workspace.
 The object is added as an "extra property" to the Gradle project and may be accessed with `$project.svnData`.
 
 ### Configuration
@@ -82,24 +83,27 @@ The object is added as an "extra property" to the Gradle project and may be acce
 
 ### Example
 
-This Gradle script creates a `svn.properties` file that contains the SVN URL and revision, and adds it to the JAR artifact:
+This Gradle script creates a `svn.properties` file that contains the SVN URL and revision of the buildfile, and adds it to the JAR artifact:
 
     apply plugin: "java"
     apply plugin: "at.bxm.svntools"
 
-    task svnStatus(type: at.bxm.gradleplugins.svntools.SvnInfo) << {
-      def props = new Properties()
-      props.setProperty("url", project.svnData.url)
-      props.setProperty("revision", project.svnData.revisionNumber as String)
-      file("svn.properties").withWriter { props.store(it, null) }
+    task svnStatus(type: at.bxm.gradleplugins.svntools.SvnInfo) {
+      sourcePath = project.buildFile
+      doLast {
+        def props = new Properties()
+        props.setProperty("url", project.svnData.url)
+        props.setProperty("revision", project.svnData.revisionNumber as String)
+        file("$project.buildDir/svn.properties").withWriter { props.store(it, null) }
+      }
     }
 
     jar {
       dependsOn svnStatus
-      from(projectDir, { include "svn.properties" })
+      from(project.buildDir, { include "svn.properties" })
     }
 
-## svnCommit (at.bxm.gradleplugins.svntools.SvnCommit)
+## SvnCommit task (at.bxm.gradleplugins.svntools.SvnCommit)
 
 Commits a list of files (and directories) within the current SVN workspace.
 
@@ -114,9 +118,23 @@ Commits a list of files (and directories) within the current SVN workspace.
 
 ### Example
 
-**to do**
+This Gradle script commits a changelog file to SVN:
 
-## svnTag (at.bxm.gradleplugins.svntools.SvnTag)
+    apply plugin: "at.bxm.svntools"
+
+    version = "1.0"
+
+    task createChangelog() {
+      project.ext.changelog = file("changelog_${project.version}.txt")
+      project.ext.changelog.text = "list of changes for this release..."
+    }
+
+    task commitChangelog(type: at.bxm.gradleplugins.svntools.SvnCommit, dependsOn: createChangelog) {
+      source << project.ext.changelog
+      commitMessage = "Changelog added"
+    }
+
+## SvnTag task (at.bxm.gradleplugins.svntools.SvnTag)
 
 Creates an SVN tag based on a local SVN workspace.
 

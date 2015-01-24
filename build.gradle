@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "at.bxm.gradleplugins"
-version = "0.7-SNAPSHOT"
+version = "1.0"
 
 dependencies {
   compile "org.codehaus.groovy:groovy-all:2.3.6"
@@ -48,7 +48,7 @@ bintray { // https://github.com/bintray/gradle-bintray-plugin
     repo = "gradle-plugins"
     version {
       name = project.version
-      desc = "svnTag task implemented"
+      desc = "Changed the 'SvnInfo' API; introduced an 'svntools' configuration block; removed predefined tasks"
       released = new Date().format("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")
       vcsTag = "v$project.version"
     }
