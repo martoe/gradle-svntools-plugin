@@ -122,7 +122,7 @@ This Gradle script commits a changelog file to SVN:
 
     apply plugin: "at.bxm.svntools"
 
-    version = "1.0"
+    version = "1.1-SNAPSHOT"
 
     task createChangelog() {
       project.ext.changelog = file("changelog_${project.version}.txt")
@@ -152,7 +152,7 @@ The `release` task creates an SVN tag using the current version number:
 
     apply plugin: "at.bxm.svntools"
 
-    version = "1.0"
+    version = "1.1-SNAPSHOT"
 
     task svnTag(type: at.bxm.gradleplugins.svntools.SvnTag) {
       tagName = "v$project.version"
