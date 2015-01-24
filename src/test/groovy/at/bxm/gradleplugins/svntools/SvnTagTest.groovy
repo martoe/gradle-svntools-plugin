@@ -12,7 +12,7 @@ class SvnTagTest extends SvnTestSupport {
   def setup() {
     createLocalRepo()
     project = projectWithPlugin()
-    task = project.tasks["svnTag"] as SvnTag
+    task = project.task(type: SvnTag, "tagging")
   }
 
   def "no tagName"() {

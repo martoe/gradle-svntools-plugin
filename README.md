@@ -84,12 +84,10 @@ The object is added as an "extra property" to the Gradle project and may be acce
 
 This Gradle script creates a `svn.properties` file that contains the SVN URL and revision, and adds it to the JAR artifact:
 
-    plugins {
-      id "java"
-      id "at.bxm.svntools" version "0.6"
-    }
+    apply plugin: "java"
+    apply plugin: "at.bxm.svntools"
 
-    task svnStatus(dependsOn: svnInfo) << {
+    task svnStatus(type: at.bxm.gradleplugins.svntools.SvnInfo) << {
       def props = new Properties()
       props.setProperty("url", project.svnData.url)
       props.setProperty("revision", project.svnData.revisionNumber as String)
@@ -134,15 +132,13 @@ Creates an SVN tag based on a local SVN workspace.
 
 The `release` task creates an SVN tag using the current version number:
 
-    plugins {
-      id "at.bxm.svntools" version "0.6"
-    }
+    apply plugin: "at.bxm.svntools"
 
     version = "1.0"
 
-    task release(dependsOn: svnTag)
-
-    svnTag {
+    task svnTag(type: at.bxm.gradleplugins.svntools.SvnTag) {
       tagName = "v$project.version"
       commitMessage = "Release version $project.version"
     }
+
+    task release(dependsOn: svnTag)

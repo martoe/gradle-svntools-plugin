@@ -11,7 +11,7 @@ class SvnInfoTest extends SvnTestSupport {
 
     when: "running the SvnInfo task"
     def project = projectWithPlugin()
-    def task = project.tasks["svnInfo"] as SvnInfo
+    def task = project.task(type: SvnInfo, "info") as SvnInfo
     task.sourcePath = workspace
     task.execute()
 
@@ -32,7 +32,7 @@ class SvnInfoTest extends SvnTestSupport {
 
     when: "running the SvnInfo task"
     def project = projectWithPlugin()
-    def task = project.tasks["svnInfo"] as SvnInfo
+    def task = project.task(type: SvnInfo, "info") as SvnInfo
     task.sourcePath = workspace
     task.execute()
 
@@ -53,7 +53,7 @@ class SvnInfoTest extends SvnTestSupport {
 
     when: "running the SvnInfo task"
     def project = projectWithPlugin()
-    def task = project.tasks["svnInfo"] as SvnInfo
+    def task = project.task(type: SvnInfo, "info") as SvnInfo
     task.sourcePath = workspace
     task.execute()
 
@@ -74,7 +74,7 @@ class SvnInfoTest extends SvnTestSupport {
 
     when: "running the SvnInfo task"
     def project = projectWithPlugin()
-    def task = project.tasks["svnInfo"] as SvnInfo
+    def task = project.task(type: SvnInfo, "info") as SvnInfo
     task.sourcePath = workspace
     task.targetPropertyName = "myProp"
     task.execute()
@@ -91,7 +91,7 @@ class SvnInfoTest extends SvnTestSupport {
 
     when: "running the SvnInfo task"
     def project = projectWithPlugin()
-    def task = project.tasks["svnInfo"] as SvnInfo
+    def task = project.task(type: SvnInfo, "info") as SvnInfo
     task.sourcePath = new File(workspace, "test.txt")
     task.execute()
 
@@ -106,7 +106,7 @@ class SvnInfoTest extends SvnTestSupport {
 
     when: "running the SvnInfo task"
     def project = projectWithPlugin()
-    def task = project.tasks["svnInfo"] as SvnInfo
+    def task = project.task(type: SvnInfo, "info") as SvnInfo
     task.sourcePath = new File(workspace, "test.txt")
     task.execute()
 
@@ -121,7 +121,7 @@ class SvnInfoTest extends SvnTestSupport {
 
     when: "running the SvnInfo task"
     def project = projectWithPlugin()
-    def task = project.tasks["svnInfo"] as SvnInfo
+    def task = project.task(type: SvnInfo, "info") as SvnInfo
     task.sourcePath = new File(workspace, "test.txt")
     task.execute()
 
@@ -134,7 +134,7 @@ class SvnInfoTest extends SvnTestSupport {
 
     when: "running the SvnInfo task"
     def project = projectWithPlugin()
-    def task = project.tasks["svnInfo"] as SvnInfo
+    def task = project.task(type: SvnInfo, "info") as SvnInfo
     task.sourcePath = tempDir
     task.execute()
 

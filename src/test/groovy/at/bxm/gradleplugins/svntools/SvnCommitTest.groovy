@@ -13,7 +13,7 @@ class SvnCommitTest extends SvnTestSupport {
     createLocalRepo()
     workspace = checkoutTrunk()
     project = projectWithPlugin()
-    task = project.tasks["svnCommit"] as SvnCommit
+    task = project.task(type: SvnCommit, "commit")
   }
 
   def "commit a new file"() {

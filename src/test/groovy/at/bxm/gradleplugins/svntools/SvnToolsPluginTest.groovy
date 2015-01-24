@@ -6,10 +6,7 @@ class SvnToolsPluginTest extends SvnTestSupport {
     when: "applying the plugin"
     def project = projectWithPlugin()
 
-    then: "tasks are defined"
-    project.tasks.size() == 3
-    project.tasks["svnInfo"] instanceof SvnInfo
-    project.tasks["svnCommit"] instanceof SvnCommit
-    project.tasks["svnTag"] instanceof SvnTag
+    then: "extension is defined"
+    project.extensions.getByType(SvnToolsPluginExtension)
   }
 }
