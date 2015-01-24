@@ -10,9 +10,10 @@ class SvnToolsPluginExtensionTest extends SvnTestSupport {
     expect: "valid SvnInfo object"
     def svnData = projectWithPlugin(workspace).extensions.getByType(SvnToolsPluginExtension).info
     svnData != null
-    svnData.trunk == "trunk"
-    svnData.branch == null
-    svnData.tag == null
+    svnData.trunk
+    svnData.name == "trunk"
+    !svnData.branch
+    !svnData.tag
     svnData.revisionNumber == 1
   }
 
@@ -22,9 +23,9 @@ class SvnToolsPluginExtensionTest extends SvnTestSupport {
     expect: "invalid SvnInfo object"
     def svnData = projectWithPlugin().extensions.getByType(SvnToolsPluginExtension).info
     svnData != null
-    svnData.trunk == null
-    svnData.branch == null
-    svnData.tag == null
+    !svnData.trunk
+    !svnData.branch
+    !svnData.tag
     svnData.revisionNumber == -1
   }
 }

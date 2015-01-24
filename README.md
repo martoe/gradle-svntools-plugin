@@ -48,11 +48,12 @@ The `svntools` block (implemented by `at.bxm.gradleplugins.svntools.SvnToolsPlug
     * **password**: The SVN password - leave empty if no authentication is required (default: `$project.svntools.password`)
 * access information about the current SVN workspace (a `at.bxm.gradleplugins.svntools.SvnData` object):
     * **info.revisionNumber**
-    * **info.url**
-    * **info.repositoryRootUrl**
-    * **info.trunk**
-    * **info.branch**
-    * **info.tag**
+    * **info.url** The complete SVN URL of the chechked-out project
+    * **info.repositoryRootUrl** The root URL of the SVN repository
+    * **info.name** Either "trunk", the name of the current branch, or the name of the current tag (i.e. the path segment succeeding the "tags" segment)
+    * **info.trunk** "true" if the SVN URL refers to a trunk
+    * **info.branch** "true" if the SVN URL refers to a branch
+    * **info.tag** "true" if the SVN URL refers to a tag
 
 ### Example
 

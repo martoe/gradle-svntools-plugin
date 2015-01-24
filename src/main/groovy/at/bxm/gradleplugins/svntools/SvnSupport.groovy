@@ -28,13 +28,16 @@ class SvnSupport {
       try {
         def svnPath = SvnPath.parse info.URL
         if (svnPath.trunk) {
-          result.trunk = "trunk"
+          result.trunk = true
+          result.name = "trunk"
           log.info "Working copy is on trunk at revision $result.revisionNumber"
         } else if (svnPath.branch) {
-          result.branch = svnPath.branchName
+          result.branch = true
+          result.name = svnPath.branchName
           log.info "Working copy is on branch $result.branch at revision $result.revisionNumber"
         } else if (svnPath.tag) {
-          result.tag = svnPath.tagName
+          result.tag = true
+          result.name = svnPath.tagName
           log.info "Working copy is on tag $result.tag at revision $result.revisionNumber"
         }
       } catch (MalformedURLException e) {

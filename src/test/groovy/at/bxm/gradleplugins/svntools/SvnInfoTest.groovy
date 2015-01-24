@@ -18,9 +18,10 @@ class SvnInfoTest extends SvnTestSupport {
     then: "SVN data are available"
     def svnData = project.ext.svnData as SvnData
     svnData != null
-    svnData.trunk == "trunk"
-    svnData.branch == null
-    svnData.tag == null
+    svnData.trunk
+    svnData.name == "trunk"
+    !svnData.branch
+    !svnData.tag
     svnData.revisionNumber == 1
   }
 
@@ -38,9 +39,10 @@ class SvnInfoTest extends SvnTestSupport {
     then: "SVN data are available"
     def svnData = project.ext.svnData as SvnData
     svnData != null
-    svnData.trunk == null
-    svnData.branch == "test-branch"
-    svnData.tag == null
+    !svnData.trunk
+    svnData.branch
+    svnData.name == "test-branch"
+    !svnData.tag
     svnData.revisionNumber == 1
   }
 
@@ -58,9 +60,10 @@ class SvnInfoTest extends SvnTestSupport {
     then: "SVN data are available"
     def svnData = project.ext.svnData as SvnData
     svnData != null
-    svnData.trunk == null
-    svnData.branch == null
-    svnData.tag == "test-tag"
+    !svnData.trunk
+    !svnData.branch
+    svnData.tag
+    svnData.name == "test-tag"
     svnData.revisionNumber == 1
   }
 
@@ -93,7 +96,7 @@ class SvnInfoTest extends SvnTestSupport {
     task.execute()
 
     then: "SVN data are available"
-    project.ext.svnData.trunk == "trunk"
+    project.ext.svnData.name == "trunk"
   }
 
   def "execute on a single file at a branch"() {
@@ -108,7 +111,7 @@ class SvnInfoTest extends SvnTestSupport {
     task.execute()
 
     then: "SVN data are available"
-    project.ext.svnData.branch == "test-branch"
+    project.ext.svnData.name == "test-branch"
   }
 
   def "execute on a single file at a tag"() {
@@ -123,7 +126,7 @@ class SvnInfoTest extends SvnTestSupport {
     task.execute()
 
     then: "SVN data are available"
-    project.ext.svnData.tag == "test-tag"
+    project.ext.svnData.name == "test-tag"
   }
 
   def "execute outside of a workspace"() {
