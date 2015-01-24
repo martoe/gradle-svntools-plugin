@@ -8,7 +8,7 @@ class SvnToolsPluginExtensionTest extends SvnTestSupport {
     def workspace = checkoutTrunk()
 
     expect: "valid SvnInfo object"
-    def svnData = projectWithPlugin(workspace).extensions.getByType(SvnToolsPluginExtension).svnData
+    def svnData = projectWithPlugin(workspace).extensions.getByType(SvnToolsPluginExtension).info
     svnData != null
     svnData.trunk == "trunk"
     svnData.branch == null
@@ -20,7 +20,7 @@ class SvnToolsPluginExtensionTest extends SvnTestSupport {
     given: "no SVN workspace"
 
     expect: "invalid SvnInfo object"
-    def svnData = projectWithPlugin().extensions.getByType(SvnToolsPluginExtension).svnData
+    def svnData = projectWithPlugin().extensions.getByType(SvnToolsPluginExtension).info
     svnData != null
     svnData.trunk == null
     svnData.branch == null
