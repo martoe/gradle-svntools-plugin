@@ -134,6 +134,18 @@ This Gradle script commits a changelog file to SVN:
       commitMessage = "Changelog added"
     }
 
+## SvnBranch task (at.bxm.gradleplugins.svntools.SvnBranch)
+
+Creates an SVN branch based on a local SVN workspace.
+
+### Configuration
+
+* **workspaceDir**: Local workspace that should be tagged (default: `$project.projectDir`)
+* **branchName**: Name of the SVN branch (required, no default)
+* **commitMessage**: An optional commit message.
+* **username**: The SVN username - leave empty if no authentication is required (default: `$project.svntools.username`)
+* **password**: The SVN password - leave empty if no authentication is required (default: `$project.svntools.password`)
+
 ## SvnTag task (at.bxm.gradleplugins.svntools.SvnTag)
 
 Creates an SVN tag based on a local SVN workspace.
