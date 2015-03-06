@@ -2,7 +2,13 @@
 /.gradle/
 /build/
 
-# IDE files
+# IDEA IDE files
 /*.iml
 /*.ipr
 /*.iws
+
+# Eclipse IDE files
+/bin/
+.classpath
+.project
+.settings/
