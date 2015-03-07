@@ -41,7 +41,7 @@ class SvnSupport {
           log.info "Working copy is on tag $result.tag at revision $result.revisionNumber"
         }
       } catch (MalformedURLException e) {
-        log.warning "SVN path has an unexpected layout: $e.message"
+        log.warning "Working copy must be a trunk, branches or tags folder: $e.message"
       }
     } catch (Exception e) {
       if (ignoreErrors) {
