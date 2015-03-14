@@ -2,7 +2,8 @@ package at.bxm.gradleplugins.svntools
 
 import org.gradle.api.*
 import org.gradle.api.tasks.TaskAction
-import org.tmatesoft.svn.core.SVNException
+import org.tmatesoft.svn.core.*
+import org.tmatesoft.svn.core.io.*
 import org.tmatesoft.svn.core.wc.*
 
 abstract class SvnCopy extends SvnBaseTask {
@@ -11,6 +12,8 @@ abstract class SvnCopy extends SvnBaseTask {
   def workspaceDir
   /** An optional commit message. */
   String commitMessage
+  /** If {@code true}, the target will be removed first if it already exists */
+  boolean replaceExisting
 
   abstract String getDestinationPath()
 
@@ -28,6 +31,12 @@ abstract class SvnCopy extends SvnBaseTask {
     def basePath = SvnPath.parse(info.URL).moduleBasePath
     def fullDestPath = "$basePath/$destinationPath"
     try {
+      if (replaceExisting) {
+        def repo = remoteRepository(info.URL.setPath(basePath, false))
+        if (existsInRepo(repo, destinationPath)) {
+          deleteFromRepo(repo, destinationPath)
+        }
+      }
       def destUrl = info.URL.setPath(fullDestPath, false)
       logger.info "Copying $info.URL at revision $info.revision to $destUrl"
       def copied = clientManager.copyClient.doCopy([copySource] as SVNCopySource[], destUrl, false, false, true, commitMessage, null);
@@ -43,6 +52,23 @@ abstract class SvnCopy extends SvnBaseTask {
     } catch (SVNException e) {
       throw new InvalidUserDataException("svn-copy failed for $fullDestPath\n$e.message", e)
     }
+  }
+
+  private SVNRepository remoteRepository(SVNURL repositoryUrl) {
+    def repo = SVNRepositoryFactory.create(repositoryUrl)
+    repo.authenticationManager = SVNWCUtil.createDefaultAuthenticationManager(username, password)
+    return repo
+  }
+
+  private static boolean existsInRepo(SVNRepository repo, String path) {
+    return repo.checkPath(path, -1) != SVNNodeKind.NONE
+  }
+
+  private static void deleteFromRepo(SVNRepository repo, String path) {
+    def editor = repo.getCommitEditor("creating a new file", null)
+    editor.openRoot(-1)
+    editor.deleteEntry(path, -1)
+    editor.closeEdit()
   }
 
   static boolean isValidName(String svnPath) {

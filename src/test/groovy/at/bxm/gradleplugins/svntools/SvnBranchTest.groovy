@@ -56,4 +56,19 @@ class SvnBranchTest extends SvnTestSupport {
     def e = thrown TaskExecutionException
     e.cause.message =~ /.* already exists/
   }
+
+  def "branch already exists - replace"() {
+    given: "a trunk workspace"
+    workspace = checkoutTrunk()
+
+    when: "creating an existing branch"
+    task.workspaceDir = workspace
+    task.branchName = "test-branch"
+    task.replaceExisting = true
+    task.execute()
+
+    then: "two more commits (delete and copy)"
+    switchLocalRepo("branches/test-branch")
+    getRevision(workspace) == 3
+  }
 }
