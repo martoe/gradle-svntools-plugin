@@ -11,7 +11,7 @@ abstract class SvnTestSupport extends Specification {
 
   File tempDir
   private SVNClientManager clientManager
-  private SVNURL localRepoUrl
+  SVNURL localRepoUrl
 
   Project projectWithPlugin(File projectDir) {
     def projectBuilder = ProjectBuilder.builder()
