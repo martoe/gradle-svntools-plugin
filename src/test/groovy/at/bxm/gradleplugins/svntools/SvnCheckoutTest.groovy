@@ -17,8 +17,8 @@ class SvnCheckoutTest extends SvnTestSupport {
 
   def "happy path"() {
     given: "nonexistent workspace"
-    def workspaceDir = new File(tempDir, "myNewWorkspace")
-    assert !workspaceDir.exists()
+    def workspaceDir = "$tempDir.absolutePath/myNewWorkspace"
+    assert !new File(workspaceDir).exists()
 
     when: "running the SvnCheckout task"
     task.svnUrl = localRepoUrl
@@ -36,7 +36,8 @@ class SvnCheckoutTest extends SvnTestSupport {
     task.execute()
 
     then:
-    thrown TaskExecutionException
+    def e = thrown TaskExecutionException
+    e.cause.message =~ "svn-checkout failed for .*"
   }
 
   def "checkout using a non-empty dir"() {
@@ -51,6 +52,17 @@ class SvnCheckoutTest extends SvnTestSupport {
     task.execute()
 
     then:
-    thrown TaskExecutionException
+    def e = thrown TaskExecutionException
+    e.cause.message =~ ".* must be an empty directory"
+  }
+
+  def "no target dir"() {
+    when: "running the SvnCheckout task without target dir"
+    task.svnUrl = localRepoUrl
+    task.execute()
+
+    then:
+    def e = thrown TaskExecutionException
+    e.cause.message == "targetDir missing"
   }
 }

@@ -10,7 +10,7 @@ class SvnCheckout extends SvnBaseTask {
   /** The remote SVN URL to be checked out */
   String svnUrl
   /** The target directory for checkout (required). If it doesn't exist it will be created. If it exists it must be empty. */
-  File targetDir
+  def targetDir
   /** The revision number to be checked out (optional, defaults to HEAD)  */
   Long revision
 
@@ -23,11 +23,15 @@ class SvnCheckout extends SvnBaseTask {
     } catch (SVNException e) {
       throw new InvalidUserDataException("Invalid svnUrl value: $svnUrl", e)
     }
-    if (targetDir.exists() && !(targetDir.isDirectory() && !targetDir.list())) {
-      throw new InvalidUserDataException("$targetDir.absolutePath must be an empty directory")
+    if (!targetDir) {
+      throw new InvalidUserDataException("targetDir missing")
+    }
+    def dir = targetDir instanceof File ? targetDir : targetDir.toString() as File
+    if (dir.exists() && !(dir.isDirectory() && !dir.list())) {
+      throw new InvalidUserDataException("$dir.absolutePath must be an empty directory")
     }
     try {
-      createSvnClientManager().updateClient.doCheckout(repoUrl, targetDir, SVNRevision.UNDEFINED, rev, SVNDepth.INFINITY, false)
+      createSvnClientManager().updateClient.doCheckout(repoUrl, dir, SVNRevision.UNDEFINED, rev, SVNDepth.INFINITY, false)
     } catch (SVNException e) {
       throw new InvalidUserDataException("svn-checkout failed for $svnUrl\n" + e.message, e)
     }

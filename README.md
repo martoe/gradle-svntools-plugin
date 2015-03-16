@@ -3,8 +3,9 @@
 A [Gradle](https://www.gradle.org) plugin (based on [SVNKit](http://svnkit.com/)) that provides various Subversion-related tasks.
 [![Build Status](https://travis-ci.org/martoe/gradle-svntools-plugin.png)](https://travis-ci.org/martoe/gradle-svntools-plugin)
 
-Binaries are hosted at [Bintray](https://bintray.com/martoe/gradle-plugins/gradle-svntools-plugin/)
-and are available at the [jcenter Maven repo](https://bintray.com/bintray/jcenter/).
+The svntools-plugin can interact with existing SVN workspaces as well as create new workspaces (by performing a svn-checkout). It can interact with any SVN version; no additional SVN client is required.
+
+Binaries are hosted at [Bintray](https://bintray.com/martoe/gradle-plugins/gradle-svntools-plugin/) and are available at the [jcenter Maven repo](https://bintray.com/bintray/jcenter/).
 
 Please report bugs and feature requests at the [Github issue page](https://github.com/martoe/gradle-svntools-plugin/issues).
 
@@ -21,7 +22,7 @@ Please report bugs and feature requests at the [Github issue page](https://githu
 ### Using the [Gradle plugins DSL](https://www.gradle.org/docs/current/userguide/plugins.html#sec:plugins_block) (Gradle 2.1 and above)
 
     plugins {
-      id "at.bxm.svntools" version "1.0"
+      id "at.bxm.svntools" version "1.1"
     }
 
 ### Using an [external dependency](https://www.gradle.org/docs/current/userguide/organizing_build_logic.html#sec:external_dependencies)
@@ -31,7 +32,7 @@ Please report bugs and feature requests at the [Github issue page](https://githu
         jcenter()
       }
       dependencies {
-        classpath "at.bxm.gradleplugins:gradle-svntools-plugin:1.0"
+        classpath "at.bxm.gradleplugins:gradle-svntools-plugin:1.1"
       }
     }
     apply plugin: "at.bxm.svntools"
@@ -46,7 +47,7 @@ The `svntools` block (implemented by `at.bxm.gradleplugins.svntools.SvnToolsPlug
 * specify default values for some configuration properties:
     * **username**: The SVN username - leave empty if no authentication is required (default: `$project.svntools.username`)
     * **password**: The SVN password - leave empty if no authentication is required (default: `$project.svntools.password`)
-* access information about the current SVN workspace (an `at.bxm.gradleplugins.svntools.SvnData` object):
+* access information about the current SVN workspace (i.e. the project's root directory), wrapped by an `at.bxm.gradleplugins.svntools.SvnData` object:
     * **info.revisionNumber** The SVN revision number
     * **info.url** The complete SVN URL of the checked-out project
     * **info.repositoryRootUrl** The root URL of the SVN repository
@@ -115,6 +116,16 @@ Checks out an SVN URL to a local directory.
 * **username**: The SVN username - leave empty if no authentication is required (default: `$project.svntools.username`)
 * **password**: The SVN password - leave empty if no authentication is required (default: `$project.svntools.password`)
 
+### Example
+
+This Gradle script performs a checkout from a local SVN repository into `build/workspace`:
+
+    apply plugin: "at.bxm.svntools"
+
+    task checkout(type: at.bxm.gradleplugins.svntools.SvnCheckout) {
+      svnUrl = "file:///home/user/svn/repo/myproject/trunk"
+      targetDir = "$project.buildDir/workspace"
+    }
 
 ## SvnCommit task (at.bxm.gradleplugins.svntools.SvnCommit)
 
