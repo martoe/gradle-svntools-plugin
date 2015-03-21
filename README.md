@@ -106,12 +106,12 @@ This Gradle script creates a `svn.properties` file that contains the SVN URL and
 
 ## SvnCheckout task (at.bxm.gradleplugins.svntools.SvnCheckout)
 
-Checks out an SVN URL to a local directory.
+Creates an SVN workspace by checking out an SVN URL to a local directory.
 
 ### Configuration
 
 * **svnUrl**: The remote repository URL (required)
-* **targetDir**: The target directory for checkout (required). If it doesn't exist it will be created. If it exists it must be empty.
+* **workspaceDir**: The target directory for checkout (required). If it doesn't exist it will be created. If it exists it must be empty.
 * **revision**: The revision number to be checked out (optional, defaults to HEAD)
 * **username**: The SVN username - leave empty if no authentication is required (default: `$project.svntools.username`)
 * **password**: The SVN password - leave empty if no authentication is required (default: `$project.svntools.password`)
@@ -124,12 +124,12 @@ This Gradle script performs a checkout from a local SVN repository into `build/w
 
     task checkout(type: at.bxm.gradleplugins.svntools.SvnCheckout) {
       svnUrl = "file:///home/user/svn/repo/myproject/trunk"
-      targetDir = "$project.buildDir/workspace"
+      workspaceDir = "$project.buildDir/workspace"
     }
 
 ## SvnCommit task (at.bxm.gradleplugins.svntools.SvnCommit)
 
-Commits a list of files (and directories) within the current SVN workspace.
+Commits a list of files (and directories). All files and directories must be part of the same SVN workspace.
 
 ### Configuration
 

@@ -86,6 +86,21 @@ class SvnCommitTest extends SvnTestSupport {
     getRevision(newFile) == 2
   }
 
+  def "commit a file outside of the workspace"() {
+    given:
+    def newValidFile = newFile("newfile.txt")
+    def newInvalidFile = newFile("newfile.txt","$workspace.absolutePath/.." as File)
+
+    when: "running the SvnCommit task"
+    task.source << newValidFile
+    task.source << newInvalidFile
+    task.execute()
+
+    then: "file committed, new revision"
+    def e = thrown TaskExecutionException
+    e.cause.message =~ "svn-add failed for .*"
+  }
+
   private File newFile(String name, File path = workspace) {
     def file = new File(path, name)
     assert !file.exists(), "$file.absolutePath already exist"

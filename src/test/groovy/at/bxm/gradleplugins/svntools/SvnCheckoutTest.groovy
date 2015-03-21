@@ -22,7 +22,7 @@ class SvnCheckoutTest extends SvnTestSupport {
 
     when: "running the SvnCheckout task"
     task.svnUrl = localRepoUrl
-    task.targetDir = workspaceDir
+    task.workspaceDir = workspaceDir
     task.execute()
 
     then: "local workspace exists"
@@ -32,7 +32,7 @@ class SvnCheckoutTest extends SvnTestSupport {
   def "invalid remote URL"() {
     when: "running the SvnCheckout task"
     task.svnUrl = "$localRepoUrl/blah"
-    task.targetDir = new File(tempDir, "workspace")
+    task.workspaceDir = new File(tempDir, "workspace")
     task.execute()
 
     then:
@@ -48,7 +48,7 @@ class SvnCheckoutTest extends SvnTestSupport {
 
     when: "running the SvnCheckout task"
     task.svnUrl = "$localRepoUrl/trunk"
-    task.targetDir = workspaceDir
+    task.workspaceDir = workspaceDir
     task.execute()
 
     then:
@@ -63,6 +63,6 @@ class SvnCheckoutTest extends SvnTestSupport {
 
     then:
     def e = thrown TaskExecutionException
-    e.cause.message == "targetDir missing"
+    e.cause.message == "workspaceDir missing"
   }
 }
