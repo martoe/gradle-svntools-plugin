@@ -63,6 +63,6 @@ class SvnCheckoutTest extends SvnTestSupport {
 
     then:
     def e = thrown TaskExecutionException
-    e.cause.message == "workspaceDir missing"
+    e.cause.message == "workspaceDir must be specified"
   }
 }
