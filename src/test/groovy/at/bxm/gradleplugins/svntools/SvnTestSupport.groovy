@@ -11,7 +11,7 @@ abstract class SvnTestSupport extends Specification {
 
   File tempDir
   private SVNClientManager clientManager
-  private SVNURL localRepoUrl
+  SVNURL localRepoUrl
 
   Project projectWithPlugin(File projectDir) {
     def projectBuilder = ProjectBuilder.builder()
@@ -72,8 +72,8 @@ abstract class SvnTestSupport extends Specification {
     clientManager.updateClient.doSwitch(new File(tempDir, "workspace"), localRepoUrl.appendPath(path, false), SVNRevision.UNDEFINED, SVNRevision.HEAD, SVNDepth.INFINITY, false, false)
   }
 
-  long getRevision(File file) {
-    clientManager.WCClient.doInfo(file, SVNRevision.WORKING).revision.number
+  long getRevision(file) {
+    clientManager.WCClient.doInfo(file as File, SVNRevision.WORKING).revision.number
   }
 
   def setup() {
