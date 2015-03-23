@@ -22,7 +22,7 @@ Please report bugs and feature requests at the [Github issue page](https://githu
 
 ## Applying the plugin
 
-(see also the [Gradle plugin portal](https://plugins.gradle.org/plugin/at.bxm.svntools/) page)
+(see also the [Gradle plugin portal](https://plugins.gradle.org/plugin/at.bxm.svntools) page)
 
 ### Using the [Gradle plugins DSL](https://www.gradle.org/docs/current/userguide/plugins.html#sec:plugins_block) (Gradle 2.1 and above)
 
