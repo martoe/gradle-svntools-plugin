@@ -1,10 +1,6 @@
 # gradle-svntools-plugin
 
-A [Gradle](https://www.gradle.org) plugin that provides various Subversion-related tasks.
-
-The svntools-plugin can interact with existing SVN workspaces as well as create new workspaces (by performing a svn-checkout). It can interact with any SVN version; no additional SVN client is required.
-
-Binaries are hosted at [Bintray](https://bintray.com/martoe/gradle-plugins/gradle-svntools-plugin/) and are available at the [jcenter Maven repo](https://bintray.com/bintray/jcenter/).
+A [Gradle](https://www.gradle.org) plugin (based on [SVNKit](http://svnkit.com/)) that provides various Subversion-related tasks.
 
 Here is a very short build script that prints out the SVN revision:
 
@@ -13,11 +9,9 @@ Here is a very short build script that prints out the SVN revision:
       println "Current revision is $svntools.info.revisionNumber"
     }
 
-The implementation is based on [SVNKit](http://svnkit.com/), which means that no SVN commandline client is required
-and any working copy format (up to version 1.8) is supported.
+The svntools-plugin can interact with existing SVN workspaces as well as create new workspaces (by performing a svn-checkout). It can interact with any SVN working copy format; no additional SVN client is required.
 
-Binaries are hosted at [Bintray](https://bintray.com/martoe/gradle-plugins/gradle-svntools-plugin/)
-and are available at the [jcenter Maven repo](https://bintray.com/bintray/jcenter/).
+Binaries are hosted at [Bintray](https://bintray.com/martoe/gradle-plugins/gradle-svntools-plugin/) and are available at the [jcenter Maven repo](https://bintray.com/bintray/jcenter/).
 Please report bugs and feature requests at the [Github issue page](https://github.com/martoe/gradle-svntools-plugin/issues).
 
 ## Use-case examples
