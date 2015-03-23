@@ -24,11 +24,11 @@ class SvnCheckout extends SvnBaseTask {
       throw new InvalidUserDataException("Invalid svnUrl value: $svnUrl", e)
     }
     if (!workspaceDir) {
-      throw new InvalidUserDataException("workspaceDir missing")
+      throw new InvalidUserDataException("workspaceDir must be specified")
     }
     def dir = workspaceDir instanceof File ? workspaceDir : workspaceDir.toString() as File
     if (dir.exists() && !(dir.isDirectory() && !dir.list())) {
-      throw new InvalidUserDataException("$dir.absolutePath must be an empty directory")
+      throw new InvalidUserDataException("workspaceDir $dir.absolutePath must be an empty directory")
     }
     try {
       createSvnClientManager().updateClient.doCheckout(repoUrl, dir, SVNRevision.UNDEFINED, rev, SVNDepth.INFINITY, false)
