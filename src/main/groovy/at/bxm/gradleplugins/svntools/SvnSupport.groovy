@@ -22,7 +22,7 @@ class SvnSupport {
     def result = new SvnData()
     try {
       def info = createSvnClientManager(username, password).WCClient.doInfo srcPath, SVNRevision.WORKING
-      result.revisionNumber = info.revision.number
+      result.revisionNumber = info.committedRevision.number
       result.url = info.URL
       result.repositoryRootUrl = info.repositoryRootURL
       try {
