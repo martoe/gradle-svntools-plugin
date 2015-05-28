@@ -142,6 +142,7 @@ class SvnInfoTest extends SvnTestSupport {
     thrown TaskExecutionException
   }
 
+  // https://github.com/martoe/gradle-svntools-plugin/issues/11
   def "different revisions on branches"() {
     given: "an SVN repo at revision 1"
     createLocalRepo()

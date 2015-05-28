@@ -27,7 +27,7 @@ Please report bugs and feature requests at the [Github issue page](https://githu
 ### Using the [Gradle plugins DSL](https://www.gradle.org/docs/current/userguide/plugins.html#sec:plugins_block) (Gradle 2.1 and above)
 
     plugins {
-      id "at.bxm.svntools" version "1.1"
+      id "at.bxm.svntools" version "1.1.1"
     }
 
 ### Using an [external dependency](https://www.gradle.org/docs/current/userguide/organizing_build_logic.html#sec:external_dependencies)
@@ -37,7 +37,7 @@ Please report bugs and feature requests at the [Github issue page](https://githu
         jcenter()
       }
       dependencies {
-        classpath "at.bxm.gradleplugins:gradle-svntools-plugin:1.1"
+        classpath "at.bxm.gradleplugins:gradle-svntools-plugin:1.1.1"
       }
     }
     apply plugin: "at.bxm.svntools"
@@ -50,8 +50,8 @@ Please report bugs and feature requests at the [Github issue page](https://githu
 The `svntools` block (implemented by `at.bxm.gradleplugins.svntools.SvnToolsPluginExtension`) can be used to
 
 * specify default values for some configuration properties:
-    * **username**: The SVN username - leave empty if no authentication is required (default: `$project.svntools.username`)
-    * **password**: The SVN password - leave empty if no authentication is required (default: `$project.svntools.password`)
+    * **username**: The SVN username - leave empty if no authentication is required
+    * **password**: The SVN password - leave empty if no authentication is required
 * access information about the current SVN workspace (i.e. the project's root directory), wrapped by an `at.bxm.gradleplugins.svntools.SvnData` object:
     * **info.revisionNumber** The SVN revision number
     * **info.url** The complete SVN URL of the checked-out project
@@ -155,7 +155,7 @@ This Gradle script commits a changelog file to SVN:
 
     apply plugin: "at.bxm.svntools"
 
-    version = "1.1-SNAPSHOT"
+    version = "1.0-SNAPSHOT"
 
     task createChangelog() {
       project.ext.changelog = file("changelog_${project.version}.txt")
@@ -199,7 +199,7 @@ The `release` task creates an SVN tag using the current version number:
 
     apply plugin: "at.bxm.svntools"
 
-    version = "1.1-SNAPSHOT"
+    version = "1.0-SNAPSHOT"
 
     task svnTag(type: at.bxm.gradleplugins.svntools.SvnTag) {
       tagName = "v$project.version"
