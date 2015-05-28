@@ -42,6 +42,15 @@ abstract class SvnTestSupport extends Specification {
     return localRepoUrl
   }
 
+  void addFile(String path) {
+    def repo = SVNRepositoryFactory.create(localRepoUrl)
+    def editor = repo.getCommitEditor("creating a new file", null)
+    editor.openRoot(-1)
+    addEmptyFile(editor, path)
+    editor.closeDir()
+    editor.closeEdit()
+  }
+
   private static ISVNEditor addEmptyFile(ISVNEditor editor, String path) {
     editor.addFile path, null, -1
     editor.applyTextDelta path, null
@@ -70,6 +79,10 @@ abstract class SvnTestSupport extends Specification {
 
   void switchLocalRepo(String path) {
     clientManager.updateClient.doSwitch(new File(tempDir, "workspace"), localRepoUrl.appendPath(path, false), SVNRevision.UNDEFINED, SVNRevision.HEAD, SVNDepth.INFINITY, false, false)
+  }
+
+  void updateLocalRepo() {
+    clientManager.updateClient.doUpdate(new File(tempDir, "workspace"), SVNRevision.HEAD, SVNDepth.INFINITY, false, false)
   }
 
   long getRevision(file) {

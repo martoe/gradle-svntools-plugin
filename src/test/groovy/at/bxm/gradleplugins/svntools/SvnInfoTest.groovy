@@ -141,4 +141,47 @@ class SvnInfoTest extends SvnTestSupport {
     then: "SVN data are available"
     thrown TaskExecutionException
   }
+
+  def "different revisions on branches"() {
+    given: "an SVN repo at revision 1"
+    createLocalRepo()
+    def project = projectWithPlugin()
+    def workspace = checkoutTrunk()
+
+    when: "checking out trunk"
+    def task = project.task(type: SvnInfo, "info1") as SvnInfo
+    task.sourcePath = workspace
+    task.execute()
+
+    then: "trunk is at revision 1"
+    project.ext.svnData.revisionNumber == 1
+
+    when: "committing to trunk"
+    addFile("trunk/somefile.txt")
+    updateLocalRepo()
+    task = project.task(type: SvnInfo, "info2") as SvnInfo
+    task.sourcePath = workspace
+    task.execute()
+
+    then: "trunk is at revision 2"
+    project.ext.svnData.revisionNumber == 2
+
+    when: "switching to root"
+    switchLocalRepo("/")
+    task = project.task(type: SvnInfo, "info3") as SvnInfo
+    task.sourcePath = workspace
+    task.execute()
+
+    then: "root is at revision 2"
+    project.ext.svnData.revisionNumber == 2
+
+    when: "switching to branch"
+    switchLocalRepo("branches/test-branch")
+    task = project.task(type: SvnInfo, "info4") as SvnInfo
+    task.sourcePath = workspace
+    task.execute()
+
+    then: "branch is still at revision 1"
+    project.ext.svnData.revisionNumber == 1
+  }
 }
