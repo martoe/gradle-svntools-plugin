@@ -3,27 +3,28 @@ package at.bxm.gradleplugins.svntools.internal
 import at.bxm.gradleplugins.svntools.api.SvnData
 import groovy.util.logging.Log
 import org.gradle.api.InvalidUserDataException
+import org.tmatesoft.svn.core.auth.BasicAuthenticationManager
 import org.tmatesoft.svn.core.internal.wc.DefaultSVNOptions
 import org.tmatesoft.svn.core.wc.SVNClientManager
 import org.tmatesoft.svn.core.wc.SVNRevision
 
 @Log
 class SvnSupport {
-  static SVNClientManager createSvnClientManager(String username, String password) {
-    if (username) {
-      return SVNClientManager.newInstance(
-          // create a local SVN config dir to make sure we don't reuse existing credentials:
-          new DefaultSVNOptions(new File(".subversion"), true),
-          username, password)
-    } else {
-      return SVNClientManager.newInstance()
+  static SVNClientManager createSvnClientManager(String username, String password, SvnProxy proxy) {
+    def authManager = new BasicAuthenticationManager(username, password)
+    if (proxy?.host) {
+      log.info "Using proxy $proxy"
+      authManager.setProxy(proxy.host, proxy.port, proxy.username, proxy.password)
     }
+    return SVNClientManager.newInstance(
+            // create a local SVN config dir to make sure we don't reuse existing credentials:
+            new DefaultSVNOptions(new File(".subversion"), true), authManager)
   }
 
-  static SvnData createSvnData(File srcPath, String username, String password, boolean ignoreErrors) {
+  static SvnData createSvnData(File srcPath, String username, String password, SvnProxy proxy, boolean ignoreErrors) {
     def result = new SvnData()
     try {
-      def info = createSvnClientManager(username, password).WCClient.doInfo srcPath, SVNRevision.WORKING
+      def info = createSvnClientManager(username, password, proxy).WCClient.doInfo srcPath, SVNRevision.WORKING
       result.revisionNumber = info.committedRevision.number
       result.url = info.URL
       result.repositoryRootUrl = info.repositoryRootURL

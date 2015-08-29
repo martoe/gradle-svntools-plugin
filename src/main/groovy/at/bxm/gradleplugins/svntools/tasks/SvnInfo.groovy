@@ -18,7 +18,7 @@ class SvnInfo extends SvnBaseTask {
   @TaskAction
   def run() {
     def srcPath = sourcePath != null ? project.file(sourcePath, PathValidation.EXISTS) : project.projectDir
-    def result = SvnSupport.createSvnData(srcPath, getUsername(), getPassword(), ignoreErrors)
+    def result = SvnSupport.createSvnData(srcPath, getUsername(), getPassword(), proxy, ignoreErrors)
     project.ext.set(targetPropertyName ?: "svnData", result)
   }
 }

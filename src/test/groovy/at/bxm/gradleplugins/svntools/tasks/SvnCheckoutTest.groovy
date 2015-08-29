@@ -1,6 +1,7 @@
 package at.bxm.gradleplugins.svntools.tasks
 
 import at.bxm.gradleplugins.svntools.SvnTestSupport
+import at.bxm.gradleplugins.svntools.SvnToolsPluginExtension
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskExecutionException
 
@@ -65,5 +66,21 @@ class SvnCheckoutTest extends SvnTestSupport {
     then:
     def e = thrown TaskExecutionException
     e.cause.message == "workspaceDir must be specified"
+  }
+
+  def "checkout with proxy"() {
+    given: "nonexistent workspace"
+    def workspaceDir = "$tempDir.absolutePath/myNewWorkspace"
+    assert !new File(workspaceDir).exists()
+    project.extensions.findByType(SvnToolsPluginExtension).proxy.host = "localhost"
+    project.extensions.findByType(SvnToolsPluginExtension).proxy.port = 9999
+
+    when: "running the SvnCheckout task"
+    task.svnUrl = localRepoUrl
+    task.workspaceDir = workspaceDir
+    task.execute()
+
+    then: "local workspace exists"
+    getRevision(workspaceDir) == 1
   }
 }

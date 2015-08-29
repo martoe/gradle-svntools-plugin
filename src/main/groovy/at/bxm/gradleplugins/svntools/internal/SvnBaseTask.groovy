@@ -12,7 +12,7 @@ abstract class SvnBaseTask extends DefaultTask {
   String password
 
   SVNClientManager createSvnClientManager() {
-    return SvnSupport.createSvnClientManager(getUsername(), getPassword())
+    return SvnSupport.createSvnClientManager(getUsername(), getPassword(), proxy)
   }
 
   String getUsername() {
@@ -21,5 +21,9 @@ abstract class SvnBaseTask extends DefaultTask {
 
   String getPassword() {
     return password ?: project.extensions.getByType(SvnToolsPluginExtension).password
+  }
+
+  SvnProxy getProxy() {
+    return project.extensions.getByType(SvnToolsPluginExtension).proxy
   }
 }
