@@ -5,12 +5,14 @@ This task requires the standard SVN directory layout (`[module]/trunk`, `[module
 
 ### Configuration
 
-* **workspaceDir**: Local workspace that should be tagged (default: `$project.projectDir`)
-* **tagName**: Name of the SVN tag (required, no default)
-* **replaceExisting**: If the tag already exists, delete it first (default: `false`)
-* **commitMessage**: An optional commit message.
-* **username**: The SVN username - leave empty if no authentication is required (default: `$project.svntools.username`)
-* **password**: The SVN password - leave empty if no authentication is required (default: `$project.svntools.password`)
+Property        | Description | Default value
+--------------- | ----------- | -------------
+workspaceDir    | Local workspace that should be tagged | `$project.projectDir`
+tagName         | Name of the SVN tag (required) |
+replaceExisting | If the tag already exists, delete it first | `false`
+commitMessage   | A commit message (optional) |
+username        | The SVN username - leave empty if no authentication is required | `$project.svntools.username`
+password        | The SVN password - leave empty if no authentication is required | `$project.svntools.password`
 
 ### Example
 

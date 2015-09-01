@@ -4,12 +4,12 @@ Commits a list of files (and directories). All files and directories must be par
 
 ### Configuration
 
-* **source**: A list of files and directories that should be committed.
-              If these are not under version control already, they will be added first.
-              If this list is empty of the files contain no modifications, no commit will be executed.
-* **commitMessage**: An optional commit message.
-* **username**: The SVN username - leave empty if no authentication is required (default: `$project.svntools.username`)
-* **password**: The SVN password - leave empty if no authentication is required (default: `$project.svntools.password`)
+Property      | Description | Default value
+------------- | ----------- | -------------
+source        | A list of files and directories that should be committed. If these are not under version control already, they will be added first. If this list is empty of the files contain no modifications, no commit will be executed |
+commitMessage | A commit message (optional) |
+username      | The SVN username - leave empty if no authentication is required | `$project.svntools.username`
+password      | The SVN password - leave empty if no authentication is required | `$project.svntools.password`
 
 ### Example
 

@@ -7,13 +7,13 @@ This task requires the standard SVN directory layout (`[module]/trunk`, `[module
 
 ### Configuration
 
-Property               | Description | Default value
----------------------- | ----------- | -------------
-**sourcePath**         | Source path for reading the SVN metadata | `$project.projectDir`
-**targetPropertyName** | The name of the project extra property that will receive the resulting SvnData object | `svnData`
-**ignoreErrors**       | Continue the build if the specified path doesn't contain SVN data | `false`
-**username**           | The SVN username - leave empty if no authentication is required | `$project.svntools.username`
-**password**           | The SVN password - leave empty if no authentication is required | `$project.svntools.password`
+Property           | Description | Default value
+------------------ | ----------- | -------------
+sourcePath         | Source path for reading the SVN metadata | `$project.projectDir`
+targetPropertyName | The name of the project extra property that will receive the resulting SvnData object | `svnData`
+ignoreErrors       | Continue the build if the specified path doesn't contain SVN data | `false`
+username           | The SVN username - leave empty if no authentication is required | `$project.svntools.username`
+password           | The SVN password - leave empty if no authentication is required | `$project.svntools.password`
 
 ### Example
 
