@@ -7,6 +7,9 @@ This task requires the standard SVN directory layout (`[module]/trunk`, `[module
 
 Property        | Description | Default value
 --------------- | ----------- | -------------
+svnUrl          | A SVN repository URL that should be tagged. This must point to either a trunk, a branch, or a tag.
+                  Currently, tags are always created from `HEAD`.
+                  If missing, the local `workspaceDir` will be used. |
 workspaceDir    | Local workspace that should be tagged | `$project.projectDir`
 tagName         | Name of the SVN tag (required) |
 replaceExisting | If the tag already exists, delete it first | `false`

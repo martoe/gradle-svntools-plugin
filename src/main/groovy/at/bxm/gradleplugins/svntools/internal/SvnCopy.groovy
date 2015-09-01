@@ -8,12 +8,15 @@ import org.tmatesoft.svn.core.SVNNodeKind
 import org.tmatesoft.svn.core.SVNURL
 import org.tmatesoft.svn.core.io.SVNRepository
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory
+import org.tmatesoft.svn.core.wc.SVNClientManager
 import org.tmatesoft.svn.core.wc.SVNCopySource
 import org.tmatesoft.svn.core.wc.SVNRevision
 import org.tmatesoft.svn.core.wc.SVNWCUtil
 
 abstract class SvnCopy extends SvnBaseTask {
 
+  /** The remote SVN URL to be copied from. Optional - fallback to {@link #workspaceDir} if missing. */
+  String svnUrl
   /** Local workspace that should be copied (default: {@code project.projectDir}) */
   def workspaceDir
   /** An optional commit message. */
@@ -26,25 +29,19 @@ abstract class SvnCopy extends SvnBaseTask {
   @TaskAction
   def run() {
     def clientManager = createSvnClientManager()
-    def workspace = workspaceDir ? project.file(workspaceDir, PathValidation.DIRECTORY) : project.projectDir
-    def info
-    try {
-      info = clientManager.WCClient.doInfo(workspace, SVNRevision.WORKING)
-    } catch (SVNException e) {
-      throw new InvalidUserDataException("svn-info failed for $workspace.absolutePath\n" + e.message, e)
-    }
-    def copySource = new SVNCopySource(info.revision, info.revision, info.URL)
-    def basePath = SvnPath.parse(info.URL).moduleBasePath
+    def copySource = svnUrl ? fromRemote() : fromWorkspace(clientManager)
+    def sourceUrl = copySource.getURL()
+    def basePath = SvnPath.parse(sourceUrl).moduleBasePath
     def fullDestPath = "$basePath/$destinationPath"
     try {
       if (replaceExisting) {
-        def repo = remoteRepository(info.URL.setPath(basePath, false))
+        def repo = remoteRepository(sourceUrl.setPath(basePath, false))
         if (existsInRepo(repo, destinationPath)) {
           deleteFromRepo(repo, destinationPath)
         }
       }
-      def destUrl = info.URL.setPath(fullDestPath, false)
-      logger.info "Copying $info.URL at revision $info.revision to $destUrl"
+      def destUrl = sourceUrl.setPath(fullDestPath, false)
+      logger.info "Copying $sourceUrl at revision $copySource.revision to $destUrl"
       def copied = clientManager.copyClient.doCopy([copySource] as SVNCopySource[], destUrl, false, false, true, commitMessage, null);
       if (copied.errorMessage) {
         if (copied.errorMessage.warning) {
@@ -57,6 +54,28 @@ abstract class SvnCopy extends SvnBaseTask {
       }
     } catch (SVNException e) {
       throw new InvalidUserDataException("svn-copy failed for $fullDestPath\n$e.message", e)
+    }
+  }
+
+  private SVNCopySource fromWorkspace(SVNClientManager clientManager) {
+    def workspace = workspaceDir ? project.file(workspaceDir, PathValidation.DIRECTORY) : project.projectDir
+    def info
+    try {
+      info = clientManager.WCClient.doInfo(workspace, SVNRevision.WORKING)
+    } catch (SVNException e) {
+      throw new InvalidUserDataException("svn-info failed for $workspace.absolutePath\n" + e.message, e)
+    }
+    return new SVNCopySource(info.revision, info.revision, info.URL)
+  }
+
+  private SVNCopySource fromRemote() {
+    if (workspaceDir) {
+      throw new InvalidUserDataException("Either 'svnUrl' or 'workspaceDir' may be set")
+    }
+    try {
+      return new SVNCopySource(SVNRevision.HEAD, SVNRevision.HEAD, SVNURL.parseURIEncoded(svnUrl))
+    } catch (SVNException e) {
+      throw new InvalidUserDataException("Invalid svnUrl value: $svnUrl", e)
     }
   }
 

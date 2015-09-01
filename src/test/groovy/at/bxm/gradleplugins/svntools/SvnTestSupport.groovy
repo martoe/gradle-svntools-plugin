@@ -74,7 +74,7 @@ abstract class SvnTestSupport extends Specification {
     return checkoutLocalRepo("tags/test-tag")
   }
 
-  private File checkoutLocalRepo(String path) {
+  File checkoutLocalRepo(String path) {
     def workspaceDir = new File(tempDir, "workspace")
     clientManager.updateClient.doCheckout(localRepoUrl.appendPath(path, false), workspaceDir, SVNRevision.UNDEFINED, SVNRevision.HEAD, SVNDepth.INFINITY, false)
     return workspaceDir
