@@ -1,5 +1,6 @@
-package at.bxm.gradleplugins.svntools
+package at.bxm.gradleplugins.svntools.tasks
 
+import at.bxm.gradleplugins.svntools.SvnTestSupport
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskExecutionException
 
@@ -13,7 +14,7 @@ class SvnCommitTest extends SvnTestSupport {
     createLocalRepo()
     workspace = checkoutTrunk()
     project = projectWithPlugin()
-    task = project.task(type: SvnCommit, "commit")
+    task = project.task(type: SvnCommit, "commit") as SvnCommit
   }
 
   def "commit a new file"() {

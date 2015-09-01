@@ -1,5 +1,6 @@
-package at.bxm.gradleplugins.svntools
+package at.bxm.gradleplugins.svntools.tasks
 
+import at.bxm.gradleplugins.svntools.SvnTestSupport
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskExecutionException
 
@@ -12,7 +13,7 @@ class SvnBranchTest extends SvnTestSupport {
   def setup() {
     createLocalRepo()
     project = projectWithPlugin()
-    task = project.task(type: SvnBranch, "task")
+    task = project.task(type: SvnBranch, "task") as SvnBranch
   }
 
   def "branch from trunk"() {

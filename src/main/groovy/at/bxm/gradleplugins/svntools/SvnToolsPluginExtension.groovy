@@ -1,5 +1,7 @@
 package at.bxm.gradleplugins.svntools
 
+import at.bxm.gradleplugins.svntools.api.SvnData
+import at.bxm.gradleplugins.svntools.internal.SvnSupport
 import org.gradle.api.Project
 
 /** Holds configuration values shared by all SVN tasks and provides SVN information about the current workspace */

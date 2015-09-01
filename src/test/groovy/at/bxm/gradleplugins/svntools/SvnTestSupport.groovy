@@ -2,9 +2,12 @@ package at.bxm.gradleplugins.svntools
 
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
-import org.tmatesoft.svn.core.*
-import org.tmatesoft.svn.core.io.*
-import org.tmatesoft.svn.core.wc.*
+import org.tmatesoft.svn.core.SVNDepth
+import org.tmatesoft.svn.core.SVNURL
+import org.tmatesoft.svn.core.io.ISVNEditor
+import org.tmatesoft.svn.core.io.SVNRepositoryFactory
+import org.tmatesoft.svn.core.wc.SVNClientManager
+import org.tmatesoft.svn.core.wc.SVNRevision
 import spock.lang.Specification
 
 abstract class SvnTestSupport extends Specification {
@@ -13,7 +16,7 @@ abstract class SvnTestSupport extends Specification {
   private SVNClientManager clientManager
   SVNURL localRepoUrl
 
-  Project projectWithPlugin(File projectDir) {
+  Project projectWithPlugin(File projectDir = null) {
     def projectBuilder = ProjectBuilder.builder()
     if (projectDir) {
       projectBuilder.withProjectDir(projectDir)

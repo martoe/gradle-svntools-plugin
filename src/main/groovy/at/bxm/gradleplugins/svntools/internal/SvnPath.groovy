@@ -1,4 +1,4 @@
-package at.bxm.gradleplugins.svntools
+package at.bxm.gradleplugins.svntools.internal
 
 import groovy.transform.ToString
 import org.tmatesoft.svn.core.SVNURL

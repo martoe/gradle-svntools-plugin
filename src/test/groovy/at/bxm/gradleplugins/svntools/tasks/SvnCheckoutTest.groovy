@@ -1,5 +1,6 @@
-package at.bxm.gradleplugins.svntools
+package at.bxm.gradleplugins.svntools.tasks
 
+import at.bxm.gradleplugins.svntools.SvnTestSupport
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskExecutionException
 
@@ -12,7 +13,7 @@ class SvnCheckoutTest extends SvnTestSupport {
   def setup() {
     createLocalRepo()
     project = projectWithPlugin()
-    task = project.task(type: SvnCheckout, "checkout")
+    task = project.task(type: SvnCheckout, "checkout") as SvnCheckout
   }
 
   def "happy path"() {

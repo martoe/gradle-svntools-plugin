@@ -1,10 +1,16 @@
-package at.bxm.gradleplugins.svntools
+package at.bxm.gradleplugins.svntools.internal
 
-import org.gradle.api.*
+import org.gradle.api.InvalidUserDataException
+import org.gradle.api.PathValidation
 import org.gradle.api.tasks.TaskAction
-import org.tmatesoft.svn.core.*
-import org.tmatesoft.svn.core.io.*
-import org.tmatesoft.svn.core.wc.*
+import org.tmatesoft.svn.core.SVNException
+import org.tmatesoft.svn.core.SVNNodeKind
+import org.tmatesoft.svn.core.SVNURL
+import org.tmatesoft.svn.core.io.SVNRepository
+import org.tmatesoft.svn.core.io.SVNRepositoryFactory
+import org.tmatesoft.svn.core.wc.SVNCopySource
+import org.tmatesoft.svn.core.wc.SVNRevision
+import org.tmatesoft.svn.core.wc.SVNWCUtil
 
 abstract class SvnCopy extends SvnBaseTask {
 

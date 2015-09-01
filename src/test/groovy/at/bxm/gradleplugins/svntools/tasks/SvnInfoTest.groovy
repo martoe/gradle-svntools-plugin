@@ -1,5 +1,7 @@
-package at.bxm.gradleplugins.svntools
+package at.bxm.gradleplugins.svntools.tasks
 
+import at.bxm.gradleplugins.svntools.SvnTestSupport
+import at.bxm.gradleplugins.svntools.api.SvnData
 import org.gradle.api.tasks.TaskExecutionException
 
 class SvnInfoTest extends SvnTestSupport {

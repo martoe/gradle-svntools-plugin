@@ -1,4 +1,4 @@
-package at.bxm.gradleplugins.svntools
+package at.bxm.gradleplugins.svntools.internal
 
 import org.tmatesoft.svn.core.SVNURL
 import spock.lang.Specification

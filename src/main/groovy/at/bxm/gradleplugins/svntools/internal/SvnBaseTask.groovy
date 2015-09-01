@@ -1,5 +1,6 @@
-package at.bxm.gradleplugins.svntools
+package at.bxm.gradleplugins.svntools.internal
 
+import at.bxm.gradleplugins.svntools.SvnToolsPluginExtension
 import org.gradle.api.DefaultTask
 import org.tmatesoft.svn.core.wc.SVNClientManager
 

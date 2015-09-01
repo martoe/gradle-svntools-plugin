@@ -52,7 +52,7 @@ The `svntools` block (implemented by `at.bxm.gradleplugins.svntools.SvnToolsPlug
 * specify default values for some configuration properties:
     * **username**: The SVN username - leave empty if no authentication is required
     * **password**: The SVN password - leave empty if no authentication is required
-* access information about the current SVN workspace (i.e. the project's root directory), wrapped by an `at.bxm.gradleplugins.svntools.SvnData` object:
+* access information about the current SVN workspace (i.e. the project's root directory), wrapped by an `at.bxm.gradleplugins.svntools.api.SvnData` object:
     * **info.revisionNumber** The SVN revision number
     * **info.url** The complete SVN URL of the checked-out project
     * **info.repositoryRootUrl** The root URL of the SVN repository
@@ -77,9 +77,9 @@ Note: The `svntools.info` object assumes that the current Gradle project has bee
     }
 
 
-## SvnInfo task (at.bxm.gradleplugins.svntools.SvnInfo)
+## SvnInfo task (at.bxm.gradleplugins.svntools.tasks.SvnInfo)
 
-Creates a `at.bxm.gradleplugins.svntools.SvnData` object (see above) that contains information about a file or directory
+Creates a `at.bxm.gradleplugins.svntools.api.SvnData` object (see above) that contains information about a file or directory
 within an SVN workspace.
 The object is added as an "extra property" to the Gradle project and may be accessed with `$project.svnData`.
 
@@ -98,7 +98,7 @@ This Gradle script creates a `svn.properties` file that contains the SVN URL and
     apply plugin: "java"
     apply plugin: "at.bxm.svntools"
 
-    task svnStatus(type: at.bxm.gradleplugins.svntools.SvnInfo) {
+    task svnStatus(type: at.bxm.gradleplugins.svntools.tasks.SvnInfo) {
       sourcePath = project.buildFile
       doLast {
         def props = new Properties()
@@ -113,7 +113,7 @@ This Gradle script creates a `svn.properties` file that contains the SVN URL and
       from(project.buildDir, { include "svn.properties" })
     }
 
-## SvnCheckout task (at.bxm.gradleplugins.svntools.SvnCheckout)
+## SvnCheckout task (at.bxm.gradleplugins.svntools.tasks.SvnCheckout)
 
 Creates an SVN workspace by checking out an SVN URL to a local directory.
 
@@ -131,12 +131,12 @@ This Gradle script performs a checkout from a local SVN repository into `build/w
 
     apply plugin: "at.bxm.svntools"
 
-    task checkout(type: at.bxm.gradleplugins.svntools.SvnCheckout) {
+    task checkout(type: at.bxm.gradleplugins.svntools.tasks.SvnCheckout) {
       svnUrl = "file:///home/user/svn/repo/myproject/trunk"
       workspaceDir = "$project.buildDir/workspace"
     }
 
-## SvnCommit task (at.bxm.gradleplugins.svntools.SvnCommit)
+## SvnCommit task (at.bxm.gradleplugins.svntools.tasks.SvnCommit)
 
 Commits a list of files (and directories). All files and directories must be part of the same SVN workspace.
 
@@ -162,12 +162,12 @@ This Gradle script commits a changelog file to SVN:
       project.ext.changelog.text = "list of changes for this release..."
     }
 
-    task commitChangelog(type: at.bxm.gradleplugins.svntools.SvnCommit, dependsOn: createChangelog) {
+    task commitChangelog(type: at.bxm.gradleplugins.svntools.tasks.SvnCommit, dependsOn: createChangelog) {
       source << project.ext.changelog
       commitMessage = "Changelog added"
     }
 
-## SvnBranch task (at.bxm.gradleplugins.svntools.SvnBranch)
+## SvnBranch task (at.bxm.gradleplugins.svntools.tasks.SvnBranch)
 
 Creates an SVN branch based on a local SVN workspace.
 
@@ -180,7 +180,7 @@ Creates an SVN branch based on a local SVN workspace.
 * **username**: The SVN username - leave empty if no authentication is required (default: `$project.svntools.username`)
 * **password**: The SVN password - leave empty if no authentication is required (default: `$project.svntools.password`)
 
-## SvnTag task (at.bxm.gradleplugins.svntools.SvnTag)
+## SvnTag task (at.bxm.gradleplugins.svntools.tasks.SvnTag)
 
 Creates an SVN tag based on a local SVN workspace.
 
@@ -201,7 +201,7 @@ The `release` task creates an SVN tag using the current version number:
 
     version = "1.0-SNAPSHOT"
 
-    task svnTag(type: at.bxm.gradleplugins.svntools.SvnTag) {
+    task svnTag(type: at.bxm.gradleplugins.svntools.tasks.SvnTag) {
       tagName = "v$project.version"
       commitMessage = "Release version $project.version"
     }

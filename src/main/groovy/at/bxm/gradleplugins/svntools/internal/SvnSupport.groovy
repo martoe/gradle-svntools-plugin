@@ -1,9 +1,11 @@
-package at.bxm.gradleplugins.svntools
+package at.bxm.gradleplugins.svntools.internal
 
+import at.bxm.gradleplugins.svntools.api.SvnData
 import groovy.util.logging.Log
 import org.gradle.api.InvalidUserDataException
 import org.tmatesoft.svn.core.internal.wc.DefaultSVNOptions
-import org.tmatesoft.svn.core.wc.*
+import org.tmatesoft.svn.core.wc.SVNClientManager
+import org.tmatesoft.svn.core.wc.SVNRevision
 
 @Log
 class SvnSupport {
