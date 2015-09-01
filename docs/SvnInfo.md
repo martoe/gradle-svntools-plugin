@@ -3,7 +3,7 @@
 Creates a `at.bxm.gradleplugins.svntools.api.SvnData` object (see [General Configuration](GeneralConfig.md)) that contains information about a file or directory
 within an SVN workspace.
 The object is added as an "extra property" to the Gradle project and may be accessed with `$project.svnData`.
-This task requires the standard SVN directory layout (`[module]/trunk`, `[module]/branches/[branch]`, `[module]/tags/[tag]`).
+This task requires the [standard SVN directory layout](http://svnbook.red-bean.com/en/1.7/svn.branchmerge.maint.html#svn.branchmerge.maint.layout) (`[module]/trunk`, `[module]/branches/[branch]`, `[module]/tags/[tag]`).
 
 ### Configuration
 
