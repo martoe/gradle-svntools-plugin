@@ -1,16 +1,19 @@
 ## SvnInfo task (at.bxm.gradleplugins.svntools.tasks.SvnInfo)
 
-Creates a `at.bxm.gradleplugins.svntools.api.SvnData` object (see above) that contains information about a file or directory
+Creates a `at.bxm.gradleplugins.svntools.api.SvnData` object (see [General Configuration](GeneralConfig.md)) that contains information about a file or directory
 within an SVN workspace.
 The object is added as an "extra property" to the Gradle project and may be accessed with `$project.svnData`.
+This task requires the standard SVN directory layout (`[module]/trunk`, `[module]/branches/[branch]`, `[module]/tags/[tag]`).
 
 ### Configuration
 
-* **sourcePath**: Source path for reading the SVN metadata (default: `$project.projectDir`)
-* **targetPropertyName**: The name of the project extra property that will receive the resulting SvnData object (default: `svnData`)
-* **ignoreErrors**: Continue the build if the specified path doesn't contain SVN data (default: `false`)
-* **username**: The SVN username - leave empty if no authentication is required (default: `$project.svntools.username`)
-* **password**: The SVN password - leave empty if no authentication is required (default: `$project.svntools.password`)
+Property               | Description | Default value
+---------------------- | ----------- | -------------
+**sourcePath**         | Source path for reading the SVN metadata | `$project.projectDir`
+**targetPropertyName** | The name of the project extra property that will receive the resulting SvnData object | `svnData`
+**ignoreErrors**       | Continue the build if the specified path doesn't contain SVN data | `false`
+**username**           | The SVN username - leave empty if no authentication is required | `$project.svntools.username`
+**password**           | The SVN password - leave empty if no authentication is required | `$project.svntools.password`
 
 ### Example
 

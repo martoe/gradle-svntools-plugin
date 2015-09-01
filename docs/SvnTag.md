@@ -1,6 +1,7 @@
 ## SvnTag task (at.bxm.gradleplugins.svntools.tasks.SvnTag)
 
 Creates an SVN tag based on a local SVN workspace.
+This task requires the standard SVN directory layout (`[module]/trunk`, `[module]/branches/[branch]`, `[module]/tags/[tag]`).
 
 ### Configuration
 

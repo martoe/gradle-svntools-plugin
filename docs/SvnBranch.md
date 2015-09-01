@@ -1,6 +1,7 @@
 ## SvnBranch task (at.bxm.gradleplugins.svntools.tasks.SvnBranch)
 
 Creates an SVN branch based on a local SVN workspace.
+This task requires the standard SVN directory layout (`[module]/trunk`, `[module]/branches/[branch]`, `[module]/tags/[tag]`).
 
 ### Configuration
 

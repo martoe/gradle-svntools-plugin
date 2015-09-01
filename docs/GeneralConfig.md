@@ -14,7 +14,7 @@ The `svntools` block (implemented by `at.bxm.gradleplugins.svntools.SvnToolsPlug
     * **info.branch** "true" if the SVN URL refers to a branch
     * **info.tag** "true" if the SVN URL refers to a tag
 
-Note: The `svntools.info` object assumes that the current Gradle project has been checked out from SVN. To retrieve information about other SVN files or workspaces, use the "SvnInfo" task below.
+Note: The `svntools.info` object assumes that the current Gradle project has been checked out from SVN. To retrieve information about other SVN files or workspaces, use the [SvnInfo task}(SvnInfo.md).
 
 ### Example
 
