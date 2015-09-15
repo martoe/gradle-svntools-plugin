@@ -14,3 +14,5 @@ replaceExisting | If the branch already exists, delete it first | `false`)
 commitMessage   | A commit message (optional) |
 username        | The SVN username - leave empty if no authentication is required | `$project.svntools.username`
 password        | The SVN password - leave empty if no authentication is required | `$project.svntools.password`
+
+If the `branchName` contains subdirectories (e.g. `branchName="subdir/v1.x"`), this subdirectory must already exist in the repository.

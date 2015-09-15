@@ -97,6 +97,6 @@ abstract class SvnCopy extends SvnBaseTask {
   }
 
   static boolean isValidName(String svnPath) {
-    svnPath =~ '^[a-zA-Z0-9_\\-.]+$'
+    svnPath =~ '^[a-zA-Z0-9_\\-./]+$'
   }
 }

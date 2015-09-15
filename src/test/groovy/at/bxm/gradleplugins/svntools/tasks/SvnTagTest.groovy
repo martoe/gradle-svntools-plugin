@@ -3,6 +3,7 @@ package at.bxm.gradleplugins.svntools.tasks
 import at.bxm.gradleplugins.svntools.SvnTestSupport
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskExecutionException
+import org.tmatesoft.svn.core.io.SVNRepositoryFactory
 
 class SvnTagTest extends SvnTestSupport {
 
@@ -85,6 +86,40 @@ class SvnTagTest extends SvnTestSupport {
     e.cause.message == "tagName contains invalid chars: $param"
 
     where:
-    param << ["blank ", "slash/", "backslash\\"]
+    param << ["blank ", "backslash\\"]
+  }
+
+  def "tag into subdirectory"() {
+    given: "a repo with a 'tags' subdirectory"
+    def repo = SVNRepositoryFactory.create(localRepoUrl)
+    def editor = repo.getCommitEditor("creating a new file", null)
+    editor.openRoot(-1)
+    editor.addDir("tags/tag-subdir", null, -1)
+    editor.closeDir()
+    editor.closeEdit()
+    workspace = checkoutTrunk()
+
+    when: "running the SvnTag task on that subdirectory"
+    task.workspaceDir = workspace
+    task.tagName = "tag-subdir/new-tag"
+    task.execute()
+
+    then: "tag exists"
+    switchLocalRepo("tags/tag-subdir/new-tag")
+    getRevision(workspace) == 3
+  }
+
+  def "tag into non-existing subdirectory"() {
+    given: "a trunk workspace"
+    workspace = checkoutTrunk()
+
+    when: "running the SvnTag task no a non-existing subdirectory"
+    task.workspaceDir = workspace
+    task.tagName = "tag-subdir/new-tag"
+    task.execute()
+
+    then: "exception"
+    def e = thrown TaskExecutionException
+    e.cause.message =~ ".*Attempted to open non-existent child node 'tag-subdir'"
   }
 }

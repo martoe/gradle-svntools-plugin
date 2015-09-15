@@ -15,6 +15,8 @@ commitMessage   | A commit message (optional) |
 username        | The SVN username - leave empty if no authentication is required | `$project.svntools.username`
 password        | The SVN password - leave empty if no authentication is required | `$project.svntools.password`
 
+If the `tagName` contains subdirectories (e.g. `tagName="subdir/v1.0"`), this subdirectory must already exist in the repository.
+
 ### Example
 
 The `release` task creates an SVN tag using the current version number:
