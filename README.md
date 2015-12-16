@@ -25,6 +25,7 @@ Please report bugs and feature requests at the [Github issue page](https://githu
 * [General Configuration](docs/GeneralConfig.md)
 * [The 'SvnInfo' task](docs/SvnInfo.md)
 * [The 'SvnCheckout' task](docs/SvnCheckout.md)
+* [The 'SvnUpdate' task](docs/SvnUpdate.md)
 * [The 'SvnCommit' task](docs/SvnCommit.md)
 * [The 'SvnBranch' task](docs/SvnBranch.md)
 * [The 'SvnTag' task](docs/SvnTag.md)

@@ -55,4 +55,8 @@ class SvnSupport {
     }
     return result
   }
+
+  static SVNRevision revisionFrom(Long value) {
+    return value != null && value >= 0 ? SVNRevision.create(value) : SVNRevision.HEAD
+  }
 }

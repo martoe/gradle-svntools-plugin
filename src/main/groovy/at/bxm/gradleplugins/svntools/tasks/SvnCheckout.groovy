@@ -9,6 +9,8 @@ import org.tmatesoft.svn.core.SVNException
 import org.tmatesoft.svn.core.SVNURL
 import org.tmatesoft.svn.core.wc.SVNRevision
 
+import static at.bxm.gradleplugins.svntools.internal.SvnSupport.revisionFrom
+
 class SvnCheckout extends SvnBaseTask {
 
   /** The remote SVN URL to be checked out */
@@ -22,7 +24,7 @@ class SvnCheckout extends SvnBaseTask {
 
   @TaskAction
   def run() {
-    def rev = revision ? SVNRevision.create(revision) : SVNRevision.HEAD
+    def rev = revisionFrom(revision)
     def repoUrl
     try {
       repoUrl = SVNURL.parseURIEncoded(svnUrl)
