@@ -83,4 +83,47 @@ class SvnCheckoutTest extends SvnTestSupport {
     then: "local workspace exists"
     getRevision(workspaceDir) == 1
   }
+
+  def "checkout into a existing workspace"() {
+    given: "an SVN workspace"
+    def workspaceDir = checkoutTrunk()
+
+    when: "running the SvnCheckout task"
+    task.svnUrl = "$localRepoUrl/trunk"
+    task.workspaceDir = workspaceDir
+    task.update = true
+    task.execute()
+
+    then: "local workspace exists"
+    getRevision(workspaceDir) == 1
+  }
+
+  def "checkout into a existing workspace without update-flag"() {
+    given: "an SVN workspace"
+    def workspaceDir = checkoutTrunk()
+
+    when: "running the SvnCheckout task"
+    task.svnUrl = "$localRepoUrl/trunk"
+    task.workspaceDir = workspaceDir
+    task.execute()
+
+    then:
+    def e = thrown TaskExecutionException
+    e.cause.message =~ ".* must be an empty directory"
+  }
+
+  def "checkout into a wrong workspace"() {
+    given: "an SVN workspace"
+    def workspaceDir = checkoutBranch()
+
+    when: "running the SvnCheckout task for a different location"
+    task.svnUrl = "$localRepoUrl/trunk"
+    task.workspaceDir = workspaceDir
+    task.update = true
+    task.execute()
+
+    then:
+    def e = thrown TaskExecutionException
+    e.cause.message =~ "SVN location of .* is invalid: .*"
+  }
 }

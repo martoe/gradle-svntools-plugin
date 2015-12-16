@@ -1,6 +1,7 @@
 package at.bxm.gradleplugins.svntools.tasks
 
 import at.bxm.gradleplugins.svntools.internal.SvnBaseTask
+import at.bxm.gradleplugins.svntools.internal.SvnSupport
 import org.gradle.api.InvalidUserDataException
 import org.gradle.api.tasks.TaskAction
 import org.tmatesoft.svn.core.SVNDepth
@@ -16,6 +17,8 @@ class SvnCheckout extends SvnBaseTask {
   def workspaceDir
   /** The revision number to be checked out (optional, defaults to HEAD)  */
   Long revision
+  /** If {@code true}, an "svn update" is performed if the {@link #workspaceDir} already contains checked-out data. */
+  boolean update
 
   @TaskAction
   def run() {
@@ -30,13 +33,33 @@ class SvnCheckout extends SvnBaseTask {
       throw new InvalidUserDataException("workspaceDir must be specified")
     }
     def dir = workspaceDir instanceof File ? workspaceDir : workspaceDir.toString() as File
-    if (dir.exists() && !(dir.isDirectory() && !dir.list())) {
-      throw new InvalidUserDataException("workspaceDir $dir.absolutePath must be an empty directory")
+    def performUpdate = false
+    if (dir.exists()) {
+      if (!dir.isDirectory()) {
+        throw new InvalidUserDataException("workspaceDir $dir.absolutePath must be a directory")
+      }
+      if (dir.list()) {
+        if (!update) {
+          throw new InvalidUserDataException("workspaceDir $dir.absolutePath must be an empty directory")
+        }
+        def result = SvnSupport.createSvnData(dir, getUsername(), getPassword(), proxy, true)
+        if (!result.url) {
+          throw new InvalidUserDataException("workspaceDir $dir.absolutePath must be either an empty directory or an SVN workspace")
+        }
+        if (result.url != repoUrl.toString()) {
+          throw new InvalidUserDataException("SVN location of $dir.absolutePath is invalid: $result.url")
+        }
+        performUpdate = true
+      }
     }
     try {
-      createSvnClientManager().updateClient.doCheckout(repoUrl, dir, SVNRevision.UNDEFINED, rev, SVNDepth.INFINITY, false)
+      if (performUpdate) {
+        createSvnClientManager().updateClient.doUpdate(dir, rev, SVNDepth.INFINITY, false, false)
+      } else {
+        createSvnClientManager().updateClient.doCheckout(repoUrl, dir, SVNRevision.UNDEFINED, rev, SVNDepth.INFINITY, false)
+      }
     } catch (SVNException e) {
-      throw new InvalidUserDataException("svn-checkout failed for $svnUrl\n" + e.message, e)
+      throw new InvalidUserDataException((performUpdate ? "svn-update" : "svn-checkout") + " failed for $svnUrl\n" + e.message, e)
     }
   }
 }

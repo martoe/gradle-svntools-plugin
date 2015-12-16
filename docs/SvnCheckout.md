@@ -1,6 +1,6 @@
 ## SvnCheckout task (at.bxm.gradleplugins.svntools.tasks.SvnCheckout)
 
-Creates an SVN workspace by checking out an SVN URL to a local directory.
+Creates an SVN workspace by checking out an SVN URL to a local directory. Also supports updating an existing workspace.
 
 ### Configuration
 
@@ -11,6 +11,7 @@ workspaceDir | The target directory for checkout (required). If it doesn't exist
 revision     | The revision number to be checked out | `HEAD`
 username     | The SVN username - leave empty if no authentication is required | `$project.svntools.username`
 password     | The SVN password - leave empty if no authentication is required | `$project.svntools.password`
+update       | If "workspaceDir" already contains checked-out data, update it instead of performing a fresh checkout | `false`
 
 ### Example
 
