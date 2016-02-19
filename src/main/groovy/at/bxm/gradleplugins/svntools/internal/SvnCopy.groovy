@@ -67,10 +67,8 @@ abstract class SvnCopy extends SvnBaseTask {
     try {
       SVNInfo info = clientManager.WCClient.doInfo(workspace, SVNRevision.WORKING)
       if(localChanges) {
-        logger.error("FILE BASED")
         return [ copySource: new SVNCopySource(SVNRevision.WORKING, SVNRevision.WORKING, workspace), url: info.URL ]
       } else {
-        logger.error("REVISION BASED")
         return [copySource: new SVNCopySource(info.revision, info.revision, info.URL), url: info.URL]
       }
     } catch (SVNException e) {
@@ -92,7 +90,6 @@ abstract class SvnCopy extends SvnBaseTask {
 
   private SVNRepository remoteRepository(SVNURL repositoryUrl) {
     def repo = SVNRepositoryFactory.create(repositoryUrl)
-    logger.error("REMOTE BASED")
     repo.authenticationManager = SVNWCUtil.createDefaultAuthenticationManager(username, password)
     return repo
   }
