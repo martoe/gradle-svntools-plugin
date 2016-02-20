@@ -2,10 +2,6 @@ package at.bxm.gradleplugins.svntools.tasks
 
 import org.gradle.api.Project
 
-/*
- * Copyright (c) 2016 1&1 Mail & Media GmbH, Muenchen. All rights reserved.
- */
-
 /**
  * Do all the tests for SvnTag plus some extra ...
  */
