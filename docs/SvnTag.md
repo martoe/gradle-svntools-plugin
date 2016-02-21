@@ -11,6 +11,7 @@ svnUrl          | The repository URL that should be tagged. This must point to e
 workspaceDir    | The local workspace that should be tagged.<br>Will only be used if the `svnUrl` property  is missing. | `$project.projectDir`
 tagName         | The name of the SVN tag (required) |
 replaceExisting | If the tag already exists, delete it first | `false`
+localChanges    | If the workspace contains changes, commit those changes to the new tag | `false`
 commitMessage   | A commit message (optional) |
 username        | The SVN username - leave empty if no authentication is required | `$project.svntools.username`
 password        | The SVN password - leave empty if no authentication is required | `$project.svntools.password`

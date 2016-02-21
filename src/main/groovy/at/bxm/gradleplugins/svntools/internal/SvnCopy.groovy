@@ -10,6 +10,7 @@ import org.tmatesoft.svn.core.io.SVNRepository
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory
 import org.tmatesoft.svn.core.wc.SVNClientManager
 import org.tmatesoft.svn.core.wc.SVNCopySource
+import org.tmatesoft.svn.core.wc.SVNInfo
 import org.tmatesoft.svn.core.wc.SVNRevision
 import org.tmatesoft.svn.core.wc.SVNWCUtil
 
@@ -24,13 +25,17 @@ abstract class SvnCopy extends SvnBaseTask {
   /** If {@code true}, the target will be removed first if it already exists */
   boolean replaceExisting
 
+  /** If Local changes should be commited to the copy target. Only used it not svnUrl is provided. */
+  boolean localChanges
+
   abstract String getDestinationPath()
 
   @TaskAction
   def run() {
     def clientManager = createSvnClientManager()
-    def copySource = svnUrl ? fromRemote() : fromWorkspace(clientManager)
-    def sourceUrl = copySource.getURL()
+    def sourceInfo = svnUrl ? fromRemote() : fromWorkspace(clientManager)
+    def copySource = sourceInfo.copySource
+    def sourceUrl = sourceInfo.url
     def basePath = SvnPath.parse(sourceUrl).moduleBasePath
     def fullDestPath = "$basePath/$destinationPath"
     try {
@@ -57,23 +62,27 @@ abstract class SvnCopy extends SvnBaseTask {
     }
   }
 
-  private SVNCopySource fromWorkspace(SVNClientManager clientManager) {
+  private def fromWorkspace(SVNClientManager clientManager) {
     def workspace = workspaceDir ? project.file(workspaceDir, PathValidation.DIRECTORY) : project.projectDir
-    def info
     try {
-      info = clientManager.WCClient.doInfo(workspace, SVNRevision.WORKING)
+      SVNInfo info = clientManager.WCClient.doInfo(workspace, SVNRevision.WORKING)
+      if(localChanges) {
+        return [ copySource: new SVNCopySource(SVNRevision.WORKING, SVNRevision.WORKING, workspace), url: info.URL ]
+      } else {
+        return [copySource: new SVNCopySource(info.revision, info.revision, info.URL), url: info.URL]
+      }
     } catch (SVNException e) {
       throw new InvalidUserDataException("svn-info failed for $workspace.absolutePath\n" + e.message, e)
     }
-    return new SVNCopySource(info.revision, info.revision, info.URL)
   }
 
-  private SVNCopySource fromRemote() {
+  private def fromRemote() {
     if (workspaceDir) {
       throw new InvalidUserDataException("Either 'svnUrl' or 'workspaceDir' may be set")
     }
     try {
-      return new SVNCopySource(SVNRevision.HEAD, SVNRevision.HEAD, SVNURL.parseURIEncoded(svnUrl))
+      SVNURL url = SVNURL.parseURIEncoded(svnUrl)
+      return [ copySource: new SVNCopySource(SVNRevision.HEAD, SVNRevision.HEAD, url), url: url ]
     } catch (SVNException e) {
       throw new InvalidUserDataException("Invalid svnUrl value: $svnUrl", e)
     }

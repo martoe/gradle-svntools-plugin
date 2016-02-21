@@ -6,6 +6,7 @@
 /*.iml
 /*.ipr
 /*.iws
+/*.idea
 
 # Eclipse IDE files
 /bin/
