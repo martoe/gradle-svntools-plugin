@@ -1,5 +1,6 @@
 package at.bxm.gradleplugins.svntools
 
+import groovy.util.logging.Log
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import org.tmatesoft.svn.core.SVNDepth
@@ -10,6 +11,7 @@ import org.tmatesoft.svn.core.wc.SVNClientManager
 import org.tmatesoft.svn.core.wc.SVNRevision
 import spock.lang.Specification
 
+@Log
 abstract class SvnTestSupport extends Specification {
 
   File tempDir
@@ -99,6 +101,8 @@ abstract class SvnTestSupport extends Specification {
   }
 
   def cleanup() {
-    assert tempDir.deleteDir(), "Could not delete directory $tempDir.absolutePath"
+    if (!tempDir.deleteDir()) {
+      log.warning("Could not delete directory $tempDir.absolutePath")
+    }
   }
 }

@@ -1,4 +1,4 @@
-## SvnCommit task (at.bxm.gradleplugins.svntools.tasks.SvnCommit)
+## [SvnCommit](../src/main/groovy/at/bxm/gradleplugins/svntools/tasks/SvnCommit.groovy) task
 
 Commits a list of files (and directories). All files and directories must be part of the same SVN workspace.
 

@@ -1,4 +1,4 @@
-## SvnUpdate task (at.bxm.gradleplugins.svntools.tasks.SvnUpdate)
+## [SvnUpdate](../src/main/groovy/at/bxm/gradleplugins/svntools/tasks/SvnUpdate.groovy) task
 
 Updates an SVN workspace.
 

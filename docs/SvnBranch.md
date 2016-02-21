@@ -1,4 +1,4 @@
-## SvnBranch task (at.bxm.gradleplugins.svntools.tasks.SvnBranch)
+## [SvnBranch](../src/main/groovy/at/bxm/gradleplugins/svntools/tasks/SvnBranch.groovy) task
 
 Creates an SVN branch based on a local SVN workspace or a remote repository.
 This task requires the [standard SVN directory layout](http://svnbook.red-bean.com/en/1.7/svn.branchmerge.maint.html#svn.branchmerge.maint.layout) (`[module]/trunk`, `[module]/branches/[branch]`, `[module]/tags/[tag]`).
