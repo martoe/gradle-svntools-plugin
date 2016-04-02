@@ -15,7 +15,7 @@ Please report bugs and feature requests at the [Github issue page](https://githu
 
 ## Use-case examples
 
-* Add the SVN revision to the version number when publishing artifacts
+* Add the SVN revision to the MANIFEST file when publishing artifacts
 * Create a tag as part of an automated release process
 * Commit files that have been changed during the build process (e.g. bumped version numbers)
 
@@ -23,11 +23,11 @@ Please report bugs and feature requests at the [Github issue page](https://githu
 
 * [Applying the plugin](docs/ApplyPlugin.md)
 * [General Configuration](docs/GeneralConfig.md)
-* [The 'SvnInfo' task](docs/SvnInfo.md)
-* [The 'SvnCheckout' task](docs/SvnCheckout.md)
-* [The 'SvnUpdate' task](docs/SvnUpdate.md)
-* [The 'SvnCommit' task](docs/SvnCommit.md)
-* [The 'SvnBranch' task](docs/SvnBranch.md)
-* [The 'SvnTag' task](docs/SvnTag.md)
+* [SvnInfo](docs/SvnInfo.md): information about a workspace file
+* [SvnCheckout](docs/SvnCheckout.md): creates a local workspace of an SVN repository
+* [SvnUpdate](docs/SvnUpdate.md): updates an SVN workspace
+* [SvnCommit](docs/SvnCommit.md): commits workspace modifications
+* [SvnBranch](docs/SvnBranch.md): creates an SVN branch
+* [SvnTag](docs/SvnTag.md): creates an SVN tag
 
 [![Build Status](https://travis-ci.org/martoe/gradle-svntools-plugin.png)](https://travis-ci.org/martoe/gradle-svntools-plugin)
