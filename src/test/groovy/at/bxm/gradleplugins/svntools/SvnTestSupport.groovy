@@ -87,7 +87,11 @@ abstract class SvnTestSupport extends Specification {
   }
 
   void updateLocalRepo() {
-    clientManager.updateClient.doUpdate(new File(tempDir, "workspace"), SVNRevision.HEAD, SVNDepth.INFINITY, false, false)
+    update("/")
+  }
+
+  void update(String path) {
+    clientManager.updateClient.doUpdate(new File(tempDir, "workspace/$path"), SVNRevision.HEAD, SVNDepth.INFINITY, false, false)
   }
 
   long getRevision(file) {
