@@ -24,6 +24,7 @@ class SvnVersionTest extends SvnTestSupport {
     version.mixedRevision == false
     version.minRevisionNumber == 1
     version.maxRevisionNumber == 1
+    version.modified == false
   }
 
   def "mixed revision"() {
@@ -47,5 +48,29 @@ class SvnVersionTest extends SvnTestSupport {
     version.mixedRevision == true
     version.minRevisionNumber == 1
     version.maxRevisionNumber == 3
+    version.modified == false
+  }
+
+  def "workspace modification"() {
+    given: "an SVN workspace at a single revision"
+    createLocalRepo()
+    def workspace = checkoutLocalRepo("/")
+    new File(workspace, "trunk/test.txt").text = "modified content"
+
+    when: "running the SvnVersion task"
+    def project = projectWithPlugin()
+    def task = project.task(type: SvnVersion, "version") as SvnVersion
+    task.sourcePath = workspace
+    task.targetPropertyName = "myVersion"
+    task.execute()
+
+    then: "SVN version contains the single revision"
+    def version = project.ext.myVersion as SvnVersionData
+    version != null
+    version as String == "1M"
+    version.mixedRevision == false
+    version.minRevisionNumber == 1
+    version.maxRevisionNumber == 1
+    version.modified == true
   }
 }

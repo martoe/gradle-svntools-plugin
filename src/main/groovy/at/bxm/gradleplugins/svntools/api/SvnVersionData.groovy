@@ -5,7 +5,11 @@ class SvnVersionData {
 
   long minRevisionNumber = SvnData.UNKNOWN_REVISION
   long maxRevisionNumber = SvnData.UNKNOWN_REVISION
-  // TODO modifications (M), switched (S), sparse (P)?
+  /** "true" if the workspace contains at least one file with modified content */
+  boolean modified
+  /** "true" if parts of the workspace have been switched */
+  boolean switched
+  // TODO implement sparse population (P) - http://svnbook.red-bean.com/en/1.7/svn.advanced.sparsedirs.html
 
   boolean isMixedRevision() {
     return minRevisionNumber != maxRevisionNumber
@@ -13,6 +17,13 @@ class SvnVersionData {
 
   @Override
   String toString() {
-    return mixedRevision ? "$minRevisionNumber:$maxRevisionNumber" : "$minRevisionNumber"
+    def result = mixedRevision ? "$minRevisionNumber:$maxRevisionNumber" : "$minRevisionNumber"
+    if (modified) {
+      result += "M"
+    }
+    if (switched) {
+      result += "S"
+    }
+    return result
   }
 }
