@@ -15,7 +15,7 @@ import org.tmatesoft.svn.core.wc.SVNStatusType
 /** Provides information similar to the <a href="http://svnbook.red-bean.com/en/1.7/svn.ref.svnversion.re.html">"svnversion"</a> command */
 class SvnVersion extends SvnBaseTask {
 
-  /** Source path for reading the SVN metadata (default: {@code project.projectDir}) */
+  /** Local SVN working copy directory (default: {@code project.projectDir}) */
   def sourcePath
   /** The name of the project extra property that will receive the resulting {@link SvnVersionData} object (default: {@code svnVersion}) */
   String targetPropertyName
@@ -42,7 +42,7 @@ class SvnVersion extends SvnBaseTask {
         version.modified = true
       }
       // TODO also check "propertiesStatus"?
-      // TODO implement "switched"
+      version.switched |= status.switched
     }
   }
 }

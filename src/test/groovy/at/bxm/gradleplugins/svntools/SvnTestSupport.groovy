@@ -82,8 +82,8 @@ abstract class SvnTestSupport extends Specification {
     return workspaceDir
   }
 
-  void switchLocalRepo(String path) {
-    clientManager.updateClient.doSwitch(new File(tempDir, "workspace"), localRepoUrl.appendPath(path, false), SVNRevision.UNDEFINED, SVNRevision.HEAD, SVNDepth.INFINITY, false, false)
+  void switchLocalRepo(String remotePath, String localPath = null) {
+    clientManager.updateClient.doSwitch(new File(tempDir, "workspace/" + (localPath ?: "")), localRepoUrl.appendPath(remotePath, false), SVNRevision.UNDEFINED, SVNRevision.HEAD, SVNDepth.INFINITY, false, false)
   }
 
   void updateLocalRepo() {

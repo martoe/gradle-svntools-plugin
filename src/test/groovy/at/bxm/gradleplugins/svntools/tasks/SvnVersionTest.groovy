@@ -73,4 +73,27 @@ class SvnVersionTest extends SvnTestSupport {
     version.maxRevisionNumber == 1
     version.modified == true
   }
+
+  def "switched workspace"() {
+    given: "a switched SVN workspace"
+    createLocalRepo()
+    def workspace = checkoutLocalRepo("/")
+    switchLocalRepo("trunk", "branches")
+
+    when: "running the SvnVersion task"
+    def project = projectWithPlugin()
+    def task = project.task(type: SvnVersion, "version") as SvnVersion
+    task.sourcePath = workspace
+    task.execute()
+
+    then: "SVN version contains a switched workspace"
+    def version = project.ext.svnVersion as SvnVersionData
+    version != null
+    version as String == "1S"
+    version.mixedRevision == false
+    version.minRevisionNumber == 1
+    version.maxRevisionNumber == 1
+    version.modified == false
+    version.switched == true
+  }
 }
