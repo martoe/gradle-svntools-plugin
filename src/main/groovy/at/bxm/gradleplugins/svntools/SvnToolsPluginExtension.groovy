@@ -1,6 +1,7 @@
 package at.bxm.gradleplugins.svntools
 
 import at.bxm.gradleplugins.svntools.api.SvnData
+import at.bxm.gradleplugins.svntools.api.SvnVersionData
 import at.bxm.gradleplugins.svntools.internal.SvnProxy
 import at.bxm.gradleplugins.svntools.internal.SvnSupport
 import org.gradle.api.Project
@@ -13,6 +14,7 @@ class SvnToolsPluginExtension {
   String password
   final SvnProxy proxy = new SvnProxy()
   SvnData info
+  SvnVersionData version
 
   SvnToolsPluginExtension(Project project) {
     this.project = project
@@ -24,5 +26,13 @@ class SvnToolsPluginExtension {
       info = SvnSupport.createSvnData(project.projectDir, ext.username, ext.password, ext.proxy, true)
     }
     return info
+  }
+
+  SvnVersionData getVersion() {
+    if (!version) {
+      def ext = project.extensions.getByType(SvnToolsPluginExtension)
+      version = SvnSupport.createSvnVersionData(project.projectDir, ext.username, ext.password, ext.proxy, true)
+    }
+    return version
   }
 }
