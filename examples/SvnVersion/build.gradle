@@ -1,0 +1,24 @@
+buildscript {
+  repositories {
+    mavenLocal()
+    jcenter()
+  }
+  dependencies {
+    classpath("at.bxm.gradleplugins:gradle-svntools-plugin:latest.integration")
+  }
+}
+apply plugin: "at.bxm.svntools"
+
+task example1(description: "Using the implicit 'svntools.version' object") << {
+  println "'svnversion' output: $svntools.version"
+  println svntools.version.modified ? "working copy is dirty" : "working copy is clean"
+}
+
+task example2(type: at.bxm.gradleplugins.svntools.tasks.SvnVersion,
+  description: "Using the custom task for advanced configuration") {
+  sourcePath = "$projectDir/src/main"
+  doLast {
+    println "'svnversion' output: $svnVersion"
+    println svnVersion.modified ? "working copy is dirty" : "working copy is clean"
+  }
+}

@@ -2,6 +2,7 @@ package at.bxm.gradleplugins.svntools.tasks
 
 import at.bxm.gradleplugins.svntools.SvnTestSupport
 import at.bxm.gradleplugins.svntools.api.SvnVersionData
+import org.tmatesoft.svn.core.SVNDepth
 
 class SvnVersionTest extends SvnTestSupport {
 
@@ -25,6 +26,7 @@ class SvnVersionTest extends SvnTestSupport {
     version.minRevisionNumber == 1
     version.maxRevisionNumber == 1
     version.modified == false
+    version.sparse == false
   }
 
   def "mixed revision"() {
@@ -95,5 +97,42 @@ class SvnVersionTest extends SvnTestSupport {
     version.maxRevisionNumber == 1
     version.modified == false
     version.switched == true
+  }
+
+  def "sparse working copy"() {
+    given: "a sparsely populated SVN working copy"
+    createLocalRepo()
+    def workspace = checkoutLocalRepo("/", SVNDepth.IMMEDIATES)
+
+    when: "running the SvnVersion task"
+    def project = projectWithPlugin()
+    def task = project.task(type: SvnVersion, "version") as SvnVersion
+    task.sourcePath = workspace
+    task.execute()
+
+    then: "SVN version contains a sparse working copy"
+    def version = project.ext.svnVersion as SvnVersionData
+    version != null
+    version as String == "1P"
+    version.mixedRevision == false
+    version.minRevisionNumber == 1
+    version.maxRevisionNumber == 1
+    version.modified == false
+    version.switched == false
+    version.sparse == true
+  }
+
+  def "no working copy"() {
+    when: "running the SvnVersion task without working copy"
+    def project = projectWithPlugin()
+    def task = project.task(type: SvnVersion, "version") as SvnVersion
+    task.sourcePath = tempDir
+    task.ignoreErrors = true
+    task.execute()
+
+    then: "SVN version contains a sparse working copy"
+    def version = project.ext.svnVersion as SvnVersionData
+    version != null
+    version as String == "exported"
   }
 }

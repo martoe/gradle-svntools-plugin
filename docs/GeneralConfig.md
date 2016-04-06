@@ -20,6 +20,7 @@ The `svntools` block (implemented by [SvnToolsPluginExtension](../src/main/groov
     * **version.minRevisionNumber** The smallest SVN revision within the working copy
     * **version.maxRevisionNumber** The greatest SVN revision within the working copy
     * **version.modified** "true" if the working copy contains local modifications
+    * **version.sparse** "true" if the working copy is sparsely populated (i.e. "depth" is not "infinity")
     * **version.switched** "true" if the parts of the working copy have been switched
 
 Note: The `svntools.info` and `svntools.version` objects assume that the current Gradle project has been checked out from SVN. To retrieve information about other SVN files or workspaces, use the [SvnInfo](SvnInfo.md) resp. [SvnVersion](SvnVersion.md) tasks.

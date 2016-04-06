@@ -13,11 +13,13 @@ class SvnVersion extends SvnBaseTask {
   def sourcePath
   /** The name of the project extra property that will receive the resulting {@link SvnVersionData} object (default: {@code svnVersion}) */
   String targetPropertyName
+  /** Continue the build if the specified path is no SVN working copy */
+  boolean ignoreErrors
 
   @TaskAction
   def run() {
     def srcPath = sourcePath != null ? project.file(sourcePath, PathValidation.EXISTS) : project.projectDir
-    def result = SvnSupport.createSvnVersionData(srcPath, getUsername(), getPassword(), proxy, false)
+    def result = SvnSupport.createSvnVersionData(srcPath, getUsername(), getPassword(), proxy, ignoreErrors)
     project.ext.set(targetPropertyName ?: "svnVersion", result)
   }
 }

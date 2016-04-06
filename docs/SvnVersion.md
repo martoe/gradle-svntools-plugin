@@ -9,5 +9,10 @@ Property           | Description | Default value
 ------------------ | ----------- | -------------
 sourcePath         | Local SVN working copy directory | `$project.projectDir`
 targetPropertyName | The name of the project extra property that will receive the resulting SvnVersionData object | `svnVersion`
+ignoreErrors       | Continue the build if the specified path is no SVN working copy | `false`
 username           | The SVN username - leave empty if no authentication is required | `$project.svntools.username`
 password           | The SVN password - leave empty if no authentication is required | `$project.svntools.password`
+
+### Example
+
+see [../samples/SvnVersion/build.gradle]

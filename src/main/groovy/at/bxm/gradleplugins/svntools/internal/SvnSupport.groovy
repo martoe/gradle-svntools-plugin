@@ -63,10 +63,17 @@ class SvnSupport {
 
   static SvnVersionData createSvnVersionData(File srcPath, String username, String password, SvnProxy proxy, boolean ignoreErrors) {
     def versionHandler = new VersionHandler()
-    createSvnClientManager(username, password, proxy).statusClient.doStatus(
-      srcPath, SVNRevision.UNDEFINED, SVNDepth.INFINITY, false, true, false, false, versionHandler, null)
+    try {
+      createSvnClientManager(username, password, proxy).statusClient.doStatus(
+        srcPath, SVNRevision.UNDEFINED, SVNDepth.INFINITY, false, true, false, false, versionHandler, null)
+    } catch (Exception e) {
+      if (ignoreErrors) {
+        log.warning "Could not execute svnversion on $srcPath.absolutePath ($e.message)"
+      } else {
+        throw new InvalidUserDataException("Could not execute svnversion on $srcPath.absolutePath ($e.message)", e)
+      }
+    }
     return versionHandler.version
-    // TODO error handling
   }
   
   static SVNRevision revisionFrom(Long value) {
@@ -87,6 +94,7 @@ class SvnSupport {
       }
       // TODO also check "propertiesStatus"?
       version.switched |= status.switched
+      version.sparse |= !status.depth.recursive
     }
   }
 }
