@@ -1,5 +1,6 @@
 package at.bxm.gradleplugins.svntools
 
+import groovy.util.logging.Log
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import org.tmatesoft.svn.core.SVNDepth
@@ -10,6 +11,7 @@ import org.tmatesoft.svn.core.wc.SVNClientManager
 import org.tmatesoft.svn.core.wc.SVNRevision
 import spock.lang.Specification
 
+@Log
 abstract class SvnTestSupport extends Specification {
 
   File tempDir
@@ -74,18 +76,22 @@ abstract class SvnTestSupport extends Specification {
     return checkoutLocalRepo("tags/test-tag")
   }
 
-  File checkoutLocalRepo(String path) {
+  File checkoutLocalRepo(String path, SVNDepth depth = SVNDepth.INFINITY) {
     def workspaceDir = new File(tempDir, "workspace")
-    clientManager.updateClient.doCheckout(localRepoUrl.appendPath(path, false), workspaceDir, SVNRevision.UNDEFINED, SVNRevision.HEAD, SVNDepth.INFINITY, false)
+    clientManager.updateClient.doCheckout(localRepoUrl.appendPath(path, false), workspaceDir, SVNRevision.UNDEFINED, SVNRevision.HEAD, depth, false)
     return workspaceDir
   }
 
-  void switchLocalRepo(String path) {
-    clientManager.updateClient.doSwitch(new File(tempDir, "workspace"), localRepoUrl.appendPath(path, false), SVNRevision.UNDEFINED, SVNRevision.HEAD, SVNDepth.INFINITY, false, false)
+  void switchLocalRepo(String remotePath, String localPath = null) {
+    clientManager.updateClient.doSwitch(new File(tempDir, "workspace/" + (localPath ?: "")), localRepoUrl.appendPath(remotePath, false), SVNRevision.UNDEFINED, SVNRevision.HEAD, SVNDepth.INFINITY, false, false)
   }
 
   void updateLocalRepo() {
-    clientManager.updateClient.doUpdate(new File(tempDir, "workspace"), SVNRevision.HEAD, SVNDepth.INFINITY, false, false)
+    update("/")
+  }
+
+  void update(String path) {
+    clientManager.updateClient.doUpdate(new File(tempDir, "workspace/$path"), SVNRevision.HEAD, SVNDepth.INFINITY, false, false)
   }
 
   long getRevision(file) {
@@ -99,6 +105,8 @@ abstract class SvnTestSupport extends Specification {
   }
 
   def cleanup() {
-    assert tempDir.deleteDir(), "Could not delete directory $tempDir.absolutePath"
+    if (!tempDir.deleteDir()) {
+      log.warning("Could not delete directory $tempDir.absolutePath")
+    }
   }
 }

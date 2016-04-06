@@ -1,4 +1,4 @@
-## SvnCheckout task (at.bxm.gradleplugins.svntools.tasks.SvnCheckout)
+## [SvnCheckout](../src/main/groovy/at/bxm/gradleplugins/svntools/tasks/SvnCheckout.groovy) task
 
 Creates an SVN workspace by checking out an SVN URL to a local directory. Also supports updating an existing workspace.
 
@@ -7,7 +7,7 @@ Creates an SVN workspace by checking out an SVN URL to a local directory. Also s
 Property     | Description | Default value
 ------------ | ----------- | -------------
 svnUrl       | The remote repository URL (required) |
-workspaceDir | The target directory for checkout (required). If it doesn't exist it will be created. If it exists it must be empty |
+workspaceDir | The target directory for checkout (required). If it doesn't exist it will be created. If it exists (and the `update` flag is not set) it must be empty |
 revision     | The revision number to be checked out | `HEAD`
 username     | The SVN username - leave empty if no authentication is required | `$project.svntools.username`
 password     | The SVN password - leave empty if no authentication is required | `$project.svntools.password`
