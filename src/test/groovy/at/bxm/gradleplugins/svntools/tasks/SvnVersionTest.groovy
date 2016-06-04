@@ -135,4 +135,23 @@ class SvnVersionTest extends SvnTestSupport {
     version != null
     version as String == "exported"
   }
+
+  def "externals"() { // see https://github.com/martoe/gradle-svntools-plugin/issues/23
+    given: "an SVN workspace with an external definition"
+    createLocalRepoWithExternals()
+    def workspace = checkoutLocalRepo("/")
+
+    when: "running the SvnVersion task"
+    def project = projectWithPlugin()
+    def task = project.task(type: SvnVersion, "version") as SvnVersion
+    task.sourcePath = workspace
+    task.targetPropertyName = "myVersion"
+    task.execute()
+
+    then: "SVN version contains no modification"
+    def version = project.ext.myVersion as SvnVersionData
+    version != null
+    version as String == "2"
+    version.modified == false
+  }
 }

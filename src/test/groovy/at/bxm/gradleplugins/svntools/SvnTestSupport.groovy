@@ -4,6 +4,8 @@ import groovy.util.logging.Log
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import org.tmatesoft.svn.core.SVNDepth
+import org.tmatesoft.svn.core.SVNProperty
+import org.tmatesoft.svn.core.SVNPropertyValue
 import org.tmatesoft.svn.core.SVNURL
 import org.tmatesoft.svn.core.io.ISVNEditor
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory
@@ -28,8 +30,8 @@ abstract class SvnTestSupport extends Specification {
     return project
   }
 
-  SVNURL createLocalRepo() {
-    def localRepoDir = new File(tempDir, "repo")
+  SVNURL createLocalRepo(String baseDir = "repo") {
+    def localRepoDir = new File(tempDir, baseDir)
     localRepoUrl = SVNRepositoryFactory.createLocalRepository(localRepoDir, true, false)
     def repo = SVNRepositoryFactory.create(localRepoUrl)
     def editor = repo.getCommitEditor("creating a new file", null)
@@ -45,6 +47,20 @@ abstract class SvnTestSupport extends Specification {
     editor.closeDir()
     editor.closeEdit()
     return localRepoUrl
+  }
+
+  /** Creates a local repo that uses another local repo (also created here) as external definition */
+  SVNURL createLocalRepoWithExternals() {
+    def externalRepo = createLocalRepo("external")
+    def repoWithExternals = createLocalRepo()
+
+    def repo = SVNRepositoryFactory.create(repoWithExternals)
+    def editor = repo.getCommitEditor("adding externals", null)
+    editor.openRoot(-1)
+    editor.openDir("trunk", -1)
+    editor.changeDirProperty(SVNProperty.EXTERNALS, SVNPropertyValue.create("ext $externalRepo"))
+    editor.closeEdit()
+    return repoWithExternals
   }
 
   void addFile(String path) {
