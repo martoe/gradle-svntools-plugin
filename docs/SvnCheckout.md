@@ -1,6 +1,7 @@
 ## [SvnCheckout](../src/main/groovy/at/bxm/gradleplugins/svntools/tasks/SvnCheckout.groovy) task
 
 Creates an SVN workspace by checking out an SVN URL to a local directory. Also supports updating an existing workspace.
+If you just need the versioned files without SVN metadata, use the [SvnExport](SvnExport.md) task.
 
 ### Configuration
 

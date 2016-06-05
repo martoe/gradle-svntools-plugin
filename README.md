@@ -30,5 +30,6 @@ Please report bugs and feature requests at the [Github issue page](https://githu
 * [SvnCommit](docs/SvnCommit.md): commits workspace modifications
 * [SvnBranch](docs/SvnBranch.md): creates an SVN branch
 * [SvnTag](docs/SvnTag.md): creates an SVN tag
+* [SvnExport](docs/SvnExport.md): exports parts of an SVN repository to a local directory
 
 [![Build Status](https://travis-ci.org/martoe/gradle-svntools-plugin.png)](https://travis-ci.org/martoe/gradle-svntools-plugin)
