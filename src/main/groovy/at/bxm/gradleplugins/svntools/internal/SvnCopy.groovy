@@ -47,7 +47,7 @@ abstract class SvnCopy extends SvnBaseTask {
       }
       def destUrl = sourceUrl.setPath(fullDestPath, false)
       logger.info "Copying $sourceUrl at revision $copySource.revision to $destUrl"
-      def copied = clientManager.copyClient.doCopy([copySource] as SVNCopySource[], destUrl, false, false, true, commitMessage, null);
+      def copied = clientManager.copyClient.doCopy([copySource] as SVNCopySource[], destUrl, false, true, true, commitMessage, null);
       if (copied.errorMessage) {
         if (copied.errorMessage.warning) {
           logger.warn "svn-copy completed with warning: $copied"

@@ -14,6 +14,7 @@ The `svntools` block (implemented by [SvnToolsPluginExtension](../src/main/groov
     * **info.trunk** "true" if the SVN URL refers to a trunk
     * **info.branch** "true" if the SVN URL refers to a branch
     * **info.tag** "true" if the SVN URL refers to a tag
+* access information about an arbitrary path within an SVN workspace, wrapped by an [SvnData](../src/main/groovy/at/bxm/gradleplugins/svntools/api/SvnData.groovy) object: **getInfo("path/file.ext")** (see example below)
 * summarize the local revision(s) of a working copy, wrapped by an [SvnVersionData](../src/main/groovy/at/bxm/gradleplugins/svntools/api/SvnVersionData.groovy) object:
     * **version** [svnversion](http://svnbook.red-bean.com/en/1.7/svn.ref.svnversion.re.html) output
     * **version.mixedRevision** "true" if the working copy contains mixed revisions
@@ -36,6 +37,10 @@ Note: The `svntools.info` and `svntools.version` objects assume that the current
 
     task info << {
       println "Current revision is $svntools.info.revisionNumber"
+    }
+
+    task specialInfo << {
+      println "Current revision of 'readme.txt' is " + svntools.createInfo(file("readme.txt"))
     }
 
 

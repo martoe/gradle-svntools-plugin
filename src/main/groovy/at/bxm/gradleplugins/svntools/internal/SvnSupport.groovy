@@ -65,7 +65,7 @@ class SvnSupport {
     def versionHandler = new VersionHandler()
     try {
       createSvnClientManager(username, password, proxy).statusClient.doStatus(
-        srcPath, SVNRevision.UNDEFINED, SVNDepth.INFINITY, false, true, false, false, versionHandler, null)
+              srcPath, SVNRevision.UNDEFINED, SVNDepth.INFINITY, false, true, false, false, versionHandler, null)
     } catch (Exception e) {
       if (ignoreErrors) {
         log.warning "Could not execute svnversion on $srcPath.absolutePath ($e.message)"
@@ -75,7 +75,7 @@ class SvnSupport {
     }
     return versionHandler.version
   }
-  
+
   static SVNRevision revisionFrom(Long value) {
     return value != null && value >= 0 ? SVNRevision.create(value) : SVNRevision.HEAD
   }
@@ -87,14 +87,18 @@ class SvnSupport {
     void handleStatus(SVNStatus status) {
       version.minRevisionNumber = version.minRevisionNumber == SvnData.UNKNOWN_REVISION ? status.revision.number : Math.min(version.minRevisionNumber, status.revision.number)
       version.maxRevisionNumber = version.maxRevisionNumber == SvnData.UNKNOWN_REVISION ? status.revision.number : Math.max(version.maxRevisionNumber, status.revision.number)
-      if (status.contentsStatus != SVNStatusType.STATUS_NORMAL) {
-        // TODO use "combinedNodeAndContentsStatus" instead?
-        log.info("$status.repositoryRelativePath has status $status.contentsStatus - workspace is dirty")
-        version.modified = true
+      if (status.contentsStatus == SVNStatusType.STATUS_NONE) {
+        log.info("no status for $status.file - probably an external definition")
+      } else {
+        if (status.contentsStatus != SVNStatusType.STATUS_NORMAL) {
+          // TODO use "combinedNodeAndContentsStatus" instead?
+          log.info("$status.repositoryRelativePath has status $status.contentsStatus - workspace is dirty")
+          version.modified = true
+        }
+        // TODO also check "propertiesStatus"?
+        version.switched |= status.switched
+        version.sparse |= !status.depth.recursive
       }
-      // TODO also check "propertiesStatus"?
-      version.switched |= status.switched
-      version.sparse |= !status.depth.recursive
     }
   }
 }

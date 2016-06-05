@@ -28,6 +28,12 @@ class SvnToolsPluginExtension {
     return info
   }
 
+  /** Convenience method for receiving SVN status data for an arbitrary path (https://github.com/martoe/gradle-svntools-plugin/issues/21) */
+  SvnData getInfo(File file) {
+    def ext = project.extensions.getByType(SvnToolsPluginExtension)
+    return SvnSupport.createSvnData(file, ext.username, ext.password, ext.proxy, false)
+  }
+
   SvnVersionData getVersion() {
     if (!version) {
       def ext = project.extensions.getByType(SvnToolsPluginExtension)

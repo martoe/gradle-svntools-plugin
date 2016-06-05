@@ -83,7 +83,7 @@ class SvnTagTest extends SvnTestSupport {
 
     then: "exception"
     def e = thrown TaskExecutionException
-    e.cause.message == "tagName contains invalid chars: $param"
+    e.cause.message == "tagName contains invalid chars: $param" as String
 
     where:
     param << ["blank ", "backslash\\"]
@@ -118,8 +118,8 @@ class SvnTagTest extends SvnTestSupport {
     task.tagName = "tag-subdir/new-tag"
     task.execute()
 
-    then: "exception"
-    def e = thrown TaskExecutionException
-    e.cause.message =~ ".*Attempted to open non-existent child node 'tag-subdir'"
+    then: "tag exists"
+    switchLocalRepo("tags/tag-subdir/new-tag")
+    getRevision(workspace) == 2
   }
 }
