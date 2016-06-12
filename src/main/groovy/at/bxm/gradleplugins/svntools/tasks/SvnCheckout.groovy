@@ -1,7 +1,7 @@
 package at.bxm.gradleplugins.svntools.tasks
 
+import at.bxm.gradleplugins.svntools.api.SvnDepth
 import at.bxm.gradleplugins.svntools.internal.SvnBaseTask
-import at.bxm.gradleplugins.svntools.internal.SvnSupport
 import org.gradle.api.InvalidUserDataException
 import org.gradle.api.tasks.TaskAction
 import org.tmatesoft.svn.core.SVNDepth
@@ -9,7 +9,7 @@ import org.tmatesoft.svn.core.SVNException
 import org.tmatesoft.svn.core.SVNURL
 import org.tmatesoft.svn.core.wc.SVNRevision
 
-import static at.bxm.gradleplugins.svntools.internal.SvnSupport.revisionFrom
+import static at.bxm.gradleplugins.svntools.internal.SvnSupport.*
 
 class SvnCheckout extends SvnBaseTask {
 
@@ -19,6 +19,11 @@ class SvnCheckout extends SvnBaseTask {
   def workspaceDir
   /** The revision number to be checked out (optional, defaults to HEAD)  */
   Long revision
+  /**
+   * The checkout depth (optional, defaults to INFINITY)
+   * @see SvnDepth
+   */
+  Object depth
   /** If {@code true}, an "svn update" is performed if the {@link #workspaceDir} already contains checked-out data. */
   boolean update
 
@@ -44,7 +49,7 @@ class SvnCheckout extends SvnBaseTask {
         if (!update) {
           throw new InvalidUserDataException("workspaceDir $dir.absolutePath must be an empty directory")
         }
-        def result = SvnSupport.createSvnData(dir, getUsername(), getPassword(), proxy, true)
+        def result = createSvnData(dir, getUsername(), getPassword(), proxy, true)
         if (!result.url) {
           throw new InvalidUserDataException("workspaceDir $dir.absolutePath must be either an empty directory or an SVN workspace")
         }
@@ -56,12 +61,28 @@ class SvnCheckout extends SvnBaseTask {
     }
     try {
       if (performUpdate) {
-        createSvnClientManager().updateClient.doUpdate(dir, rev, SVNDepth.INFINITY, false, false)
+        createSvnClientManager().updateClient.doUpdate(dir, rev, parseDepth(depth), false, false)
       } else {
-        createSvnClientManager().updateClient.doCheckout(repoUrl, dir, SVNRevision.UNDEFINED, rev, SVNDepth.INFINITY, false)
+        createSvnClientManager().updateClient.doCheckout(repoUrl, dir, SVNRevision.UNDEFINED, rev, parseDepth(depth), false)
       }
     } catch (SVNException e) {
       throw new InvalidUserDataException((performUpdate ? "svn-update" : "svn-checkout") + " failed for $svnUrl\n" + e.message, e)
     }
+  }
+
+  private static SVNDepth parseDepth(depth) {
+    if (depth) {
+      try {
+        SvnDepth svnDepth = SvnDepth.parse(depth)
+        switch (svnDepth) {
+          case SvnDepth.EMPTY: return SVNDepth.EMPTY
+          case SvnDepth.FILES: return SVNDepth.FILES
+          case SVNDepth.IMMEDIATES: return SVNDepth.IMMEDIATES
+        }
+      } catch (IllegalArgumentException e) {
+        throw new InvalidUserDataException("Invalid depth value: $depth")
+      }
+    }
+    return SVNDepth.INFINITY
   }
 }
