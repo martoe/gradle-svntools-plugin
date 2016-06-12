@@ -53,10 +53,53 @@ class SvnToolsPluginExtensionTest extends SvnTestSupport {
     createLocalRepo()
     def workspace = checkoutTrunk()
 
-    when: "reading SvnData for a file"
-    def svnData = projectWithPlugin(workspace).extensions.getByType(SvnToolsPluginExtension).getInfo(new File(workspace, "missing.txt"))
+    when: "reading SvnData for a non-existing file"
+    projectWithPlugin(workspace).extensions.getByType(SvnToolsPluginExtension).getInfo(new File(workspace, "missing.txt"))
+    
+    then: "error"
+    thrown(InvalidUserDataException)
+  }
+
+  def "access svnData for a remote repository"() {
+    given: "an SVN repo"
+    def url = createLocalRepo() as String
+
+    when: "reading SvnData for the repository"
+    def svnData = projectWithPlugin().extensions.getByType(SvnToolsPluginExtension).getRemoteInfo(url)
     
     then: "data returned"
+    svnData != null
+    svnData.name == null
+    !svnData.trunk
+    !svnData.branch
+    !svnData.tag
+    svnData.revisionNumber == 1
+  }
+
+  def "access svnData for a remote file"() {
+    given: "an SVN repo"
+    def url = createLocalRepo() as String
+
+    when: "reading SvnData for a remote file"
+    def svnData = projectWithPlugin().extensions.getByType(SvnToolsPluginExtension).getRemoteInfo(url, "trunk/test.txt")
+    
+    then: "data returned"
+    svnData != null
+    svnData.trunk
+    svnData.name == "trunk"
+    !svnData.branch
+    !svnData.tag
+    svnData.revisionNumber == 1
+  }
+
+  def "access svnData for a non-existing remote file"() {
+    given: "an SVN repo"
+    def url = createLocalRepo() as String
+
+    when: "reading SvnData for a non-existing remote file"
+    def svnData = projectWithPlugin().extensions.getByType(SvnToolsPluginExtension).getRemoteInfo(url, "trunk/invalid.txt")
+    
+    then: "error"
     thrown(InvalidUserDataException)
   }
 }

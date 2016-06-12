@@ -4,7 +4,10 @@ import at.bxm.gradleplugins.svntools.api.SvnData
 import at.bxm.gradleplugins.svntools.api.SvnVersionData
 import at.bxm.gradleplugins.svntools.internal.SvnProxy
 import at.bxm.gradleplugins.svntools.internal.SvnSupport
+import org.gradle.api.InvalidUserDataException
 import org.gradle.api.Project
+import org.tmatesoft.svn.core.SVNException
+import org.tmatesoft.svn.core.SVNURL
 
 /** Holds configuration values shared by all SVN tasks and provides SVN information about the current workspace */
 class SvnToolsPluginExtension {
@@ -20,25 +23,38 @@ class SvnToolsPluginExtension {
     this.project = project
   }
 
+  /** @return svn-info for the project directory (cached) */
   SvnData getInfo() {
     if (!info) {
-      def ext = project.extensions.getByType(SvnToolsPluginExtension)
-      info = SvnSupport.createSvnData(project.projectDir, ext.username, ext.password, ext.proxy, true)
+      info = SvnSupport.createSvnData(project.projectDir, username, password, proxy, true)
     }
     return info
   }
 
   /** Convenience method for receiving SVN status data for an arbitrary path (https://github.com/martoe/gradle-svntools-plugin/issues/21) */
   SvnData getInfo(File file) {
-    def ext = project.extensions.getByType(SvnToolsPluginExtension)
-    return SvnSupport.createSvnData(file, ext.username, ext.password, ext.proxy, false)
+    return SvnSupport.createSvnData(file, username, password, proxy, false)
   }
 
+  /** @return svn-version for the project directory (cached) */
   SvnVersionData getVersion() {
     if (!version) {
-      def ext = project.extensions.getByType(SvnToolsPluginExtension)
-      version = SvnSupport.createSvnVersionData(project.projectDir, ext.username, ext.password, ext.proxy, true)
+      version = SvnSupport.createSvnVersionData(project.projectDir, username, password, proxy, true)
     }
     return version
+  }
+
+  /** 
+   * Retrieves SVN status data for a path within a remote repository
+   * @param repoUrl An SVN repository URL
+   * @param filePath An optional path within the repository
+   */
+  SvnData getRemoteInfo(String repoUrl, String filePath = null) {
+    try {
+      SVNURL url = SVNURL.parseURIEncoded(repoUrl)
+      return SvnSupport.createSvnData(url, filePath ?: "/", username, password, proxy, false)
+    } catch (SVNException e) {
+      throw new InvalidUserDataException("Invalid svnUrl value: $repoUrl", e)
+    }
   }
 }
