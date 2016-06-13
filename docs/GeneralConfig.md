@@ -15,6 +15,7 @@ The `svntools` block (implemented by [SvnToolsPluginExtension](../src/main/groov
     * **info.branch** "true" if the SVN URL refers to a branch
     * **info.tag** "true" if the SVN URL refers to a tag
 * access information about an arbitrary path within an SVN workspace, wrapped by an [SvnData](../src/main/groovy/at/bxm/gradleplugins/svntools/api/SvnData.groovy) object: **getInfo("path/file.ext")** (see example below)
+* access information about a path within a remote SVN repository, wrapped by an [SvnData](../src/main/groovy/at/bxm/gradleplugins/svntools/api/SvnData.groovy) object: **getRemoteInfo("", "path/file.ext")** (see example below)
 * summarize the local revision(s) of a working copy, wrapped by an [SvnVersionData](../src/main/groovy/at/bxm/gradleplugins/svntools/api/SvnVersionData.groovy) object:
     * **version** [svnversion](http://svnbook.red-bean.com/en/1.7/svn.ref.svnversion.re.html) output
     * **version.mixedRevision** "true" if the working copy contains mixed revisions
@@ -40,10 +41,16 @@ Note: The `svntools.info` and `svntools.version` objects assume that the current
     }
 
     task specialInfo << {
-      println "Current revision of 'readme.txt' is " + svntools.createInfo(file("readme.txt"))
+      println "Current revision of 'readme.txt' is " + svntools.getInfo(file("readme.txt"))
     }
 
-
+    task remoteInfo << {
+      try {
+        println "Remote revision of 'readme.txt' is " + svntools.getRemoteInfo("https://svn.apache.org/repos/asf/subversion", "trunk/readme.txt")
+      } catch (Exception e) {
+        println "Remote file is not available: $e.message"
+      }
+    }
 
 ## Using a Proxy Server
 

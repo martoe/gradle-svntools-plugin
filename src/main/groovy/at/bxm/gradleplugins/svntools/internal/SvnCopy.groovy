@@ -7,12 +7,10 @@ import org.tmatesoft.svn.core.SVNException
 import org.tmatesoft.svn.core.SVNNodeKind
 import org.tmatesoft.svn.core.SVNURL
 import org.tmatesoft.svn.core.io.SVNRepository
-import org.tmatesoft.svn.core.io.SVNRepositoryFactory
 import org.tmatesoft.svn.core.wc.SVNClientManager
 import org.tmatesoft.svn.core.wc.SVNCopySource
 import org.tmatesoft.svn.core.wc.SVNInfo
 import org.tmatesoft.svn.core.wc.SVNRevision
-import org.tmatesoft.svn.core.wc.SVNWCUtil
 
 abstract class SvnCopy extends SvnBaseTask {
 
@@ -40,7 +38,7 @@ abstract class SvnCopy extends SvnBaseTask {
     def fullDestPath = "$basePath/$destinationPath"
     try {
       if (replaceExisting) {
-        def repo = remoteRepository(sourceUrl.setPath(basePath, false))
+        def repo = SvnSupport.remoteRepository(sourceUrl.setPath(basePath, false), username, password, proxy)
         if (existsInRepo(repo, destinationPath)) {
           deleteFromRepo(repo, destinationPath)
         }
@@ -86,12 +84,6 @@ abstract class SvnCopy extends SvnBaseTask {
     } catch (SVNException e) {
       throw new InvalidUserDataException("Invalid svnUrl value: $svnUrl", e)
     }
-  }
-
-  private SVNRepository remoteRepository(SVNURL repositoryUrl) {
-    def repo = SVNRepositoryFactory.create(repositoryUrl)
-    repo.authenticationManager = SVNWCUtil.createDefaultAuthenticationManager(username, password)
-    return repo
   }
 
   private static boolean existsInRepo(SVNRepository repo, String path) {

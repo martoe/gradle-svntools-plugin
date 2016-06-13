@@ -37,6 +37,7 @@ abstract class SvnTestSupport extends Specification {
     def editor = repo.getCommitEditor("creating a new file", null)
     editor.openRoot(-1)
     editor.addDir("trunk", null, -1)
+    editor.addDir("trunk/dir", null, -1)
     addEmptyFile(editor, "trunk/test.txt")
     editor.addDir("branches", null, -1)
     editor.addDir("branches/test-branch", null, -1)

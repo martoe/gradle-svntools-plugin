@@ -2,6 +2,7 @@ package at.bxm.gradleplugins.svntools.tasks
 
 import at.bxm.gradleplugins.svntools.SvnTestSupport
 import at.bxm.gradleplugins.svntools.SvnToolsPluginExtension
+import at.bxm.gradleplugins.svntools.api.SvnDepth
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskExecutionException
 
@@ -27,8 +28,9 @@ class SvnCheckoutTest extends SvnTestSupport {
     task.workspaceDir = workspaceDir
     task.execute()
 
-    then: "local workspace exists"
+    then: "local workspace exists and contains files"
     getRevision(workspaceDir) == 1
+    childrenOf(workspaceDir).size() == 3
   }
 
   def "invalid remote URL"() {
@@ -125,5 +127,59 @@ class SvnCheckoutTest extends SvnTestSupport {
     then:
     def e = thrown TaskExecutionException
     e.cause.message =~ "SVN location of .* is invalid: .*"
+  }
+
+  def "checkout depth=empty"() {
+    given: "nonexistent workspace"
+    def workspaceDir = "$tempDir.absolutePath/myNewWorkspace"
+    assert !new File(workspaceDir).exists()
+
+    when: "running the SvnCheckout task with depth=empty"
+    task.svnUrl = localRepoUrl.appendPath("trunk", false)
+    task.workspaceDir = workspaceDir
+    task.depth = "empty"
+    task.execute()
+
+    then: "local workspace is empty"
+    childrenOf(workspaceDir).size() == 0
+  }
+
+  def "checkout depth=files"() {
+    given: "nonexistent workspace"
+    def workspaceDir = "$tempDir.absolutePath/myNewWorkspace"
+    assert !new File(workspaceDir).exists()
+
+    when: "running the SvnCheckout task with depth=files"
+    task.svnUrl = localRepoUrl.appendPath("trunk", false)
+    task.workspaceDir = workspaceDir
+    task.depth = "Files"
+    task.execute()
+
+    then: "local workspace contains one file"
+    def ws = childrenOf(workspaceDir)
+    ws.size() == 1
+    ws[0].isFile()
+  }
+
+  def "checkout depth=immediates"() {
+    given: "nonexistent workspace"
+    def workspaceDir = "$tempDir.absolutePath/myNewWorkspace"
+    assert !new File(workspaceDir).exists()
+
+    when: "running the SvnCheckout task with depth=immediates"
+    task.svnUrl = localRepoUrl.appendPath("trunk", false)
+    task.workspaceDir = workspaceDir
+    task.depth = SvnDepth.IMMEDIATES
+    task.execute()
+
+    then: "local workspace contains one file and one empty dir"
+    def ws = childrenOf(workspaceDir)
+    ws.findAll({ it.isFile() }).size() == 1
+    ws.findAll({ it.isDirectory() }).size() == 1
+    childrenOf(ws.find({ it.isDirectory() })).size() == 0
+  }
+
+  private static List<File> childrenOf(parentFile) {
+    (parentFile as File).listFiles().findAll { it.name != ".svn" }
   }
 }
