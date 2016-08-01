@@ -14,7 +14,7 @@ group = "at.bxm.gradleplugins"
 
 dependencies {
   compile "org.codehaus.groovy:groovy-all:2.3.6"
-  compile "org.tmatesoft.svnkit:svnkit:1.8.5"
+  compile "org.tmatesoft.svnkit:svnkit:1.8.12"
   testCompile("org.spockframework:spock-core:0.7-groovy-2.0") {
     exclude group: "org.codehaus.groovy"
   }
