@@ -31,7 +31,7 @@ class SvnSupport {
     def authManager = new BasicAuthenticationManager(username, password)
     if (proxy?.host) {
       log.info "Using proxy $proxy"
-      authManager.setProxy(proxy.host, proxy.port, proxy.username, proxy.password)
+      authManager.setProxy(proxy.host, proxy.port, proxy.username, (String)proxy.password)
     }
     return authManager
   }
