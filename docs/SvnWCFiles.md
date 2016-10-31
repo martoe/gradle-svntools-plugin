@@ -9,10 +9,10 @@ Property           | Description | Default value
 sourcePath         | Source path for checkout dir | `$project.projectDir`
 ignoreErrors       | Continue the build if the specified paths conflict with the WC status (can't dadd/delete) | `false`
 
-Property           | Description | Default value
------------------- | ----------- | -------------
-sourcePath         | Source path for checkout dir (or sub-folder) | `$project.projectDir`
-ignoreErrors       | Continue the build if the specified paths conflict with the WC status (can't dadd/delete) | `false`
+method             | Description 
+------------------ | -----------------------
+add                | Pass include / exclude pattern in a Closure similar to project.fileTree
+delete             | Pass include / exclude pattern in a Closure similar to project.fileTree
 
 ### Example
 
