@@ -8,6 +8,8 @@ The `svntools` block (implemented by [SvnToolsPluginExtension](../src/main/groov
 * adjust proxy server settings (see below)
 * access information about the current SVN workspace root (i.e. the project's root directory), wrapped by an [SvnData](../src/main/groovy/at/bxm/gradleplugins/svntools/api/SvnData.groovy) object:
     * **info.revisionNumber** The SVN revision number
+    * **info.committedDate** The last committed Date (java.util.Date)
+    * **info.committedAuthor** The last committer
     * **info.url** The complete SVN URL of the checked-out project
     * **info.repositoryRootUrl** The root URL of the SVN repository
     * **info.name** Either "trunk", the name of the current branch, or the name of the current tag

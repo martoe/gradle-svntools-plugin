@@ -41,6 +41,8 @@ class SvnSupport {
     try {
       def info = createSvnClientManager(username, password, proxy).WCClient.doInfo srcPath, SVNRevision.WORKING
       result.revisionNumber = info.committedRevision.number
+      result.committedDate - info.committedDate
+      result.committedAuthor = info.author
       result.url = info.URL
       result.repositoryRootUrl = info.repositoryRootURL
       try {
@@ -105,7 +107,7 @@ class SvnSupport {
     }
     return result
   }
-  
+
   static SvnVersionData createSvnVersionData(File srcPath, String username, String password, SvnProxy proxy, boolean ignoreErrors) {
     def versionHandler = new VersionHandler()
     try {
@@ -119,6 +121,31 @@ class SvnSupport {
       }
     }
     return versionHandler.version
+  }
+
+  static void doSvnAdd(File[] paths, SVNDepth svnDepth, String username, String password, SvnProxy proxy, boolean ignoreErrors) {
+    try {
+      createSvnClientManager(username, password, proxy).WCClient.doAdd (paths, /*force:*/ ignoreErrors, /*mkdir:*/ false, /*climbUnversionedParents:*/ true
+                                , /*depth:*/ svnDepth, /*depthIsSticky:*/ false, /*includeIgnored:*/ false, /*makeParents:*/ true)
+    } catch (Exception e) {
+      // if (ignoreErrors) {
+      //   log.warning "Could not execute svn:add on ${paths*.absolutePath} ($e.message)"
+      // } else {
+        throw new InvalidUserDataException("Could not execute svn:add on ${paths*.absolutePath} ($e.message)", e)
+      // }
+    }
+  }
+
+  static void doSvnDelete(File path, String username, String password, SvnProxy proxy, boolean ignoreErrors) {
+    try {
+      createSvnClientManager(username, password, proxy).WCClient.doDelete (/*path:*/ path, /*force:*/ ignoreErrors, /*dryRun:*/ false)
+    } catch (Exception e) {
+      if (ignoreErrors) {
+         log.warning "Could not execute svn:delete on $path.absolutePath ($e.message)"
+      } else {
+        throw new InvalidUserDataException("Could not execute svn:delete on $path.absolutePath ($e.message)", e)
+      }
+    }
   }
 
   static SVNRepository remoteRepository(SVNURL repositoryUrl, String username, String password, SvnProxy proxy) {

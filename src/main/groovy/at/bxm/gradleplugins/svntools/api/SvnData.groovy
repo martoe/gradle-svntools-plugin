@@ -7,6 +7,8 @@ import groovy.transform.ToString
 class SvnData {
   static final long UNKNOWN_REVISION = -1
   long revisionNumber = UNKNOWN_REVISION
+  java.util.Date committedDate
+  String committedAuthor
   /** The complete SVN URL of the checked-out project */
   String url
   /** The root URL of the SVN repository */
