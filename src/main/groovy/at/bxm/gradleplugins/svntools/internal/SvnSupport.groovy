@@ -41,7 +41,7 @@ class SvnSupport {
     try {
       def info = createSvnClientManager(username, password, proxy).WCClient.doInfo srcPath, SVNRevision.WORKING
       result.revisionNumber = info.committedRevision.number
-      result.committedDate - info.committedDate
+      result.committedDate = info.committedDate
       result.committedAuthor = info.author
       result.url = info.URL
       result.repositoryRootUrl = info.repositoryRootURL
