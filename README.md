@@ -27,6 +27,7 @@ Please report bugs and feature requests at the [Github issue page](https://githu
 * [SvnVersion](docs/SvnVersion.md): summarize the local revision(s) of a working copy.
 * [SvnCheckout](docs/SvnCheckout.md): creates a local workspace of an SVN repository
 * [SvnUpdate](docs/SvnUpdate.md): updates an SVN workspace
+* [SvnWCFiles](docs/SvnWCFiles.md): schedules svn add/delete of files in the SVN workspace
 * [SvnCommit](docs/SvnCommit.md): commits workspace modifications
 * [SvnBranch](docs/SvnBranch.md): creates an SVN branch
 * [SvnTag](docs/SvnTag.md): creates an SVN tag
