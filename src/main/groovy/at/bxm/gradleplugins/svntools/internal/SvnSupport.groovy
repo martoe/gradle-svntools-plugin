@@ -78,6 +78,8 @@ class SvnSupport {
     try {
       def info = remoteRepository(svnUrl, username, password, proxy).info(path, -1)
       result.revisionNumber = info.revision
+      result.committedDate = info.date
+      result.committedAuthor = info.author
       result.url = info.URL
       result.repositoryRootUrl = info.repositoryRoot
       try {
