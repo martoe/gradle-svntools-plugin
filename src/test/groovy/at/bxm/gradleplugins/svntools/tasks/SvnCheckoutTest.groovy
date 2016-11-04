@@ -5,6 +5,7 @@ import at.bxm.gradleplugins.svntools.SvnToolsPluginExtension
 import at.bxm.gradleplugins.svntools.api.SvnDepth
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskExecutionException
+import spock.lang.Ignore
 
 class SvnCheckoutTest extends SvnTestSupport {
 
@@ -179,6 +180,22 @@ class SvnCheckoutTest extends SvnTestSupport {
     childrenOf(ws.find({ it.isDirectory() })).size() == 0
   }
 
+  @Ignore("expensive test with remote dependencies")
+  def "remote repo"() {
+    given: "nonexistent workspace"
+    def workspaceDir = "$tempDir.absolutePath/myNewWorkspace"
+    assert !new File(workspaceDir).exists()
+
+    when: "running the SvnCheckout task"
+    task.svnUrl = "https://svn.svnkit.com/repos/svnkit/trunk/svnkit-osgi"
+    task.workspaceDir = workspaceDir
+    task.execute()
+
+    then: "local workspace exists and contains files"
+    getRevision(workspaceDir) > 10000
+    childrenOf(workspaceDir).size() > 2
+  }
+  
   private static List<File> childrenOf(parentFile) {
     (parentFile as File).listFiles().findAll { it.name != ".svn" }
   }

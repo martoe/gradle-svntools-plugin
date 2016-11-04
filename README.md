@@ -23,6 +23,10 @@ Please report bugs and feature requests at the [Github issue page](https://githu
 
 * [Applying the plugin](docs/ApplyPlugin.md)
 * [General Configuration](docs/GeneralConfig.md)
+* [Examples](examples/)
+
+#### Available tasks
+
 * [SvnInfo](docs/SvnInfo.md): information about a workspace file
 * [SvnVersion](docs/SvnVersion.md): summarize the local revision(s) of a working copy.
 * [SvnCheckout](docs/SvnCheckout.md): creates a local workspace of an SVN repository
