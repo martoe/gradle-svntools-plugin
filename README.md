@@ -29,6 +29,8 @@ Please report bugs and feature requests at the [Github issue page](https://githu
 * [SvnUpdate](docs/SvnUpdate.md): updates an SVN workspace
 * [SvnCommit](docs/SvnCommit.md): commits workspace modifications
 * [SvnRevert](docs/SvnRevert.md): reverts workspace modifications
+* [SvnCreatePatch](docs/SvnCreatePatch.md): creates a patch file based on workspace modifications
+* [SvnApplyPatch](docs/SvnApplyPatch.md): applies a patch file
 * [SvnBranch](docs/SvnBranch.md): creates an SVN branch
 * [SvnTag](docs/SvnTag.md): creates an SVN tag
 * [SvnExport](docs/SvnExport.md): exports parts of an SVN repository to a local directory

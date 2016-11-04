@@ -16,6 +16,6 @@ password      | The SVN password - leave empty if no authentication is required 
     apply plugin: "at.bxm.svntools"
 
     task createPatch(type: at.bxm.gradleplugins.svntools.tasks.SvnCreatePatch) {
-      dir "src/main/java", "src/main/resources"
+      source "src/main/java", "src/main/resources"
       patchFile = "target/myModifications.patch"
     }

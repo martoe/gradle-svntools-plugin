@@ -702,7 +702,7 @@ public class SvnPatchTarget extends SvnTargetContent {
         File fullPath = SVNFileUtil.createFilePath(workingCopyDirectory, relPath);
         try {
             String workingCopyDirectoryPath = SVNFileUtil.getFilePath(workingCopyDirectory.getCanonicalFile());
-            String canonicalFullPath = fullPath.getCanonicalPath();
+            String canonicalFullPath = SVNFileUtil.getFilePath(fullPath.getCanonicalFile()); // PATCH FOR https://issues.tmatesoft.com/issue/SVNKIT-691
             return canonicalFullPath.equals(workingCopyDirectoryPath) || SVNPathUtil.isAncestor(workingCopyDirectoryPath, canonicalFullPath);
         } catch (IOException e) {
             SVNErrorMessage errorMessage = SVNErrorMessage.create(SVNErrorCode.IO_ERROR, e);
