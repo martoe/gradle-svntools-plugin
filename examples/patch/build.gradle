@@ -1,0 +1,44 @@
+buildscript {
+  repositories {
+    mavenLocal()
+    jcenter()
+  }
+  dependencies {
+    classpath("at.bxm.gradleplugins:gradle-svntools-plugin:latest.integration")
+  }
+}
+apply plugin: "at.bxm.svntools"
+
+task clean(type: Delete) {
+  delete project.buildDir
+}
+
+task checkoutSvnkit(type: at.bxm.gradleplugins.svntools.tasks.SvnCheckout, dependsOn: clean) {
+  svnUrl = "https://svn.svnkit.com/repos/svnkit/trunk/"
+  workspaceDir = "$project.buildDir/sample-workspace"
+}
+
+task createPatch(type: at.bxm.gradleplugins.svntools.tasks.SvnCreatePatch, dependsOn: checkoutSvnkit, description: "Checking out a project, make some modification, and then create a patch file") {
+  source "$project.buildDir/sample-workspace"
+  patchFile = "$project.buildDir/sample.patch"
+  doFirst {
+    // perform some modifications
+    def readmeFile = file("$workspaceDir/README.txt")
+    def readme = readmeFile.text
+    readmeFile.text = readme.replace("SVNKit", "This awesome library")
+  }
+}
+
+task applyPatch(type: at.bxm.gradleplugins.svntools.tasks.SvnApplyPatch, dependsOn: checkoutSvnkit, description: "Checking out a project and applying a patch file") {
+  patchFile = "sample.patch"
+  dir = "$project.buildDir/sample-workspace"
+}
+
+// a demo task that tells us at the end of the build if the workspace is clean or dirty
+task printStatus(type: at.bxm.gradleplugins.svntools.tasks.SvnVersion) {
+  sourcePath = "$project.buildDir/sample-workspace"
+  doLast {
+    println "svnversion: $svnVersion - working copy is " + (svnVersion.modified ? "dirty" : "clean")
+  }
+}
+[checkoutSvnkit, createPatch, applyPatch]*.finalizedBy printStatus
