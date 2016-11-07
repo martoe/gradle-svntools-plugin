@@ -8,6 +8,11 @@ import org.tmatesoft.svn.core.SVNDepth
 import org.tmatesoft.svn.core.SVNURL
 import org.tmatesoft.svn.core.auth.BasicAuthenticationManager
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager
+import org.tmatesoft.svn.core.auth.SVNAuthentication
+import org.tmatesoft.svn.core.auth.SVNPasswordAuthentication
+import org.tmatesoft.svn.core.auth.SVNSSHAuthentication
+import org.tmatesoft.svn.core.auth.SVNSSLAuthentication
+import org.tmatesoft.svn.core.auth.SVNUserNameAuthentication
 import org.tmatesoft.svn.core.internal.wc.DefaultSVNOptions
 import org.tmatesoft.svn.core.io.SVNRepository
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory
@@ -28,10 +33,18 @@ class SvnSupport {
   }
 
   static ISVNAuthenticationManager createAuthenticationManager(String username, String password, SvnProxy proxy) {
-    def authManager = new BasicAuthenticationManager(username, password)
+    def passwd = password != null ? password.toCharArray() : null
+    def authManager = BasicAuthenticationManager.newInstance([
+      // the first three arguments are copied from BasicAuthenticationManager.newInstance(String, char[])
+      SVNPasswordAuthentication.newInstance(username, passwd, false, null, false),
+      SVNSSHAuthentication.newInstance(username, passwd, -1, false, null, false),
+      SVNUserNameAuthentication.newInstance(username, false, null, false),
+      // the forth argument is needed when accessing a repo via https
+      SVNSSLAuthentication.newInstance(null as File, "dummy".toCharArray(), false, null, false)
+    ] as SVNAuthentication[])
     if (proxy?.host) {
       log.info "Using proxy $proxy"
-      authManager.setProxy(proxy.host, proxy.port, proxy.username, proxy.password as String)
+      authManager.setProxy(proxy.host, proxy.port, proxy.username, proxy.password?.toCharArray())
     }
     return authManager
   }
