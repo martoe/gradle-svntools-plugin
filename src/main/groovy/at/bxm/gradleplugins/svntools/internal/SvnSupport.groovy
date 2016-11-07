@@ -44,7 +44,7 @@ class SvnSupport {
     ] as SVNAuthentication[])
     if (proxy?.host) {
       log.info "Using proxy $proxy"
-      authManager.setProxy(proxy.host, proxy.port, proxy.username, proxy.password?.toCharArray())
+      authManager.setProxy(proxy.host, proxy.port, proxy.username, (char[])proxy.password?.toCharArray())
     }
     return authManager
   }
