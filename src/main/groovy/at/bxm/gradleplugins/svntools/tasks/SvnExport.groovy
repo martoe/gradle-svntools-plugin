@@ -2,6 +2,7 @@ package at.bxm.gradleplugins.svntools.tasks
 
 import at.bxm.gradleplugins.svntools.internal.SvnBaseTask
 import org.gradle.api.InvalidUserDataException
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import org.tmatesoft.svn.core.SVNDepth
 import org.tmatesoft.svn.core.SVNException
@@ -13,11 +14,11 @@ import static at.bxm.gradleplugins.svntools.internal.SvnSupport.*
 class SvnExport extends SvnBaseTask {
 
   /** The remote SVN URL to be exported */
-  String svnUrl
+  @Internal String svnUrl
   /** The target directory for export (required). If it doesn't exist it will be created. If it exists it must be empty. */
-  def targetDir
+  @Internal targetDir
   /** The revision number to be exported (optional, defaults to HEAD)  */
-  Long revision
+  @Internal Long revision
 
   @TaskAction
   def run() {

@@ -3,6 +3,7 @@ package at.bxm.gradleplugins.svntools.tasks
 import at.bxm.gradleplugins.svntools.internal.SvnBaseTask
 import org.gradle.api.InvalidUserDataException
 import org.gradle.api.PathValidation
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import org.tmatesoft.svn.core.SVNDepth
 import org.tmatesoft.svn.core.SVNException
@@ -15,9 +16,9 @@ class SvnCommit extends SvnBaseTask {
    * If these are not under version control already, they will be added first.
    * If this list is empty of the files contain no modifications, no commit will be executed.
    */
-  def source = []
+  @Internal source = []
   /** An optional commit message. */
-  String commitMessage
+  @Internal String commitMessage
 
   @TaskAction
   def run() {
