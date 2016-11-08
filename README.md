@@ -39,4 +39,4 @@ Please report bugs and feature requests at the [Github issue page](https://githu
 * [SvnTag](docs/SvnTag.md): creates an SVN tag
 * [SvnExport](docs/SvnExport.md): exports parts of an SVN repository to a local directory
 
-[![Build Status](https://travis-ci.org/martoe/gradle-svntools-plugin.png)](https://travis-ci.org/martoe/gradle-svntools-plugin)
+[![Build Status](https://api.travis-ci.org/martoe/gradle-svntools-plugin.svg?branch=develop)](https://travis-ci.org/martoe/gradle-svntools-plugin)
