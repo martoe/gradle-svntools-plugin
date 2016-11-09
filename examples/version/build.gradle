@@ -1,0 +1,19 @@
+import at.bxm.gradleplugins.svntools.tasks.SvnVersion
+
+buildscript {
+  apply from: "../buildscript.gradle", to: buildscript
+}
+apply plugin: "at.bxm.svntools"
+
+task printVersionForProject(description: "Using the implicit 'svntools.version' object - only works if the project is part of an SVN workspace") << {
+  println "'svnversion' output: $svntools.version"
+  println svntools.version.modified ? "working copy is dirty" : "working copy is clean"
+}
+
+task printVersion(type: SvnVersion, description: "Using the SvnVersion task for advanced configuration") {
+  sourcePath = "$project.projectDir/../workspace"
+  doLast {
+    println "'svnversion' output: $svnVersion"
+    println svnVersion.modified ? "working copy is dirty" : "working copy is clean"
+  }
+}

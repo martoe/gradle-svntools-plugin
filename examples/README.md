@@ -2,11 +2,18 @@
 
 To use a local snapshot version instead of the latest release, execute `gradlew clean publishToMavenLocal` first
 
+
 ## SVN Checkout
 
-Checking out the SVNKit sources:
+Checking out the gradle-svntools-plugin sources:
 
-    gradlew -b examples/checkout/build.gradle checkoutSvnkit
+    gradlew -b examples/checkout/build.gradle checkoutSvntools
+
+## SVN Version
+
+Print some status information for a checked-out workspace:
+
+    gradlew -b examples/version/build.gradle printVersion
 
 ## SVN Patches
 

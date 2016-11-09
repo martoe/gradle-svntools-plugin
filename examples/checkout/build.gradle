@@ -1,19 +1,15 @@
+import at.bxm.gradleplugins.svntools.tasks.SvnCheckout
+
 buildscript {
-  repositories {
-    mavenLocal()
-    jcenter()
-  }
-  dependencies {
-    classpath("at.bxm.gradleplugins:gradle-svntools-plugin:latest.integration")
-  }
+  apply from: "../buildscript.gradle", to: buildscript
 }
 apply plugin: "at.bxm.svntools"
 
 task clean(type: Delete) {
-  delete project.buildDir
+  delete "$project.projectDir/../workspace"
 }
 
-task checkoutSvnkit(type: at.bxm.gradleplugins.svntools.tasks.SvnCheckout, dependsOn: clean) {
-  svnUrl = "https://svn.svnkit.com/repos/svnkit/trunk/"
-  workspaceDir = "$project.buildDir/sample-workspace"
+task checkoutSvntools(type: SvnCheckout, dependsOn: clean) {
+  svnUrl = "https://github.com/martoe/gradle-svntools-plugin/trunk"
+  workspaceDir = "$project.projectDir/../workspace"
 }

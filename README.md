@@ -2,22 +2,9 @@
 
 A [Gradle](https://www.gradle.org) plugin (based on [SVNKit](http://svnkit.com/)) that provides various [Subversion](http://svnbook.red-bean.com/)-related tasks.
 
-Here is a very short build script that prints out the SVN revision:
-
-    apply plugin: "at.bxm.svntools"
-    task info << {
-      println "Current revision is $svntools.info.revisionNumber"
-    }
-
 The svntools-plugin can interact with existing SVN workspaces as well as create new workspaces (by performing a svn-checkout). It can interact with any SVN working copy format; no additional SVN client is required.
 
 Please report bugs and feature requests at the [Github issue page](https://github.com/martoe/gradle-svntools-plugin/issues).
-
-## Use-case examples
-
-* Add the SVN revision to the MANIFEST file when publishing artifacts
-* Create a tag as part of an automated release process
-* Commit files that have been changed during the build process (e.g. bumped version numbers)
 
 ## Usage
 
@@ -25,7 +12,7 @@ Please report bugs and feature requests at the [Github issue page](https://githu
 * [General Configuration](docs/GeneralConfig.md)
 * [Examples](examples/)
 
-#### Available tasks
+## Available tasks
 
 * [SvnInfo](docs/SvnInfo.md): information about a workspace file
 * [SvnVersion](docs/SvnVersion.md): summarize the local revision(s) of a working copy.

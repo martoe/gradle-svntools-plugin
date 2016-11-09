@@ -1,0 +1,8 @@
+buildscript {
+  apply from: "../buildscript.gradle", to: buildscript
+}
+apply plugin: "at.bxm.svntools"
+
+task printRevision << {
+  println "Current revision is $svntools.info.revisionNumber"
+}

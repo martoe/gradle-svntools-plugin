@@ -1,64 +1,50 @@
-Index: README.txt
+Index: README.md
 ===================================================================
---- README.txt	(revision 10631)
-+++ README.txt	(working copy)
-@@ -1,15 +1,15 @@
--This is a README.txt file for SVNKit - pure Java Subversion client library.
-+This is a README.txt file for This awesome library - pure Java Subversion client library.
+--- README.md	(revision 225)
++++ README.md	(working copy)
+@@ -1,21 +1,21 @@
+ # gradle-svntools-plugin
  
- 1. DESCRIPTION
+-A [Gradle](https://www.gradle.org) plugin (based on [SVNKit](http://svnkit.com/)) that provides various [Subversion](http://svnbook.red-bean.com/)-related tasks.
++A [Gradle](https://www.gradle.org) plugin (based on [SubersionKit](http://svnkit.com/)) that provides various [Subversion](http://svnbook.red-bean.com/)-related tasks.
  
--SVNKit is a pure Java Subversion client library. 
-+This awesome library is a pure Java Subversion client library. 
+-Here is a very short build script that prints out the SVN revision:
++Here is a very short build script that prints out the Subersion revision:
  
- 2. LICENSING
+     apply plugin: "at.bxm.svntools"
+     task info << {
+       println "Current revision is $svntools.info.revisionNumber"
+     }
  
--SVNKit is open source product. The complete source code, documentation, and files required 
-+This awesome library is open source product. The complete source code, documentation, and files required 
- to build the library are available for download from our Web site at http://svnkit.com/
+-The svntools-plugin can interact with existing SVN workspaces as well as create new workspaces (by performing a svn-checkout). It can interact with any SVN working copy format; no additional SVN client is required.
++The svntools-plugin can interact with existing Subersion workspaces as well as create new workspaces (by performing a svn-checkout). It can interact with any Subersion working copy format; no additional Subersion client is required.
  
--The TMate open source license permits you to use SVNKit at no charge under the condition 
-+The TMate open source license permits you to use This awesome library at no charge under the condition 
- that if you use the software in an application you redistribute, the complete source code for 
- your application must be available and freely redistributable under reasonable conditions. 
+ Please report bugs and feature requests at the [Github issue page](https://github.com/martoe/gradle-svntools-plugin/issues).
  
-@@ -22,26 +22,26 @@
+ ## Use-case examples
  
- 3. FEATURES
+-* Add the SVN revision to the MANIFEST file when publishing artifacts
++* Add the Subersion revision to the MANIFEST file when publishing artifacts
+ * Create a tag as part of an automated release process
+ * Commit files that have been changed during the build process (e.g. bumped version numbers)
  
--SVNKit allows to work with Subversion repositories and Subversion working copies. SVNKit features
-+This awesome library allows to work with Subversion repositories and Subversion working copies. This awesome library features
- direct repository access as well as support for all high level Subversion operation that are 
- available with the command line Subversion client. 
+@@ -29,14 +29,14 @@
  
--This version of SVNKit supports all major Subversion 1.8 features.
-+This version of This awesome library supports all major Subversion 1.8 features.
+ * [SvnInfo](docs/SvnInfo.md): information about a workspace file
+ * [SvnVersion](docs/SvnVersion.md): summarize the local revision(s) of a working copy.
+-* [SvnCheckout](docs/SvnCheckout.md): creates a local workspace of an SVN repository
+-* [SvnUpdate](docs/SvnUpdate.md): updates an SVN workspace
++* [SvnCheckout](docs/SvnCheckout.md): creates a local workspace of an Subersion repository
++* [SvnUpdate](docs/SvnUpdate.md): updates an Subersion workspace
+ * [SvnCommit](docs/SvnCommit.md): commits workspace modifications
+ * [SvnRevert](docs/SvnRevert.md): reverts workspace modifications
+ * [SvnCreatePatch](docs/SvnCreatePatch.md): creates a patch file based on workspace modifications
+ * [SvnApplyPatch](docs/SvnApplyPatch.md): applies a patch file
+-* [SvnBranch](docs/SvnBranch.md): creates an SVN branch
+-* [SvnTag](docs/SvnTag.md): creates an SVN tag
+-* [SvnExport](docs/SvnExport.md): exports parts of an SVN repository to a local directory
++* [SvnBranch](docs/SvnBranch.md): creates an Subersion branch
++* [SvnTag](docs/SvnTag.md): creates an Subersion tag
++* [SvnExport](docs/SvnExport.md): exports parts of an Subersion repository to a local directory
  
--This version of SVNKit supports 1.8 and 1.6 working copy formats; 1.7 working copies need to be upgraded to 1.8 format.
-+This version of This awesome library supports 1.8 and 1.6 working copy formats; 1.7 working copies need to be upgraded to 1.8 format.
- 
- 4. RESOURCES
- 
--SVNKit Web Site: http://svnkit.com/
--SVNKit Documentation: http://svnkit.com/documentation.html
--SVNKit Wiki: https://wiki.svnkit.com/
--SVNKit JavaDoc: http://svnkit.com/javadoc/
-+This awesome library Web Site: http://svnkit.com/
-+This awesome library Documentation: http://svnkit.com/documentation.html
-+This awesome library Wiki: https://wiki.svnkit.com/
-+This awesome library JavaDoc: http://svnkit.com/javadoc/
- 
--SVNKit Mailing List: http://svnkit.com/support.html
--SVNKit Issues Tracker: http://svnkit.com/tracker/
-+This awesome library Mailing List: http://svnkit.com/support.html
-+This awesome library Issues Tracker: http://svnkit.com/tracker/
- 
--SVNKit Continuous Build Server: https://teamcity.svnkit.com/
-+This awesome library Continuous Build Server: https://teamcity.svnkit.com/
- 
- 5. CONTACTS
- 
--On all questions related to SVNKit please contact us at support@svnkit.com
-\ No newline at end of file
-+On all questions related to This awesome library please contact us at support@svnkit.com
-\ No newline at end of file
+ [![Build Status](https://travis-ci.org/martoe/gradle-svntools-plugin.png)](https://travis-ci.org/martoe/gradle-svntools-plugin)

@@ -1,44 +1,42 @@
+import at.bxm.gradleplugins.svntools.tasks.SvnApplyPatch
+import at.bxm.gradleplugins.svntools.tasks.SvnCreatePatch
+import at.bxm.gradleplugins.svntools.tasks.SvnRevert
+import at.bxm.gradleplugins.svntools.tasks.SvnVersion
+
 buildscript {
-  repositories {
-    mavenLocal()
-    jcenter()
-  }
-  dependencies {
-    classpath("at.bxm.gradleplugins:gradle-svntools-plugin:latest.integration")
-  }
+  apply from: "../buildscript.gradle", to: buildscript
 }
 apply plugin: "at.bxm.svntools"
 
-task clean(type: Delete) {
-  delete project.buildDir
-}
-
-task checkoutSvnkit(type: at.bxm.gradleplugins.svntools.tasks.SvnCheckout, dependsOn: clean) {
-  svnUrl = "https://svn.svnkit.com/repos/svnkit/trunk/"
-  workspaceDir = "$project.buildDir/sample-workspace"
-}
-
-task createPatch(type: at.bxm.gradleplugins.svntools.tasks.SvnCreatePatch, dependsOn: checkoutSvnkit, description: "Checking out a project, make some modification, and then create a patch file") {
-  source "$project.buildDir/sample-workspace"
+task createPatch(type: SvnCreatePatch, description: "Make some modification to a workspace, and then create a patch file") {
+  source "$project.projectDir/../workspace"
   patchFile = "$project.buildDir/sample.patch"
   doFirst {
     // perform some modifications
-    def readmeFile = file("$workspaceDir/README.txt")
+    def readmeFile = file("$project.projectDir/../workspace/README.md")
     def readme = readmeFile.text
-    readmeFile.text = readme.replace("SVNKit", "This awesome library")
+    readmeFile.text = readme.replace("SVN", "Subversion")
   }
 }
 
-task applyPatch(type: at.bxm.gradleplugins.svntools.tasks.SvnApplyPatch, dependsOn: checkoutSvnkit, description: "Checking out a project and applying a patch file") {
-  patchFile = "sample.patch"
-  dir = "$project.buildDir/sample-workspace"
+task applyPatch(type: SvnApplyPatch, description: "Checking out a project and applying a patch file") {
+  patchFile = "$project.projectDir/sample.patch"
+  dir = "$project.projectDir/../workspace"
 }
 
+// a helper task to clean up after 'createPatch'
+task revertAfterCreatePatch(type: SvnRevert) {
+  revert "$project.projectDir/../workspace"
+  recursive = true
+}
+createPatch.finalizedBy revertAfterCreatePatch
+
 // a demo task that tells us at the end of the build if the workspace is clean or dirty
-task printStatus(type: at.bxm.gradleplugins.svntools.tasks.SvnVersion) {
-  sourcePath = "$project.buildDir/sample-workspace"
+task printStatus(type: SvnVersion) {
+  sourcePath = "$project.projectDir/../workspace"
   doLast {
     println "svnversion: $svnVersion - working copy is " + (svnVersion.modified ? "dirty" : "clean")
   }
 }
-[checkoutSvnkit, createPatch, applyPatch]*.finalizedBy printStatus
+[createPatch, applyPatch, revertAfterCreatePatch]*.finalizedBy printStatus
+
