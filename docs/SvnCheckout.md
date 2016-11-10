@@ -17,11 +17,4 @@ update       | If "workspaceDir" already contains checked-out data, update it in
 
 ### Example
 
-This Gradle script performs a checkout from a local SVN repository into `build/workspace`:
-
-    apply plugin: "at.bxm.svntools"
-
-    task checkout(type: at.bxm.gradleplugins.svntools.tasks.SvnCheckout) {
-      svnUrl = "file:///home/user/svn/repo/myproject/trunk"
-      workspaceDir = "$project.buildDir/workspace"
-    }
+See [checkout examples](../examples/README.md#svn-checkout)

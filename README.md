@@ -13,12 +13,6 @@ Plugin version | Gradle version | Java version
 up to 1.7      | 2.0 - 2.14     | 1.6 and above
 2.0 and above  | 3.0 and above  | 1.7 and above
 
-## Use-case examples
-
-* Add the SVN revision to the MANIFEST file when publishing artifacts
-* Create a tag as part of an automated release process
-* Commit files that have been changed during the build process (e.g. bumped version numbers)
-
 ## Usage
 
 * [Applying the plugin](docs/ApplyPlugin.md)

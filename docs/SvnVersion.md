@@ -15,4 +15,4 @@ password           | The SVN password - leave empty if no authentication is requ
 
 ### Example
 
-see [examples/SvnVersion/build.gradle](../examples/SvnVersion/build.gradle)
+See [version examples](../examples/README.md#svn-version)
