@@ -3,18 +3,19 @@ package at.bxm.gradleplugins.svntools.tasks
 import at.bxm.gradleplugins.svntools.internal.SvnBaseTask
 import org.gradle.api.InvalidUserDataException
 import org.gradle.api.PathValidation
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import org.tmatesoft.svn.core.SVNDepth
 import org.tmatesoft.svn.core.SVNException
 
-import static at.bxm.gradleplugins.svntools.internal.SvnSupport.revisionFrom
+import static at.bxm.gradleplugins.svntools.internal.SvnSupport.*
 
 class SvnUpdate extends SvnBaseTask {
 
   /** Local workspace that should be updated (default: {@code project.projectDir}) */
-  def workspaceDir
+  @Internal workspaceDir
   /** The target revision number (optional, defaults to HEAD)  */
-  Long revision
+  @Internal Long revision
 
   @TaskAction
   def run() {

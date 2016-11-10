@@ -3,6 +3,7 @@ package at.bxm.gradleplugins.svntools.tasks
 import at.bxm.gradleplugins.svntools.internal.SvnBaseTask
 import org.gradle.api.InvalidUserDataException
 import org.gradle.api.file.FileCollection
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import org.tmatesoft.svn.core.SVNException
 
@@ -11,15 +12,15 @@ import static org.tmatesoft.svn.core.wc.SVNRevision.*
 
 /**
  * Creates a patch file that contains all modifications of local workspace files and directories (including subdirectories).
- * 
+ *
  * Corresponds to a `svn diff > filename.patch`
  */
 class SvnCreatePatch extends SvnBaseTask {
 
   /** Local workspace files and directories with modifications that shall be saved to a patch file (default: {@code project.projectDir}) */
-  final source = []
+  @Internal final source = []
   /** The name of the target patch file (required). If it exists it will be overwritten */
-  def patchFile
+  @Internal patchFile
 
   void setSource(path) {
     source.clear()
@@ -31,14 +32,14 @@ class SvnCreatePatch extends SvnBaseTask {
       source << it
     }
   }
-  
-  FileCollection getSourceFiles() {
+
+  private FileCollection sourceFiles() {
     return project.files(source ? source : project.projectDir);
   }
-  
+
   @TaskAction
   def run() {
-    def sources = sourceFiles.files
+    def sources = sourceFiles().files
     def targetFile = project.file(patchFile)
     if (targetFile.exists()) {
       if (targetFile.file) {

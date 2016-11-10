@@ -2,6 +2,7 @@ package at.bxm.gradleplugins.svntools.internal
 
 import org.gradle.api.InvalidUserDataException
 import org.gradle.api.PathValidation
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import org.tmatesoft.svn.core.SVNException
 import org.tmatesoft.svn.core.SVNNodeKind
@@ -15,17 +16,17 @@ import org.tmatesoft.svn.core.wc.SVNRevision
 abstract class SvnCopy extends SvnBaseTask {
 
   /** The remote SVN URL to be copied from. Optional - fallback to {@link #workspaceDir} if missing. */
-  String svnUrl
+  @Internal String svnUrl
   /** Local workspace that should be copied (default: {@code project.projectDir}) */
-  def workspaceDir
+  @Internal workspaceDir
   /** An optional commit message. */
-  String commitMessage
+  @Internal String commitMessage
   /** If {@code true}, the target will be removed first if it already exists */
-  boolean replaceExisting
+  @Internal boolean replaceExisting
+  /** If local changes should be committed to the copy target. Only used it not svnUrl is provided. */
+  @Internal boolean localChanges
 
-  /** If Local changes should be commited to the copy target. Only used it not svnUrl is provided. */
-  boolean localChanges
-
+  @Internal
   abstract String getDestinationPath()
 
   @TaskAction
@@ -64,8 +65,8 @@ abstract class SvnCopy extends SvnBaseTask {
     def workspace = workspaceDir ? project.file(workspaceDir, PathValidation.DIRECTORY) : project.projectDir
     try {
       SVNInfo info = clientManager.WCClient.doInfo(workspace, SVNRevision.WORKING)
-      if(localChanges) {
-        return [ copySource: new SVNCopySource(SVNRevision.WORKING, SVNRevision.WORKING, workspace), url: info.URL ]
+      if (localChanges) {
+        return [copySource: new SVNCopySource(SVNRevision.WORKING, SVNRevision.WORKING, workspace), url: info.URL]
       } else {
         return [copySource: new SVNCopySource(info.revision, info.revision, info.URL), url: info.URL]
       }
@@ -80,7 +81,7 @@ abstract class SvnCopy extends SvnBaseTask {
     }
     try {
       SVNURL url = SVNURL.parseURIEncoded(svnUrl)
-      return [ copySource: new SVNCopySource(SVNRevision.HEAD, SVNRevision.HEAD, url), url: url ]
+      return [copySource: new SVNCopySource(SVNRevision.HEAD, SVNRevision.HEAD, url), url: url]
     } catch (SVNException e) {
       throw new InvalidUserDataException("Invalid svnUrl value: $svnUrl", e)
     }

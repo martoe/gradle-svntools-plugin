@@ -2,6 +2,7 @@ package at.bxm.gradleplugins.svntools.tasks
 
 import at.bxm.gradleplugins.svntools.internal.SvnBaseTask
 import org.gradle.api.InvalidUserDataException
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import org.tmatesoft.svn.core.SVNException
 
@@ -13,9 +14,9 @@ import static org.gradle.api.PathValidation.*
 class SvnApplyPatch extends SvnBaseTask {
 
   /** The name of the patch file, relative to the project directory (required) */
-  def patchFile
+  @Internal patchFile
   /** The base directory to apply the patch, must be part of a local SVN workspace (default: `$project.projectDir`) */
-  def dir
+  @Internal dir
 
   @TaskAction
   def run() {
