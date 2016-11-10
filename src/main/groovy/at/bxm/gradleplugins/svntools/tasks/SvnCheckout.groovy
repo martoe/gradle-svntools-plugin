@@ -3,6 +3,7 @@ package at.bxm.gradleplugins.svntools.tasks
 import at.bxm.gradleplugins.svntools.api.SvnDepth
 import at.bxm.gradleplugins.svntools.internal.SvnBaseTask
 import org.gradle.api.InvalidUserDataException
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import org.tmatesoft.svn.core.SVNDepth
 import org.tmatesoft.svn.core.SVNException
@@ -14,18 +15,18 @@ import static at.bxm.gradleplugins.svntools.internal.SvnSupport.*
 class SvnCheckout extends SvnBaseTask {
 
   /** The remote SVN URL to be checked out */
-  String svnUrl
+  @Internal String svnUrl
   /** The target directory for checkout (required). If it doesn't exist it will be created. If it exists it must be empty. */
-  def workspaceDir
+  @Internal workspaceDir
   /** The revision number to be checked out (optional, defaults to HEAD)  */
-  Long revision
+  @Internal Long revision
   /**
    * The checkout depth (optional, defaults to INFINITY)
    * @see SvnDepth
    */
-  Object depth
+  @Internal depth
   /** If {@code true}, an "svn update" is performed if the {@link #workspaceDir} already contains checked-out data. */
-  boolean update
+  @Internal update
 
   @TaskAction
   def run() {

@@ -6,6 +6,13 @@ The svntools-plugin can interact with existing SVN workspaces as well as create 
 
 Please report bugs and feature requests at the [Github issue page](https://github.com/martoe/gradle-svntools-plugin/issues).
 
+## Version compatibility
+
+Plugin version | Gradle version | Java version 
+-------------- | -------------- | -------------
+up to 1.7      | 2.0 - 2.14     | 1.6 and above
+2.0 and above  | 3.0 and above  | 1.7 and above
+
 ## Usage
 
 * [Applying the plugin](docs/ApplyPlugin.md)
