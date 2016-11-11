@@ -14,7 +14,7 @@ class SvnToolsPluginExtension {
 
   private final Project project
   String username
-  String password
+  char[] password
   final SvnProxy proxy = new SvnProxy()
   SvnData info
   SvnVersionData version
