@@ -3,8 +3,8 @@
 The `svntools` block (implemented by [SvnToolsPluginExtension](../src/main/groovy/at/bxm/gradleplugins/svntools/SvnToolsPluginExtension.groovy)) can be used to
 
 * specify default values for some configuration properties:
-    * **username**: The SVN username - leave empty if no authentication is required
-    * **password**: The SVN password - leave empty if no authentication is required
+    * **username**: The SVN username - leave empty if no authentication is required. [See below](#svn-credentials)
+    * **password**: The SVN password - leave empty if no authentication is required. [See below](#svn-credentials)
 * adjust proxy server settings (see below)
 * access information about the current SVN workspace root (i.e. the project's root directory), wrapped by an [SvnData](../src/main/groovy/at/bxm/gradleplugins/svntools/api/SvnData.groovy) object:
     * **info.revisionNumber** The SVN revision number
@@ -27,6 +27,27 @@ The `svntools` block (implemented by [SvnToolsPluginExtension](../src/main/groov
 
 Note: The `svntools.info` and `svntools.version` objects assume that the current Gradle project has been checked out from SVN. To retrieve information about other SVN files or workspaces, use the [SvnInfo](SvnInfo.md) resp. [SvnVersion](SvnVersion.md) tasks.
 
+#### SVN credentials
+
+It isn't a good idea to include usernames and passwords in the build script. Instead, add them to the `~/gradle.properties` file:
+
+    svnUsername = foo
+    svnPassword = bar
+
+Now, these values can be used within the build script like regular variables:
+
+    task svnStatus(type: at.bxm.gradleplugins.svntools.tasks.SvnInfo) {
+      username = svnUsername // credentials for the current task only
+      password = svnPassword
+    }
+
+    svntools {
+      username = svnUsername // credentials for all tasks
+      password = svnPassword
+    }
+
+Instead of `username = svnUsername`, write `username = findProperty("svnUsername")` to avoid an error if that value doesn't exist.
+ 
 ### Example
 
     apply plugin: "at.bxm.svntools"
