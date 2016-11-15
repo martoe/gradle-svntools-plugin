@@ -34,3 +34,4 @@ up to 1.7      | 2.0 - 2.14     | 1.6 and above
 * [SvnExport](docs/SvnExport.md): exports parts of an SVN repository to a local directory
 
 [![Build Status](https://api.travis-ci.org/martoe/gradle-svntools-plugin.svg?branch=develop)](https://travis-ci.org/martoe/gradle-svntools-plugin)
+[![Coverage Status](https://coveralls.io/repos/github/martoe/gradle-svntools-plugin/badge.svg?branch=develop)](https://coveralls.io/github/martoe/gradle-svntools-plugin?branch=develop)

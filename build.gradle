@@ -8,6 +8,8 @@ plugins {
   id "groovy"
   id "idea"
   id "nu.studer.plugindev" version "1.0.6"
+  id "jacoco"
+  id "com.github.kt3k.coveralls" version "2.7.1"
 }
 
 group = "at.bxm.gradleplugins"
@@ -60,5 +62,11 @@ bintrayUpload.dependsOn check
 if (project.hasProperty("ignoreTestFailures")) {
   test {
     ignoreFailures = ignoreTestFailures == "true"
+  }
+}
+
+jacocoTestReport {
+  reports {
+    xml.enabled = true // coveralls plugin depends on xml format report
   }
 }
