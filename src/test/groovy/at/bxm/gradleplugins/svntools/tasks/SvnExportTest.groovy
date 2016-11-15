@@ -28,7 +28,7 @@ class SvnExportTest extends SvnTestSupport {
 
     then: "targetDir exists"
     targetDir.exists()
-    targetDir.list() as List == ["dir", "test.txt"]
+    targetDir.list().sort() as List == ["dir", "test.txt"]
   }
 
   def "invalid remote URL"() {
