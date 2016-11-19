@@ -1,15 +1,21 @@
 package at.bxm.gradleplugins.svntools.tasks
 
+import at.bxm.gradleplugins.svntools.SvnTestSupport
 import org.gradle.api.Project
 
 /**
  * Do all the tests for SvnTag plus some extra ...
  */
-class SvnTagDirty extends SvnTagTest {
+class SvnTagDirty extends SvnTestSupport {
 
+  File workspace
+  Project project
+  SvnTag task
 
   def setup() {
-    task.localChanges = true
+    createLocalRepo()
+    project = projectWithPlugin()
+    task = project.task(type: SvnTag, "tagging") as SvnTag
   }
 
   def "tag on dirty workspace" () {
@@ -20,6 +26,7 @@ class SvnTagDirty extends SvnTagTest {
 
     when: "running the SvnTag task"
     task.tagName = "dirty-tag"
+    task.localChanges = true
     task.workspaceDir = workspace
     task.execute()
 
@@ -42,7 +49,6 @@ class SvnTagDirty extends SvnTagTest {
 
     when: "running the SvnTag task without local changes"
     task.tagName = "clean-tag"
-    task.localChanges = false
     task.workspaceDir = workspace
     task.execute()
 

@@ -1,5 +1,4 @@
 package at.bxm.gradleplugins.svntools.api
-
 /** Checkout/update depth constants, see http://svnbook.red-bean.com/en/1.7/svn.advanced.sparsedirs.html */
 enum SvnDepth {
 
@@ -11,8 +10,4 @@ enum SvnDepth {
   IMMEDIATES,
   /** Include the immediate target, its file and directory children, its children's children, and so on to full recursion. */
   INFINITY
-
-  static SvnDepth parse(value) {
-    return value ? valueOf(value.toString().toUpperCase()) : null
-  }
 }
