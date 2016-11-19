@@ -17,6 +17,8 @@ class SvnToolsPluginExtensionTest extends SvnTestSupport {
     !svnData.branch
     !svnData.tag
     svnData.revisionNumber == 1
+    svnData.committedDate != null
+    svnData.committedAuthor == "username"
   }
 
   def "access svnData outside a workspace"() {
