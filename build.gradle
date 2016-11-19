@@ -59,14 +59,23 @@ bintray { // https://github.com/bintray/gradle-bintray-plugin
 }
 bintrayUpload.dependsOn check
 
-if (project.hasProperty("ignoreTestFailures")) {
-  test {
+def patchedSvnkitFiles = "org/tmatesoft/svn/core/internal/wc2/patch/*" // exclude from coverage report
+test {
+  if (project.hasProperty("ignoreTestFailures")) {
     ignoreFailures = ignoreTestFailures == "true"
+  }
+  jacoco {
+    excludes << patchedSvnkitFiles
   }
 }
 
 jacocoTestReport {
   reports {
     xml.enabled = true // coveralls plugin depends on xml format report
+  }
+  afterEvaluate { // https://issues.gradle.org/browse/GRADLE-2955
+    classDirectories = files(classDirectories.files.collect {
+      fileTree(dir: it, exclude: patchedSvnkitFiles)
+    })
   }
 }
