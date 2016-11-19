@@ -53,6 +53,8 @@ class SvnSupport {
     try {
       def info = createSvnClientManager(username, password, proxy).WCClient.doInfo srcPath, SVNRevision.WORKING
       result.revisionNumber = info.committedRevision.number
+      result.committedDate = info.committedDate
+      result.committedAuthor = info.author
       result.url = info.URL
       result.repositoryRootUrl = info.repositoryRootURL
       try {
@@ -88,6 +90,8 @@ class SvnSupport {
     try {
       def info = remoteRepository(svnUrl, username, password, proxy).info(path, -1)
       result.revisionNumber = info.revision
+      result.committedDate = info.date
+      result.committedAuthor = info.author
       result.url = info.URL
       result.repositoryRootUrl = info.repositoryRoot
       try {
@@ -133,6 +137,31 @@ class SvnSupport {
     return versionHandler.version
   }
 
+  static void doSvnAdd(File[] paths, SVNDepth svnDepth, String username, String password, SvnProxy proxy, boolean ignoreErrors) {
+    try {
+      createSvnClientManager(username, password, proxy).WCClient.doAdd (paths, /*force:*/ ignoreErrors, /*mkdir:*/ false, /*climbUnversionedParents:*/ true
+                                , /*depth:*/ svnDepth, /*depthIsSticky:*/ false, /*includeIgnored:*/ false, /*makeParents:*/ true)
+    } catch (Exception e) {
+      // if (ignoreErrors) {
+      //   log.warning "Could not execute svn:add on ${paths*.absolutePath} ($e.message)"
+      // } else {
+        throw new InvalidUserDataException("Could not execute svn:add on ${paths*.absolutePath} ($e.message)", e)
+      // }
+    }
+  }
+
+  static void doSvnDelete(File path, String username, String password, SvnProxy proxy, boolean ignoreErrors) {
+    try {
+      createSvnClientManager(username, password, proxy).WCClient.doDelete (/*path:*/ path, /*force:*/ ignoreErrors, /*dryRun:*/ false)
+    } catch (Exception e) {
+      if (ignoreErrors) {
+         log.warning "Could not execute svn:delete on $path.absolutePath ($e.message)"
+      } else {
+        throw new InvalidUserDataException("Could not execute svn:delete on $path.absolutePath ($e.message)", e)
+      }
+    }
+  }
+
   static SVNRepository remoteRepository(SVNURL repositoryUrl, String username, char[] password, SvnProxy proxy) {
     def repo = SVNRepositoryFactory.create(repositoryUrl)
     repo.authenticationManager = createAuthenticationManager(username, password, proxy)
@@ -156,6 +185,10 @@ class SvnSupport {
         if (status.contentsStatus != SVNStatusType.STATUS_NORMAL) {
           // TODO use "combinedNodeAndContentsStatus" instead?
           log.info("$status.repositoryRelativePath has status $status.contentsStatus - workspace is dirty")
+          version.modified = true
+        } else if (status.nodeStatus != SVNStatusType.STATUS_NORMAL) {
+          // e.g. deleted
+          log.info("$status.repositoryRelativePath has nodeStatus $status.nodeStatus - workspace is dirty")
           version.modified = true
         }
         // TODO also check "propertiesStatus"?

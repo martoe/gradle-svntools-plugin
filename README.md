@@ -25,6 +25,8 @@ up to 1.7      | 2.0 - 2.14     | 1.6 and above
 * [SvnVersion](docs/SvnVersion.md): summarize the local revision(s) of a working copy.
 * [SvnCheckout](docs/SvnCheckout.md): creates a local workspace of an SVN repository
 * [SvnUpdate](docs/SvnUpdate.md): updates an SVN workspace
+* [SvnAdd](docs/SvnAdd.md): schedules svn add of files in the SVN workspace
+* [SvnDelete](docs/SvnDelete.md): schedules svn delete of files in the SVN workspace
 * [SvnCommit](docs/SvnCommit.md): commits workspace modifications
 * [SvnRevert](docs/SvnRevert.md): reverts workspace modifications
 * [SvnCreatePatch](docs/SvnCreatePatch.md): creates a patch file based on workspace modifications
