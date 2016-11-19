@@ -174,6 +174,10 @@ class SvnSupport {
           // TODO use "combinedNodeAndContentsStatus" instead?
           log.info("$status.repositoryRelativePath has status $status.contentsStatus - workspace is dirty")
           version.modified = true
+        } else if (status.nodeStatus != SVNStatusType.STATUS_NORMAL) {
+          // e.g. deleted
+          log.info("$status.repositoryRelativePath has nodeStatus $status.nodeStatus - workspace is dirty")
+          version.modified = true
         }
         // TODO also check "propertiesStatus"?
         version.switched |= status.switched
