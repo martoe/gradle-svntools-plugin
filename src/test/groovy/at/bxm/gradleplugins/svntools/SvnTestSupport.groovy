@@ -19,7 +19,7 @@ import static org.tmatesoft.svn.core.wc.SVNWCUtil.*
 abstract class SvnTestSupport extends Specification {
 
   File tempDir
-  private SVNClientManager clientManager
+  SVNClientManager clientManager
   SVNURL localRepoUrl
 
   Project projectWithPlugin(File projectDir = null) {

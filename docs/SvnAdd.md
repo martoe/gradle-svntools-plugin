@@ -1,16 +1,17 @@
 ## [SvnAdd](../src/main/groovy/at/bxm/gradleplugins/svntools/tasks/SvnAdd.groovy) task
 
-Allows scheduling of file paths add within an SVN workspace (equivalent to svn add).
+Schedules files (within an SVN working copy) to be added to version control.
 
 ### Configuration
 
 Property           | Description | Default value
 ------------------ | ----------- | -------------
+add                | Files and directories to be added by this task |
+recursive          | Also add items in subdirectories | `false`
 ignoreErrors       | Continue the build if the specified paths conflict with the WC status (can't add) | `false`
+username           | The SVN username - leave empty if no authentication is required | `$project.svntools.username`
+password           | The SVN password - leave empty if no authentication is required | `$project.svntools.password`
 
-method             | Description 
------------------- | -----------------------
-add                | Files to be added by this task
 
 ### Example
 

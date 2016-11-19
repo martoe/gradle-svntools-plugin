@@ -2,18 +2,17 @@ package at.bxm.gradleplugins.svntools.tasks
 
 import at.bxm.gradleplugins.svntools.internal.SvnBaseTask
 import at.bxm.gradleplugins.svntools.internal.SvnSupport
+import org.gradle.api.InvalidUserDataException
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
-import org.tmatesoft.svn.core.SVNDepth
+import org.tmatesoft.svn.core.SVNException
 
-/** Provides add / delete operations on WC Files */
+/** Schedules files (within an SVN working copy) to be removed from version control (and deleted locally) */
 class SvnDelete extends SvnBaseTask {
 
+  @Internal final delete = []
   /** Continue the build if the specified paths conflict with the WC status (can't delete) (default: {@code false}) */
-  boolean ignoreErrors = false
-
-  final delete = []
-
-  String depth
+  @Internal boolean ignoreErrors
 
   /** To specify files to be scheduled for deletion */
   void setDelete(target) {
@@ -29,9 +28,17 @@ class SvnDelete extends SvnBaseTask {
 
   @TaskAction
   def run() {
-    SVNDepth svnDepth = (depth ? SVNDepth.fromString(depth) : SVNDepth.FILES)
+    def wcClient = SvnSupport.createSvnClientManager(username, password, proxy).WCClient
     project.files(delete).each { file ->
-      SvnSupport.doSvnDelete(file, getUsername(), getPassword(), proxy, ignoreErrors)
+      try {
+        wcClient.doDelete(file, ignoreErrors, false)
+      } catch (SVNException e) {
+        if (ignoreErrors) {
+          logger.warn "Could not execute svn-delete on $file.absolutePath ($e.message)"
+        } else {
+          throw new InvalidUserDataException("Could not execute svn-delete on $file.absolutePath ($e.message)", e)
+        }
+      }
     }
   }
 }
