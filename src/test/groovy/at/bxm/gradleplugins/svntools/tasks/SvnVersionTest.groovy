@@ -1,19 +1,16 @@
 package at.bxm.gradleplugins.svntools.tasks
 
-import at.bxm.gradleplugins.svntools.SvnTestSupport
 import at.bxm.gradleplugins.svntools.api.SvnVersionData
-import org.tmatesoft.svn.core.SVNDepth
 
-class SvnVersionTest extends SvnTestSupport {
+import static org.tmatesoft.svn.core.SVNDepth.*
+
+class SvnVersionTest extends SvnWorkspaceTestSupport {
 
   def "single revision"() {
     given: "an SVN workspace at a single revision"
-    createLocalRepo()
-    def workspace = checkoutLocalRepo("/")
 
     when: "running the SvnVersion task"
-    def project = projectWithPlugin()
-    def task = project.task(type: SvnVersion, "version") as SvnVersion
+    def task = taskWithType(SvnVersion)
     task.sourcePath = workspace
     task.targetPropertyName = "myVersion"
     task.execute()
@@ -31,15 +28,13 @@ class SvnVersionTest extends SvnTestSupport {
 
   def "mixed revision"() {
     given: "an SVN workspace with mixed revision"
-    createLocalRepo()
-    def workspace = checkoutLocalRepo("/")
+    switchLocalRepo("/")
     addFile("trunk/newfile.txt")
     addFile("trunk/newfile2.txt")
     update("trunk")
 
     when: "running the SvnVersion task"
-    def project = projectWithPlugin()
-    def task = project.task(type: SvnVersion, "version") as SvnVersion
+    def task = taskWithType(SvnVersion)
     task.sourcePath = workspace
     task.execute()
 
@@ -55,13 +50,11 @@ class SvnVersionTest extends SvnTestSupport {
 
   def "workspace modification"() {
     given: "an SVN workspace at a single revision"
-    createLocalRepo()
-    def workspace = checkoutLocalRepo("/")
+    switchLocalRepo("/")
     new File(workspace, "trunk/test.txt").text = "modified content"
 
     when: "running the SvnVersion task"
-    def project = projectWithPlugin()
-    def task = project.task(type: SvnVersion, "version") as SvnVersion
+    def task = taskWithType(SvnVersion)
     task.sourcePath = workspace
     task.targetPropertyName = "myVersion"
     task.execute()
@@ -78,13 +71,11 @@ class SvnVersionTest extends SvnTestSupport {
 
   def "switched workspace"() {
     given: "a switched SVN workspace"
-    createLocalRepo()
-    def workspace = checkoutLocalRepo("/")
+    switchLocalRepo("/")
     switchLocalRepo("trunk", "branches")
 
     when: "running the SvnVersion task"
-    def project = projectWithPlugin()
-    def task = project.task(type: SvnVersion, "version") as SvnVersion
+    def task = taskWithType(SvnVersion)
     task.sourcePath = workspace
     task.execute()
 
@@ -99,59 +90,55 @@ class SvnVersionTest extends SvnTestSupport {
     version.switched == true
   }
 
-  def "sparse working copy"() {
-    given: "a sparsely populated SVN working copy"
-    createLocalRepo()
-    def workspace = checkoutLocalRepo("/", SVNDepth.IMMEDIATES)
+  def "unversioned file"() {
+    given: "an SVN workspace with an unversioned file"
+    newFile("newfile.txt")
 
     when: "running the SvnVersion task"
-    def project = projectWithPlugin()
-    def task = project.task(type: SvnVersion, "version") as SvnVersion
+    def task = taskWithType(SvnVersion)
     task.sourcePath = workspace
     task.execute()
 
-    then: "SVN version contains a sparse working copy"
-    def version = project.ext.svnVersion as SvnVersionData
-    version != null
-    version as String == "1P"
-    version.mixedRevision == false
-    version.minRevisionNumber == 1
-    version.maxRevisionNumber == 1
-    version.modified == false
-    version.switched == false
-    version.sparse == true
+    then: "no modification"
+    project.ext.svnVersion as String == "1"
   }
 
-  def "no working copy"() {
-    when: "running the SvnVersion task without working copy"
-    def project = projectWithPlugin()
-    def task = project.task(type: SvnVersion, "version") as SvnVersion
-    task.sourcePath = tempDir
-    task.ignoreErrors = true
-    task.execute()
-
-    then: "SVN version contains a sparse working copy"
-    def version = project.ext.svnVersion as SvnVersionData
-    version != null
-    version as String == "exported"
-  }
-
-  def "externals"() { // see https://github.com/martoe/gradle-svntools-plugin/issues/23
-    given: "an SVN workspace with an external definition"
-    createLocalRepoWithExternals()
-    def workspace = checkoutLocalRepo("/")
+  def "added dir"() {
+    given: "an SVN workspace with an added dir"
+    clientManager.WCClient.doAdd(newFile("newdir/newfile.txt").parentFile, false, false, false, EMPTY, false, false)
 
     when: "running the SvnVersion task"
-    def project = projectWithPlugin()
-    def task = project.task(type: SvnVersion, "version") as SvnVersion
+    def task = taskWithType(SvnVersion)
     task.sourcePath = workspace
-    task.targetPropertyName = "myVersion"
     task.execute()
 
-    then: "SVN version contains no modification"
-    def version = project.ext.myVersion as SvnVersionData
-    version != null
-    version as String == "2"
-    version.modified == false
+    then: "modification"
+    project.ext.svnVersion as String == "1M"
+  }
+
+  def "locally deleted file"() {
+    given: "an SVN workspace with a deleted file"
+    existingFile("test.txt").delete()
+
+    when: "running the SvnVersion task"
+    def task = taskWithType(SvnVersion)
+    task.sourcePath = workspace
+    task.execute()
+
+    then: "modification"
+    project.ext.svnVersion as String == "1M"
+  }
+
+  def "file marked for deletion"() {
+    given: "an SVN workspace with a deleted file"
+    clientManager.WCClient.doDelete(existingFile("test.txt"), false, false, false)
+
+    when: "running the SvnVersion task"
+    def task = taskWithType(SvnVersion)
+    task.sourcePath = workspace
+    task.execute()
+
+    then: "modification"
+    project.ext.svnVersion as String == "1M"
   }
 }
