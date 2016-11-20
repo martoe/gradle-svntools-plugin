@@ -59,4 +59,31 @@ class SvnDeleteTest extends SvnWorkspaceTestSupport {
     then: "dir deleted"
     status().deleted == [dir]
   }
+
+  def "deleting a nonexisting file"() {
+    given:
+    def file = new File(workspace, "nonexisting.txt")
+
+    when: "running the SvnDelete task"
+    def task = taskWithType(SvnDelete)
+    task.delete = file
+    task.execute()
+
+    then: "exception"
+    def exception = thrown TaskExecutionException
+    exception.cause.message.readLines()[0] =~ "svn: E125001: .* does not exist"
+  }
+
+  def "force deletion of a nonexisting file"() {
+    given:
+    def file = new File(workspace, "nonexisting.txt")
+
+    when: "running the SvnDelete task"
+    def task = taskWithType(SvnDelete)
+    task.delete = file
+    task.ignoreErrors = true
+    task.execute()
+
+    then: "no error"
+  }
 }
