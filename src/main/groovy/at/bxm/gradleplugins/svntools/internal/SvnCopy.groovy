@@ -25,6 +25,11 @@ abstract class SvnCopy extends SvnBaseTask {
   @Internal boolean replaceExisting
   /** If local changes should be committed to the copy target. Only used it not svnUrl is provided. */
   @Internal boolean localChanges
+  /**
+   * Set to {@code true} if the target name contains arbitrary chars (as supported by the current SVN server and operation system).
+   * If {@code false} (default), only a reduced subset of chars (a-z, A-Z, 0-9, "_", "-", ".", and "/") is allowed
+   */
+  @Internal boolean specialChars
 
   @Internal
   abstract String getDestinationPath()
@@ -98,7 +103,7 @@ abstract class SvnCopy extends SvnBaseTask {
     editor.closeEdit()
   }
 
-  static boolean isValidName(String svnPath) {
-    svnPath =~ '^[a-zA-Z0-9_\\-./]+$'
+  boolean isValidName(String svnPath) {
+    specialChars || svnPath =~ '^[a-zA-Z0-9_\\-./]+$'
   }
 }
