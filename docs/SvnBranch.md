@@ -12,6 +12,7 @@ workspaceDir    | The local workspace that should be branched.<br>Will only be u
 branchName      | The name of the new SVN branch (required) |
 replaceExisting | If the branch already exists, delete it first | `false`
 localChanges    | If the workspace contains changes, commit those changes to the new branch | `false`
+specialChars    | Set to `true` if the target name contains arbitrary chars (as supported by the current SVN server and operation system). If `false`, only a reduced subset of chars (a-z, A-Z, 0-9, "_", "-", ".", and "/") is allowed | `false`
 commitMessage   | A commit message (optional) |
 username        | The SVN username - leave empty if no authentication is required | `$project.svntools.username`
 password        | The SVN password - leave empty if no authentication is required | `$project.svntools.password`

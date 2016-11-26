@@ -1,21 +1,8 @@
 package at.bxm.gradleplugins.svntools.tasks
 
-import at.bxm.gradleplugins.svntools.SvnTestSupport
-import org.gradle.api.Project
 import org.gradle.api.tasks.TaskExecutionException
 
-class SvnCreatePatchTest extends SvnTestSupport {
-
-  File workspace
-  Project project
-  SvnCreatePatch task
-
-  def setup() {
-    createLocalRepo()
-    workspace = checkoutTrunk()
-    project = projectWithPlugin()
-    task = project.task(type: SvnCreatePatch, "createPatch") as SvnCreatePatch
-  }
+class SvnCreatePatchTest extends SvnWorkspaceTestSupport {
 
   def "single file"() {
     given:
@@ -23,6 +10,7 @@ class SvnCreatePatchTest extends SvnTestSupport {
     file.text = "changed"
 
     when: "running the SvnCreatePatch task"
+    def task = taskWithType(SvnCreatePatch)
     task.source(file)
     task.patchFile = "myPatch.txt"
     task.execute()
@@ -41,7 +29,8 @@ class SvnCreatePatchTest extends SvnTestSupport {
     file.text = "blah"
 
     when: "running the SvnCreatePatch task"
-    task.source(file)
+    def task = taskWithType(SvnCreatePatch)
+    task.source = file
     task.patchFile = "myPatch.txt"
     task.execute()
 
@@ -51,9 +40,19 @@ class SvnCreatePatchTest extends SvnTestSupport {
     exception.cause.message.readLines()[1] == "Invalid source file or directory"
   }
 
-  private File existingFile(String name) {
-    def file = new File(workspace, name)
-    assert file.exists(), "$file.absolutePath doesn't exist"
-    return file
+  def "patchfile already exists"() {
+    given:
+    def file = existingFile("test.txt")
+    file.text = "changed"
+    def patchFile = newFile("myPatch.txt")
+
+    when: "running the SvnCreatePatch task"
+    def task = taskWithType(SvnCreatePatch)
+    task.source(file)
+    task.patchFile = patchFile
+    task.execute()
+
+    then: "patchfile is overwritten"
+    patchFile.text.readLines().size() == 7
   }
 }

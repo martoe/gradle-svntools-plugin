@@ -25,35 +25,36 @@ import org.tmatesoft.svn.core.wc.SVNStatusType
 @Log
 class SvnSupport {
 
-  static SVNClientManager createSvnClientManager(String username, String password, SvnProxy proxy) {
+  static SVNClientManager createSvnClientManager(String username, char[] password, SvnProxy proxy) {
     return SVNClientManager.newInstance(
       // create a local SVN config dir to make sure we don't reuse existing credentials:
       new DefaultSVNOptions(new File(".subversion"), true),
       createAuthenticationManager(username, password, proxy))
   }
 
-  static ISVNAuthenticationManager createAuthenticationManager(String username, String password, SvnProxy proxy) {
-    def passwd = password != null ? password.toCharArray() : null
+  static ISVNAuthenticationManager createAuthenticationManager(String username, char[] password, SvnProxy proxy) {
     def authManager = BasicAuthenticationManager.newInstance([
       // the first three arguments are copied from BasicAuthenticationManager.newInstance(String, char[])
-      SVNPasswordAuthentication.newInstance(username, passwd, false, null, false),
-      SVNSSHAuthentication.newInstance(username, passwd, -1, false, null, false),
+      SVNPasswordAuthentication.newInstance(username, password, false, null, false),
+      SVNSSHAuthentication.newInstance(username, password, -1, false, null, false),
       SVNUserNameAuthentication.newInstance(username, false, null, false),
       // the forth argument is needed when accessing a repo via https
       SVNSSLAuthentication.newInstance(null as File, "dummy".toCharArray(), false, null, false)
     ] as SVNAuthentication[])
     if (proxy?.host) {
       log.info "Using proxy $proxy"
-      authManager.setProxy(proxy.host, proxy.port, proxy.username, (char[])proxy.password?.toCharArray())
+      authManager.setProxy(proxy.host, proxy.port, proxy.username, (char[])proxy.password)
     }
     return authManager
   }
 
-  static SvnData createSvnData(File srcPath, String username, String password, SvnProxy proxy, boolean ignoreErrors) {
+  static SvnData createSvnData(File srcPath, String username, char[] password, SvnProxy proxy, boolean ignoreErrors) {
     def result = new SvnData()
     try {
       def info = createSvnClientManager(username, password, proxy).WCClient.doInfo srcPath, SVNRevision.WORKING
       result.revisionNumber = info.committedRevision.number
+      result.committedDate = info.committedDate
+      result.committedAuthor = info.author
       result.url = info.URL
       result.repositoryRootUrl = info.repositoryRootURL
       try {
@@ -84,11 +85,13 @@ class SvnSupport {
     return result
   }
 
-  static SvnData createSvnData(SVNURL svnUrl, String path, String username, String password, SvnProxy proxy, boolean ignoreErrors) {
+  static SvnData createSvnData(SVNURL svnUrl, String path, String username, char[] password, SvnProxy proxy, boolean ignoreErrors) {
     def result = new SvnData()
     try {
       def info = remoteRepository(svnUrl, username, password, proxy).info(path, -1)
       result.revisionNumber = info.revision
+      result.committedDate = info.date
+      result.committedAuthor = info.author
       result.url = info.URL
       result.repositoryRootUrl = info.repositoryRoot
       try {
@@ -119,7 +122,7 @@ class SvnSupport {
     return result
   }
   
-  static SvnVersionData createSvnVersionData(File srcPath, String username, String password, SvnProxy proxy, boolean ignoreErrors) {
+  static SvnVersionData createSvnVersionData(File srcPath, String username, char[] password, SvnProxy proxy, boolean ignoreErrors) {
     def versionHandler = new VersionHandler()
     try {
       createSvnClientManager(username, password, proxy).statusClient.doStatus(
@@ -134,7 +137,7 @@ class SvnSupport {
     return versionHandler.version
   }
 
-  static SVNRepository remoteRepository(SVNURL repositoryUrl, String username, String password, SvnProxy proxy) {
+  static SVNRepository remoteRepository(SVNURL repositoryUrl, String username, char[] password, SvnProxy proxy) {
     def repo = SVNRepositoryFactory.create(repositoryUrl)
     repo.authenticationManager = createAuthenticationManager(username, password, proxy)
     return repo
@@ -157,6 +160,10 @@ class SvnSupport {
         if (status.contentsStatus != SVNStatusType.STATUS_NORMAL) {
           // TODO use "combinedNodeAndContentsStatus" instead?
           log.info("$status.repositoryRelativePath has status $status.contentsStatus - workspace is dirty")
+          version.modified = true
+        } else if (status.nodeStatus != SVNStatusType.STATUS_NORMAL) {
+          // e.g. deleted
+          log.info("$status.repositoryRelativePath has nodeStatus $status.nodeStatus - workspace is dirty")
           version.modified = true
         }
         // TODO also check "propertiesStatus"?

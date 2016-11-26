@@ -13,11 +13,13 @@ import org.tmatesoft.svn.core.wc.SVNClientManager
 import org.tmatesoft.svn.core.wc.SVNRevision
 import spock.lang.Specification
 
+import static org.tmatesoft.svn.core.wc.SVNWCUtil.*
+
 @Log
 abstract class SvnTestSupport extends Specification {
 
   File tempDir
-  private SVNClientManager clientManager
+  SVNClientManager clientManager
   SVNURL localRepoUrl
 
   Project projectWithPlugin(File projectDir = null) {
@@ -34,6 +36,7 @@ abstract class SvnTestSupport extends Specification {
     def localRepoDir = new File(tempDir, baseDir)
     localRepoUrl = SVNRepositoryFactory.createLocalRepository(localRepoDir, true, false)
     def repo = SVNRepositoryFactory.create(localRepoUrl)
+    repo.authenticationManager = createDefaultAuthenticationManager("username", "password".chars) 
     def editor = repo.getCommitEditor("creating a new file", null)
     editor.openRoot(-1)
     editor.addDir("trunk", null, -1)

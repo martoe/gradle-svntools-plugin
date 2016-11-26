@@ -1,27 +1,15 @@
 package at.bxm.gradleplugins.svntools.tasks
 
-import at.bxm.gradleplugins.svntools.SvnTestSupport
-import org.gradle.api.Project
 import org.gradle.api.tasks.TaskExecutionException
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory
 
-class SvnTagTest extends SvnTestSupport {
-
-  File workspace
-  Project project
-  SvnTag task
-
-  def setup() {
-    createLocalRepo()
-    project = projectWithPlugin()
-    task = project.task(type: SvnTag, "tagging") as SvnTag
-  }
+class SvnTagTest extends SvnWorkspaceTestSupport {
 
   def "no tagName"() {
     given: "a workspace"
-    workspace = checkoutTrunk()
 
     when: "running the SvnTag task"
+    def task = taskWithType(SvnTag)
     task.workspaceDir = workspace
     task.execute()
 
@@ -32,9 +20,9 @@ class SvnTagTest extends SvnTestSupport {
 
   def "tag from trunk"() {
     given: "a trunk workspace"
-    workspace = checkoutTrunk()
 
     when: "running the SvnTag task"
+    def task = taskWithType(SvnTag)
     task.workspaceDir = workspace
     task.tagName = "my-tag"
     task.execute()
@@ -46,9 +34,10 @@ class SvnTagTest extends SvnTestSupport {
 
   def "tag from a branch"() {
     given: "a branch workspace"
-    workspace = checkoutBranch()
+    switchLocalRepo("branches/test-branch")
 
     when: "running the SvnTag task"
+    def task = taskWithType(SvnTag)
     task.workspaceDir = workspace
     task.tagName = "my.tag"
     task.execute()
@@ -60,9 +49,10 @@ class SvnTagTest extends SvnTestSupport {
 
   def "tag from a tag"() {
     given: "a tag workspace"
-    workspace = checkoutTag()
+    switchLocalRepo("tags/test-tag")
 
     when: "running the SvnTag task"
+    def task = taskWithType(SvnTag)
     task.workspaceDir = workspace
     task.tagName = "myTag"
     task.execute()
@@ -74,9 +64,9 @@ class SvnTagTest extends SvnTestSupport {
 
   def "invalid tagName"() {
     given: "a workspace"
-    workspace = checkoutTrunk()
 
     when: "running the SvnTag task"
+    def task = taskWithType(SvnTag)
     task.workspaceDir = workspace
     task.tagName = param
     task.execute()
@@ -84,6 +74,24 @@ class SvnTagTest extends SvnTestSupport {
     then: "exception"
     def e = thrown TaskExecutionException
     e.cause.message == "tagName contains invalid chars: $param" as String
+
+    where:
+    param << ["blank ", "backslash\\"]
+  }
+
+  def "tagName with special chars"() {
+    given: "a workspace"
+
+    when: "running the SvnTag task"
+    def task = taskWithType(SvnTag)
+    task.workspaceDir = workspace
+    task.tagName = param
+    task.specialChars = true
+    task.execute()
+
+    then: "tag exists"
+    switchLocalRepo("tags/$param")
+    getRevision(workspace) == 2
 
     where:
     param << ["blank ", "backslash\\"]
@@ -97,9 +105,10 @@ class SvnTagTest extends SvnTestSupport {
     editor.addDir("tags/tag-subdir", null, -1)
     editor.closeDir()
     editor.closeEdit()
-    workspace = checkoutTrunk()
+    updateLocalRepo()
 
     when: "running the SvnTag task on that subdirectory"
+    def task = taskWithType(SvnTag)
     task.workspaceDir = workspace
     task.tagName = "tag-subdir/new-tag"
     task.execute()
@@ -111,9 +120,9 @@ class SvnTagTest extends SvnTestSupport {
 
   def "tag into non-existing subdirectory"() {
     given: "a trunk workspace"
-    workspace = checkoutTrunk()
 
     when: "running the SvnTag task no a non-existing subdirectory"
+    def task = taskWithType(SvnTag)
     task.workspaceDir = workspace
     task.tagName = "tag-subdir/new-tag"
     task.execute()

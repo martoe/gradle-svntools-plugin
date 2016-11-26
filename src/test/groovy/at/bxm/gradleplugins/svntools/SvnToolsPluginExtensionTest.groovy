@@ -17,6 +17,8 @@ class SvnToolsPluginExtensionTest extends SvnTestSupport {
     !svnData.branch
     !svnData.tag
     svnData.revisionNumber == 1
+    svnData.committedDate != null
+    svnData.committedAuthor == "username"
   }
 
   def "access svnData outside a workspace"() {
@@ -101,5 +103,16 @@ class SvnToolsPluginExtensionTest extends SvnTestSupport {
     
     then: "error"
     thrown(InvalidUserDataException)
+  }
+
+  def "access svnVersion at trunk"() {
+    given: "an SVN workspace at trunk"
+    createLocalRepo()
+    def workspace = checkoutTrunk()
+
+    expect: "valid SvnVersion object"
+    def version = projectWithPlugin(workspace).extensions.getByType(SvnToolsPluginExtension).version
+    version != null
+    version as String == "1"
   }
 }

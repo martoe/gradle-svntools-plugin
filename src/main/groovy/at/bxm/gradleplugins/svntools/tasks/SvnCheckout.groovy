@@ -73,15 +73,13 @@ class SvnCheckout extends SvnBaseTask {
 
   private static SVNDepth parseDepth(depth) {
     if (depth) {
-      try {
-        SvnDepth svnDepth = SvnDepth.parse(depth)
-        switch (svnDepth) {
-          case SvnDepth.EMPTY: return SVNDepth.EMPTY
-          case SvnDepth.FILES: return SVNDepth.FILES
-          case SVNDepth.IMMEDIATES: return SVNDepth.IMMEDIATES
-        }
-      } catch (IllegalArgumentException e) {
-        throw new InvalidUserDataException("Invalid depth value: $depth")
+      switch (depth.toString().toLowerCase()) {
+        case "empty": return SVNDepth.EMPTY
+        case "files": return SVNDepth.FILES
+        case "immediates": return SVNDepth.IMMEDIATES
+        case "infinity": return SVNDepth.INFINITY
+        default:
+          throw new InvalidUserDataException("Invalid depth value: $depth")
       }
     }
     return SVNDepth.INFINITY
