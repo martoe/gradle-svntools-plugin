@@ -1,4 +1,4 @@
-# gradle-svntools-plugin
+# gradle-svntools-plugin (maintenance branch for Gradle 2)
 
 A [Gradle](https://www.gradle.org) plugin (based on [SVNKit](http://svnkit.com/)) that provides various [Subversion](http://svnbook.red-bean.com/)-related tasks.
 
