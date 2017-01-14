@@ -3,6 +3,7 @@ package at.bxm.gradleplugins.svntools.tasks
 import at.bxm.gradleplugins.svntools.SvnTestSupport
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskExecutionException
+import org.tmatesoft.svn.core.SVNDepth
 
 class SvnCommitTest extends SvnTestSupport {
 
@@ -20,6 +21,19 @@ class SvnCommitTest extends SvnTestSupport {
   def "commit a new file"() {
     given:
     def newFile = newFile("newfile.txt")
+
+    when: "running the SvnCommit task"
+    task.source << newFile
+    task.execute()
+
+    then: "file committed, new revision"
+    getRevision(newFile) == 2
+  }
+
+  def "commit an added file"() {
+    given:
+    def newFile = newFile("newfile.txt")
+    clientManager.WCClient.doAdd(newFile, false, false, false, SVNDepth.INFINITY, false, false)
 
     when: "running the SvnCommit task"
     task.source << newFile
@@ -90,7 +104,7 @@ class SvnCommitTest extends SvnTestSupport {
   def "commit a file outside of the workspace"() {
     given:
     def newValidFile = newFile("newfile.txt")
-    def newInvalidFile = newFile("newfile.txt","$workspace.absolutePath/.." as File)
+    def newInvalidFile = newFile("newfile.txt", "$workspace.absolutePath/.." as File)
 
     when: "running the SvnCommit task"
     task.source << newValidFile
@@ -100,6 +114,27 @@ class SvnCommitTest extends SvnTestSupport {
     then: "file committed, new revision"
     def e = thrown TaskExecutionException
     e.cause.message =~ "svn-add failed for .*"
+  }
+
+  def "commit a deleted directory"(boolean deleteLocally) {
+    given: "directory marked for deletion"
+    def deleteDir = new File(workspace, "dir")
+    clientManager.WCClient.doDelete(deleteDir, false, deleteLocally, false)
+
+    when: "running the SvnCommit task"
+    task.source << deleteDir
+    task.execute()
+
+    then: "dir deleted, new revision"
+    workspace.deleteDir()
+    checkoutTrunk()
+    deleteDir.exists() == false
+    getRevision(workspace) == 2
+
+    where:
+    deleteLocally | _
+    true          | _
+    false         | _
   }
 
   private File newFile(String name, File path = workspace) {

@@ -2,11 +2,12 @@ package at.bxm.gradleplugins.svntools.tasks
 
 import at.bxm.gradleplugins.svntools.internal.SvnBaseTask
 import org.gradle.api.InvalidUserDataException
-import org.gradle.api.PathValidation
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import org.tmatesoft.svn.core.SVNDepth
 import org.tmatesoft.svn.core.SVNException
+import org.tmatesoft.svn.core.wc.SVNInfo
+import org.tmatesoft.svn.core.wc.SVNRevision
 
 /** Commits a list of files (and directories) within the current SVN workspace. */
 class SvnCommit extends SvnBaseTask {
@@ -21,7 +22,7 @@ class SvnCommit extends SvnBaseTask {
   @Internal String commitMessage
 
   @TaskAction
-  def run() {
+  run() {
     if (!source) {
       logger.warn "No files to commit"
       return
@@ -29,14 +30,28 @@ class SvnCommit extends SvnBaseTask {
     def addedFiles = []
     def clientManager = createSvnClientManager()
     source.each {
-      def file = project.file(it, PathValidation.EXISTS)
-      // don't know if this file is already in SVN, so to be sure we add it with "force=true":
+      def file = project.file(it)
+      SVNInfo status
       try {
-        clientManager.WCClient.doAdd(file, true, false, false, SVNDepth.EMPTY, false, false)
-        addedFiles << file
+        status = clientManager.WCClient.doInfo(file, SVNRevision.WORKING)
       } catch (SVNException e) {
-        throw new InvalidUserDataException("svn-add failed for $file.absolutePath\n" + e.message, e)
+        status = null // not under version control yet
       }
+      if (status?.schedule == "delete") {
+        logger.debug("File {} is already scheduled for delete", file.absolutePath)
+      } else if (!file.exists()) {
+        throw new InvalidUserDataException("File " + file.absolutePath + " doesn't exist")
+      } else if (status?.schedule == "add") {
+        logger.debug("File {} is already scheduled for add", file.absolutePath)
+      } else { // status?.schedule == null
+        logger.debug("Adding {} to SVN", file.absolutePath)
+        try {
+          clientManager.WCClient.doAdd(file, true, false, false, SVNDepth.EMPTY, false, false)
+        } catch (SVNException e) {
+          throw new InvalidUserDataException("svn-add failed for $file.absolutePath\n" + e.message, e)
+        }
+      }
+      addedFiles << file
     }
     logger.info "Committing $addedFiles"
     try {
