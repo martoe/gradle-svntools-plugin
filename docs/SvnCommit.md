@@ -7,6 +7,7 @@ Commits a list of files (and directories). All files and directories must be par
 Property      | Description | Default value
 ------------- | ----------- | -------------
 source        | A list of files and directories that should be committed. If these are not under version control already, they will be added first. If this list is empty of the files contain no modifications, no commit will be executed |
+recursive     | Also commit items in subdirectories | `false`
 commitMessage | A commit message (optional) |
 username      | The SVN username - leave empty if no authentication is required | `$project.svntools.username`
 password      | The SVN password - leave empty if no authentication is required | `$project.svntools.password`

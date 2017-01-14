@@ -101,6 +101,21 @@ class SvnCommitTest extends SvnTestSupport {
     getRevision(newFile) == 2
   }
 
+  def "commit a new directory recursively"() {
+    given:
+    def newDir = new File(workspace, "newdir")
+    def newFile = newFile("newfile.txt", newDir)
+
+    when: "running the SvnCommit task"
+    task.source << newDir
+    task.recursive = true
+    task.execute()
+
+    then: "directory and file committed, new revision"
+    getRevision(newDir) == 2
+    getRevision(newFile) == 2
+  }
+
   def "commit a file outside of the workspace"() {
     given:
     def newValidFile = newFile("newfile.txt")

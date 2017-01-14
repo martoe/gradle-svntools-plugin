@@ -18,6 +18,8 @@ class SvnCommit extends SvnBaseTask {
    * If this list is empty of the files contain no modifications, no commit will be executed.
    */
   @Internal source = []
+  /** Also commit items in subdirectories (default: {@code false}) */
+  @Internal boolean recursive
   /** An optional commit message. */
   @Internal String commitMessage
 
@@ -29,6 +31,7 @@ class SvnCommit extends SvnBaseTask {
     }
     def addedFiles = []
     def clientManager = createSvnClientManager()
+    SVNDepth svnDepth = recursive ? SVNDepth.INFINITY : SVNDepth.EMPTY
     source.each {
       def file = project.file(it)
       SVNInfo status
@@ -46,7 +49,7 @@ class SvnCommit extends SvnBaseTask {
       } else { // status?.schedule == null
         logger.debug("Adding {} to SVN", file.absolutePath)
         try {
-          clientManager.WCClient.doAdd(file, true, false, false, SVNDepth.EMPTY, false, false)
+          clientManager.WCClient.doAdd(file, true, false, false, svnDepth, false, false)
         } catch (SVNException e) {
           throw new InvalidUserDataException("svn-add failed for $file.absolutePath\n" + e.message, e)
         }
@@ -55,7 +58,7 @@ class SvnCommit extends SvnBaseTask {
     }
     logger.info "Committing $addedFiles"
     try {
-      def committed = clientManager.commitClient.doCommit(addedFiles as File[], false, commitMessage, null, null, false, true, SVNDepth.EMPTY)
+      def committed = clientManager.commitClient.doCommit(addedFiles as File[], false, commitMessage, null, null, false, true, svnDepth)
       if (committed.errorMessage) {
         if (committed.errorMessage.warning) {
           logger.warn "Commit completed with warning: $committed"
