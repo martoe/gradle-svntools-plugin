@@ -21,6 +21,10 @@ git push
     * Release title: same as "Tag version"
     * Description: from `gradle.properties`
 
+6. [close current milestone](https://github.com/martoe/gradle-svntools-plugin/milestones) and all assigned issues
+
+6. [create next milestone](https://github.com/martoe/gradle-svntools-plugin/milestones/new)
+
 6. checkout "develop" and rebase against "master"
 ```
 git checkout develop
@@ -34,3 +38,4 @@ git rebase master
 git commit -am "Post-release"
 git push
 ```
+
