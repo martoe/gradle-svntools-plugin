@@ -116,6 +116,22 @@ class SvnCommitTest extends SvnTestSupport {
     getRevision(newFile) == 2
   }
 
+  def "commit a changed file in a subdirectory"() {
+    given: "changed file in a subdirectory"
+    def unchangedDir = new File(workspace, "dir")
+    def changedFile = new File(unchangedDir, "test.txt")
+    changedFile.text = "changed"
+
+    when: "running the SvnCommit task on the directory"
+    task.source = [unchangedDir]
+    task.recursive = true
+    task.execute()
+
+    then: "file committed, new revision"
+    getRevision(unchangedDir) == 1
+    getRevision(changedFile) == 2
+  }
+
   def "commit a file outside of the workspace"() {
     given:
     def newValidFile = newFile("newfile.txt")
