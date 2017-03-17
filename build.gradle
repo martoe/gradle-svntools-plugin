@@ -18,7 +18,7 @@ targetCompatibility = 1.7
 
 dependencies {
   compile "org.codehaus.groovy:groovy-all:2.4.7"
-  compile "org.tmatesoft.svnkit:svnkit:1.8.12"
+  compile "org.tmatesoft.svnkit:svnkit:1.8.15"
   testCompile("org.spockframework:spock-core:1.0-groovy-2.4") {
     exclude group: "org.codehaus.groovy"
   }
@@ -59,23 +59,14 @@ bintray { // https://github.com/bintray/gradle-bintray-plugin
 }
 bintrayUpload.dependsOn check
 
-def patchedSvnkitFiles = "org/tmatesoft/svn/core/internal/wc2/patch/*" // exclude from coverage report
 test {
   if (project.hasProperty("ignoreTestFailures")) {
     ignoreFailures = ignoreTestFailures == "true"
-  }
-  jacoco {
-    excludes << patchedSvnkitFiles
   }
 }
 
 jacocoTestReport {
   reports {
     xml.enabled = true // coveralls plugin depends on xml format report
-  }
-  afterEvaluate { // https://issues.gradle.org/browse/GRADLE-2955
-    classDirectories = files(classDirectories.files.collect {
-      fileTree(dir: it, exclude: patchedSvnkitFiles)
-    })
   }
 }

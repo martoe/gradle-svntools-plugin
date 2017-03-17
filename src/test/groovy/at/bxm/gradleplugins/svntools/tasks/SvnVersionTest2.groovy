@@ -58,7 +58,7 @@ class SvnVersionTest2 extends SvnTestSupport {
     then: "SVN version contains no modification"
     def version = project.ext.myVersion as SvnVersionData
     version != null
-    version as String == "2"
+    version as String == "1:2" // mixed because the external contains rev.1
     version.modified == false
   }
 }

@@ -42,6 +42,7 @@ abstract class SvnTestSupport extends Specification {
     editor.addDir("trunk", null, -1)
     editor.addDir("trunk/dir", null, -1)
     addEmptyFile(editor, "trunk/test.txt")
+    addEmptyFile(editor, "trunk/dir/test.txt")
     editor.addDir("branches", null, -1)
     editor.addDir("branches/test-branch", null, -1)
     addEmptyFile(editor, "branches/test-branch/test.txt")

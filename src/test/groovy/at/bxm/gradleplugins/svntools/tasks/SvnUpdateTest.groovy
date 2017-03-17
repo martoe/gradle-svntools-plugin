@@ -49,6 +49,6 @@ class SvnUpdateTest extends SvnTestSupport {
 
     then:
     def e = thrown TaskExecutionException
-    e.cause.message =~ "workspaceDir .* is no SVN workspace"
+    e.cause.message =~ ".* E155007: None of the targets are working copies"
   }
 }

@@ -17,9 +17,10 @@ class SvnDeleteTest extends SvnWorkspaceTestSupport {
     status().deleted == [existingFile]
   }
 
-  def "deleting a directory"() {
+  def "deleting a non-empty directory"() {
     given:
     def dir = existingDir("dir")
+    def file = new File(dir, "test.txt")
 
     when: "running the SvnDelete task"
     def task = taskWithType(SvnDelete)
@@ -27,7 +28,7 @@ class SvnDeleteTest extends SvnWorkspaceTestSupport {
     task.execute()
 
     then: "dir deleted"
-    status().deleted == [dir]
+    status().deleted == [dir, file]
   }
   
   def "deleting a dirty directory"() {
@@ -48,6 +49,7 @@ class SvnDeleteTest extends SvnWorkspaceTestSupport {
   def "force deletion a dirty directory"() {
     given:
     def dir = existingDir("dir")
+    def file = new File(dir, "test.txt")
     new File(dir, "unversioned.txt").text = "x"
 
     when: "running the SvnDelete task"
@@ -57,7 +59,7 @@ class SvnDeleteTest extends SvnWorkspaceTestSupport {
     task.execute()
 
     then: "dir deleted"
-    status().deleted == [dir]
+    status().deleted == [dir, file]
   }
 
   def "deleting a nonexisting file"() {

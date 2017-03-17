@@ -18,12 +18,14 @@ class SvnUpdate extends SvnBaseTask {
   @Internal Long revision
 
   @TaskAction
-  def run() {
+  run() {
     def rev = revisionFrom(revision)
     def dir = workspaceDir ? project.file(workspaceDir, PathValidation.DIRECTORY) : project.projectDir
     try {
       def targetRev = createSvnClientManager().updateClient.doUpdate(dir, rev, SVNDepth.INFINITY, false, false)
       if (targetRev < 0) {
+        // this has been working for svnkit-1.8.12
+        // svnkit-1.8.15 throws an exception instead ("E155007: None of the targets are working copies")
         throw new InvalidUserDataException("workspaceDir $dir.absolutePath is no SVN workspace")
       }
     } catch (SVNException e) {
