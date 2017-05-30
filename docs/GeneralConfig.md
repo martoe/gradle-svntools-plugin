@@ -86,6 +86,7 @@ If a proxy server is needed for connecting to the remote SVN repository, it can 
         proxy.port = [portnumber]
         proxy.username = "[username]"
         proxy.password = "[password]"
+        proxy.nonProxyHosts = "127.0.0.1|localhost|companysvn"
     }
 
 This way, the proxy settings are only applied to the svn-tools-plugin and are ignored by Gradle.
@@ -95,7 +96,8 @@ This way, the proxy settings are only applied to the svn-tools-plugin and are ig
     gradlew -Dhttp.proxyHost=[hostname] \
             -Dhttp.proxyPort=[portnumber] \
             -Dhttp.proxyUser=[username] \
-            -Dhttp.proxyPassword=[password]
+            -Dhttp.proxyPassword=[password] \
+            -Dhttp.nonProxyHosts=[list_of_hostnames] \
             [taskname]
 
 Now all tasks of the current Gradle execution are using the proxy server (e.g. dependencies are downloaded through the proxy server)
@@ -106,5 +108,8 @@ Now all tasks of the current Gradle execution are using the proxy server (e.g. d
     systemProp.http.proxyPort = [portnumber]
     systemProp.http.proxyUser = [username]
     systemProp.http.proxyPassword = [password]
+    systemProp.http.nonProxyHosts = [list_of_hostnames]
 
 Every Gradle execution will use the proxy server.
+
+See [Java networking properties](https://docs.oracle.com/javase/8/docs/api/java/net/doc-files/net-properties.html#Proxies)

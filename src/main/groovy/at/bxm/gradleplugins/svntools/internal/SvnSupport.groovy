@@ -6,13 +6,7 @@ import groovy.util.logging.Log
 import org.gradle.api.InvalidUserDataException
 import org.tmatesoft.svn.core.SVNDepth
 import org.tmatesoft.svn.core.SVNURL
-import org.tmatesoft.svn.core.auth.BasicAuthenticationManager
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager
-import org.tmatesoft.svn.core.auth.SVNAuthentication
-import org.tmatesoft.svn.core.auth.SVNPasswordAuthentication
-import org.tmatesoft.svn.core.auth.SVNSSHAuthentication
-import org.tmatesoft.svn.core.auth.SVNSSLAuthentication
-import org.tmatesoft.svn.core.auth.SVNUserNameAuthentication
 import org.tmatesoft.svn.core.internal.wc.DefaultSVNOptions
 import org.tmatesoft.svn.core.io.SVNRepository
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory
@@ -33,17 +27,10 @@ class SvnSupport {
   }
 
   static ISVNAuthenticationManager createAuthenticationManager(String username, char[] password, SvnProxy proxy) {
-    def authManager = BasicAuthenticationManager.newInstance([
-      // the first three arguments are copied from BasicAuthenticationManager.newInstance(String, char[])
-      SVNPasswordAuthentication.newInstance(username, password, false, null, false),
-      SVNSSHAuthentication.newInstance(username, password, -1, false, null, false),
-      SVNUserNameAuthentication.newInstance(username, false, null, false),
-      // the forth argument is needed when accessing a repo via https
-      SVNSSLAuthentication.newInstance(null as File, "dummy".toCharArray(), false, null, false)
-    ] as SVNAuthentication[])
+    def authManager = new SimpleAuthenticationManager(username, password)
     if (proxy?.host) {
       log.info "Using proxy $proxy"
-      authManager.setProxy(proxy.host, proxy.port, proxy.username, (char[])proxy.password)
+      authManager.setProxy(proxy.host, proxy.port, proxy.username, (char[])proxy.password, proxy.nonProxyHosts)
     }
     return authManager
   }
