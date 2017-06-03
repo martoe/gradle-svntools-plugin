@@ -28,10 +28,14 @@ class SvnCleanup extends SvnBaseTask {
   def run() {
     def wcClient = SvnSupport.createSvnClientManager(username, password, proxy).WCClient
     project.files(cleanup).each { file ->
-      try {
-        wcClient.doCleanup(file)
-      } catch (SVNException e) {
-        throw new InvalidUserDataException("svn-cleanup failed for $file.absolutePath\n" + e.message, e)
+      if (file.isDirectory()) {
+        try {
+          wcClient.doCleanup(file)
+        } catch (SVNException e) {
+          throw new InvalidUserDataException("svn-cleanup failed for $file.absolutePath\n" + e.message, e)
+        }
+      } else {
+        throw new InvalidUserDataException("Not a directory: $file.path $file")
       }
     }
   }

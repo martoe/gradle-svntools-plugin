@@ -4,13 +4,12 @@ import org.gradle.api.tasks.TaskExecutionException
 
 class SvnCleanupTest extends SvnWorkspaceTestSupport {
 
-  def "cleanup a directory"() {
-    given:
-    def workspaceDir = existingFile("test.txt").parentFile
+  def "cleanup two directories"() {
+    given: "an SVN working copy"
 
     when: "running the SvnCleanup task"
     def task = taskWithType(SvnCleanup)
-    task.cleanup(workspaceDir)
+    task.cleanup(workspace, new File(workspace, "dir"))
     task.execute()
 
     then: "no error"
@@ -23,6 +22,21 @@ class SvnCleanupTest extends SvnWorkspaceTestSupport {
     when: "running the SvnCleanup task"
     def task = taskWithType(SvnCleanup)
     task.cleanup = workspaceFile
+    task.execute()
+
+    then: "exception"
+    def e = thrown TaskExecutionException
+    e.cause.message =~ "Not a directory: .*"
+  }
+
+  def "cleanup a non-working-copy directory"() {
+    given:
+    def unversioned = new File(workspace, "newDir")
+    unversioned.mkdir()
+
+    when: "running the SvnCleanup task"
+    def task = taskWithType(SvnCleanup)
+    task.cleanup(unversioned)
     task.execute()
 
     then: "exception"

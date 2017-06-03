@@ -18,7 +18,11 @@ targetCompatibility = 1.7
 
 dependencies {
   compile "org.codehaus.groovy:groovy-all:2.4.7"
-  compile "org.tmatesoft.svnkit:svnkit:1.8.15"
+  // TODO svnkit-1.8.15 references trilead-ssh2:1.0.0-build221 which is currently broken at jcenter
+  compile("org.tmatesoft.svnkit:svnkit:1.8.15") {
+    exclude module: "trilead-ssh2" 
+  }
+  compile "com.trilead:trilead-ssh2:1.0.0-build220" 
   testCompile("org.spockframework:spock-core:1.0-groovy-2.4") {
     exclude group: "org.codehaus.groovy"
   }

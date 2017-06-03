@@ -21,19 +21,20 @@ Plugin version | Gradle version | Java version
 
 ## Available tasks
 
-* [SvnInfo](docs/SvnInfo.md): information about a workspace file
-* [SvnVersion](docs/SvnVersion.md): summarize the local revision(s) of a working copy.
-* [SvnCheckout](docs/SvnCheckout.md): creates a local workspace of an SVN repository
-* [SvnUpdate](docs/SvnUpdate.md): updates an SVN workspace
-* [SvnAdd](docs/SvnAdd.md): schedules svn add of files in the SVN workspace
-* [SvnDelete](docs/SvnDelete.md): schedules svn delete of files in the SVN workspace
-* [SvnCommit](docs/SvnCommit.md): commits workspace modifications
-* [SvnRevert](docs/SvnRevert.md): reverts workspace modifications
-* [SvnCreatePatch](docs/SvnCreatePatch.md): creates a patch file based on workspace modifications
+* [SvnAdd](docs/SvnAdd.md): schedules files within a working copy to be added to SVN
 * [SvnApplyPatch](docs/SvnApplyPatch.md): applies a patch file
 * [SvnBranch](docs/SvnBranch.md): creates an SVN branch
-* [SvnTag](docs/SvnTag.md): creates an SVN tag
+* [SvnCheckout](docs/SvnCheckout.md): creates a local working copy of an SVN repository
+* [SvnCleanup](docs/SvnCleanup.md): cleans up a working copy
+* [SvnCommit](docs/SvnCommit.md): commits modifications of a local working copy
+* [SvnCreatePatch](docs/SvnCreatePatch.md): creates a patch file based on modifications of a local working copy
+* [SvnDelete](docs/SvnDelete.md): schedules files within a working copy to be deleted from SVN
 * [SvnExport](docs/SvnExport.md): exports parts of an SVN repository to a local directory
+* [SvnInfo](docs/SvnInfo.md): information about a local working copy file
+* [SvnRevert](docs/SvnRevert.md): reverts modifications of a local working copy
+* [SvnTag](docs/SvnTag.md): creates an SVN tag
+* [SvnUpdate](docs/SvnUpdate.md): updates a local working copy
+* [SvnVersion](docs/SvnVersion.md): summarize the local revision(s) of a working copy.
 
 [![Build Status](https://api.travis-ci.org/martoe/gradle-svntools-plugin.svg?branch=develop)](https://travis-ci.org/martoe/gradle-svntools-plugin)
 [![Coverage Status](https://coveralls.io/repos/github/martoe/gradle-svntools-plugin/badge.svg?branch=develop)](https://coveralls.io/github/martoe/gradle-svntools-plugin?branch=develop)
