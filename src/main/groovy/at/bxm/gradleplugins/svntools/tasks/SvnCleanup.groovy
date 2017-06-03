@@ -35,7 +35,7 @@ class SvnCleanup extends SvnBaseTask {
           throw new InvalidUserDataException("svn-cleanup failed for $file.absolutePath\n" + e.message, e)
         }
       } else {
-        throw new InvalidUserDataException("Not a directory: $file.path $file")
+        throw new InvalidUserDataException("Not a directory: $file")
       }
     }
   }
