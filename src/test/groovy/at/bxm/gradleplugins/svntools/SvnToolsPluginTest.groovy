@@ -15,7 +15,7 @@ class SvnToolsPluginTest extends SvnTestSupport {
   def "Tasks are available by name"(String name, Class<?> taskClass) {
     expect:
     def project = projectWithPlugin()
-    def task = project.task(type: project.extensions.extraProperties.get(name), name.toLowerCase())
+    def task = project.task(type: project."${name}", name.toLowerCase())
     task in taskClass
 
     where:
