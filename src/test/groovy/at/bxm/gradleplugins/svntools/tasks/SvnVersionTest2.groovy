@@ -15,7 +15,7 @@ class SvnVersionTest2 extends SvnTestSupport {
     def project = projectWithPlugin()
     def task = project.task(type: SvnVersion, "version") as SvnVersion
     task.sourcePath = workspace
-    task.execute()
+    task.run()
 
     then: "SVN version contains a sparse working copy"
     def version = project.ext.svnVersion as SvnVersionData
@@ -35,7 +35,7 @@ class SvnVersionTest2 extends SvnTestSupport {
     def task = project.task(type: SvnVersion, "version") as SvnVersion
     task.sourcePath = tempDir
     task.ignoreErrors = true
-    task.execute()
+    task.run()
 
     then: "SVN version contains a sparse working copy"
     def version = project.ext.svnVersion as SvnVersionData
@@ -53,7 +53,7 @@ class SvnVersionTest2 extends SvnTestSupport {
     def task = project.task(type: SvnVersion, "version") as SvnVersion
     task.sourcePath = workspace
     task.targetPropertyName = "myVersion"
-    task.execute()
+    task.run()
 
     then: "SVN version contains no modification"
     def version = project.ext.myVersion as SvnVersionData

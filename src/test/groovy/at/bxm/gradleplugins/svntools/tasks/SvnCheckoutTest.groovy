@@ -3,8 +3,8 @@ package at.bxm.gradleplugins.svntools.tasks
 import at.bxm.gradleplugins.svntools.SvnTestSupport
 import at.bxm.gradleplugins.svntools.SvnToolsPluginExtension
 import at.bxm.gradleplugins.svntools.api.SvnDepth
+import org.gradle.api.InvalidUserDataException
 import org.gradle.api.Project
-import org.gradle.api.tasks.TaskExecutionException
 import spock.lang.Ignore
 
 class SvnCheckoutTest extends SvnTestSupport {
@@ -27,7 +27,7 @@ class SvnCheckoutTest extends SvnTestSupport {
     when: "running the SvnCheckout task"
     task.svnUrl = localRepoUrl
     task.workspaceDir = workspaceDir
-    task.execute()
+    task.run()
 
     then: "local workspace exists and contains files"
     getRevision(workspaceDir) == 1
@@ -38,11 +38,11 @@ class SvnCheckoutTest extends SvnTestSupport {
     when: "running the SvnCheckout task"
     task.svnUrl = "$localRepoUrl/blah"
     task.workspaceDir = new File(tempDir, "workspace")
-    task.execute()
+    task.run()
 
     then:
-    def e = thrown TaskExecutionException
-    e.cause.message =~ "svn-checkout failed for .*"
+    def e = thrown InvalidUserDataException
+    e.message =~ "svn-checkout failed for .*"
   }
 
   def "checkout using a non-empty dir"() {
@@ -54,21 +54,21 @@ class SvnCheckoutTest extends SvnTestSupport {
     when: "running the SvnCheckout task"
     task.svnUrl = "$localRepoUrl/trunk"
     task.workspaceDir = workspaceDir
-    task.execute()
+    task.run()
 
     then:
-    def e = thrown TaskExecutionException
-    e.cause.message =~ ".* must be an empty directory"
+    def e = thrown InvalidUserDataException
+    e.message =~ ".* must be an empty directory"
   }
 
   def "no target dir"() {
     when: "running the SvnCheckout task without target dir"
     task.svnUrl = localRepoUrl
-    task.execute()
+    task.run()
 
     then:
-    def e = thrown TaskExecutionException
-    e.cause.message == "workspaceDir must be specified"
+    def e = thrown InvalidUserDataException
+    e.message == "workspaceDir must be specified"
   }
 
   def "checkout with proxy"() {
@@ -81,7 +81,7 @@ class SvnCheckoutTest extends SvnTestSupport {
     when: "running the SvnCheckout task"
     task.svnUrl = localRepoUrl
     task.workspaceDir = workspaceDir
-    task.execute()
+    task.run()
 
     then: "local workspace exists"
     getRevision(workspaceDir) == 1
@@ -95,7 +95,7 @@ class SvnCheckoutTest extends SvnTestSupport {
     task.svnUrl = "$localRepoUrl/trunk"
     task.workspaceDir = workspaceDir
     task.update = true
-    task.execute()
+    task.run()
 
     then: "local workspace exists"
     getRevision(workspaceDir) == 1
@@ -108,11 +108,11 @@ class SvnCheckoutTest extends SvnTestSupport {
     when: "running the SvnCheckout task"
     task.svnUrl = "$localRepoUrl/trunk"
     task.workspaceDir = workspaceDir
-    task.execute()
+    task.run()
 
     then:
-    def e = thrown TaskExecutionException
-    e.cause.message =~ ".* must be an empty directory"
+    def e = thrown InvalidUserDataException
+    e.message =~ ".* must be an empty directory"
   }
 
   def "checkout into a wrong workspace"() {
@@ -123,11 +123,11 @@ class SvnCheckoutTest extends SvnTestSupport {
     task.svnUrl = "$localRepoUrl/trunk"
     task.workspaceDir = workspaceDir
     task.update = true
-    task.execute()
+    task.run()
 
     then:
-    def e = thrown TaskExecutionException
-    e.cause.message =~ "SVN location of .* is invalid: .*"
+    def e = thrown InvalidUserDataException
+    e.message =~ "SVN location of .* is invalid: .*"
   }
 
   def "checkout depth=empty"() {
@@ -139,7 +139,7 @@ class SvnCheckoutTest extends SvnTestSupport {
     task.svnUrl = localRepoUrl.appendPath("trunk", false)
     task.workspaceDir = workspaceDir
     task.depth = "empty"
-    task.execute()
+    task.run()
 
     then: "local workspace is empty"
     childrenOf(workspaceDir).size() == 0
@@ -154,7 +154,7 @@ class SvnCheckoutTest extends SvnTestSupport {
     task.svnUrl = localRepoUrl.appendPath("trunk", false)
     task.workspaceDir = workspaceDir
     task.depth = "Files"
-    task.execute()
+    task.run()
 
     then: "local workspace contains one file"
     def ws = childrenOf(workspaceDir)
@@ -171,7 +171,7 @@ class SvnCheckoutTest extends SvnTestSupport {
     task.svnUrl = localRepoUrl.appendPath("trunk", false)
     task.workspaceDir = workspaceDir
     task.depth = SvnDepth.IMMEDIATES
-    task.execute()
+    task.run()
 
     then: "local workspace contains one file and one empty dir"
     def ws = childrenOf(workspaceDir)
@@ -189,7 +189,7 @@ class SvnCheckoutTest extends SvnTestSupport {
     when: "running the SvnCheckout task"
     task.svnUrl = "https://svn.svnkit.com/repos/svnkit/trunk/svnkit-osgi"
     task.workspaceDir = workspaceDir
-    task.execute()
+    task.run()
 
     then: "local workspace exists and contains files"
     getRevision(workspaceDir) > 10000

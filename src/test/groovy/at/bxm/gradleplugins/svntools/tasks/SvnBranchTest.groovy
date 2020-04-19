@@ -1,6 +1,6 @@
 package at.bxm.gradleplugins.svntools.tasks
 
-import org.gradle.api.tasks.TaskExecutionException
+import org.gradle.api.InvalidUserDataException
 
 class SvnBranchTest extends SvnWorkspaceTestSupport {
 
@@ -11,7 +11,7 @@ class SvnBranchTest extends SvnWorkspaceTestSupport {
     def task = taskWithType(SvnBranch)
     task.workspaceDir = workspace
     task.branchName = "branch"
-    task.execute()
+    task.run()
 
     then: "branch exists"
     switchLocalRepo("branches/branch")
@@ -26,7 +26,7 @@ class SvnBranchTest extends SvnWorkspaceTestSupport {
     def task = taskWithType(SvnBranch)
     task.workspaceDir = workspace
     task.branchName = "v2.0"
-    task.execute()
+    task.run()
 
     then: "branch exists"
     switchLocalRepo("branches/v2.0")
@@ -40,11 +40,11 @@ class SvnBranchTest extends SvnWorkspaceTestSupport {
     def task = taskWithType(SvnBranch)
     task.workspaceDir = workspace
     task.branchName = "test-branch"
-    task.execute()
+    task.run()
 
     then:
-    def e = thrown TaskExecutionException
-    e.cause.message =~ /.* already exists/
+    def e = thrown InvalidUserDataException
+    e.message =~ /.* already exists/
   }
 
   def "branch already exists - replace"() {
@@ -55,7 +55,7 @@ class SvnBranchTest extends SvnWorkspaceTestSupport {
     task.workspaceDir = workspace
     task.branchName = "test-branch"
     task.replaceExisting = true
-    task.execute()
+    task.run()
 
     then: "two more commits (delete and copy)"
     switchLocalRepo("branches/test-branch")
@@ -66,11 +66,11 @@ class SvnBranchTest extends SvnWorkspaceTestSupport {
     when: "running the task without branch name"
     def task = taskWithType(SvnBranch)
     task.workspaceDir = workspace
-    task.execute()
+    task.run()
 
     then: "exception"
-    def exception = thrown TaskExecutionException
-    exception.cause.message.readLines()[0] == "branchName missing"
+    def exception = thrown InvalidUserDataException
+    exception.message.readLines()[0] == "branchName missing"
   }
 
   def "invalid branch name"() {
@@ -78,10 +78,10 @@ class SvnBranchTest extends SvnWorkspaceTestSupport {
     def task = taskWithType(SvnBranch)
     task.workspaceDir = workspace
     task.branchName = ":invalid:"
-    task.execute()
+    task.run()
 
     then: "exception"
-    def exception = thrown TaskExecutionException
-    exception.cause.message.readLines()[0] == "branchName contains invalid chars: :invalid:"
+    def exception = thrown InvalidUserDataException
+    exception.message.readLines()[0] == "branchName contains invalid chars: :invalid:"
   }
 }

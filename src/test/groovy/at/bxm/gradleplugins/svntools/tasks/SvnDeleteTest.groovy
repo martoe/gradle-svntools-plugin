@@ -1,6 +1,6 @@
 package at.bxm.gradleplugins.svntools.tasks
 
-import org.gradle.api.tasks.TaskExecutionException
+import org.gradle.api.InvalidUserDataException
 
 class SvnDeleteTest extends SvnWorkspaceTestSupport {
 
@@ -11,7 +11,7 @@ class SvnDeleteTest extends SvnWorkspaceTestSupport {
     when: "running the SvnDelete task"
     def task = taskWithType(SvnDelete)
     task.delete(existingFile)
-    task.execute()
+    task.run()
 
     then: "file deleted"
     status().deleted == [existingFile]
@@ -25,7 +25,7 @@ class SvnDeleteTest extends SvnWorkspaceTestSupport {
     when: "running the SvnDelete task"
     def task = taskWithType(SvnDelete)
     task.delete(dir)
-    task.execute()
+    task.run()
 
     then: "dir deleted"
     status().deleted == [dir, file]
@@ -39,10 +39,10 @@ class SvnDeleteTest extends SvnWorkspaceTestSupport {
     when: "running the SvnDelete task"
     def task = taskWithType(SvnDelete)
     task.delete(dir)
-    task.execute()
+    task.run()
 
     then: "exception"
-    def exception = thrown TaskExecutionException
+    def exception = thrown InvalidUserDataException
     exception.cause.message.readLines()[0] =~ "svn: E200005: .* is not under version control"
   }
 
@@ -56,7 +56,7 @@ class SvnDeleteTest extends SvnWorkspaceTestSupport {
     def task = taskWithType(SvnDelete)
     task.ignoreErrors = true
     task.delete(dir)
-    task.execute()
+    task.run()
 
     then: "dir deleted"
     status().deleted == [dir, file]
@@ -69,10 +69,10 @@ class SvnDeleteTest extends SvnWorkspaceTestSupport {
     when: "running the SvnDelete task"
     def task = taskWithType(SvnDelete)
     task.delete = file
-    task.execute()
+    task.run()
 
     then: "exception"
-    def exception = thrown TaskExecutionException
+    def exception = thrown InvalidUserDataException
     exception.cause.message.readLines()[0] =~ "svn: E125001: .* does not exist"
   }
 
@@ -84,7 +84,7 @@ class SvnDeleteTest extends SvnWorkspaceTestSupport {
     def task = taskWithType(SvnDelete)
     task.delete = file
     task.ignoreErrors = true
-    task.execute()
+    task.run()
 
     then: "no error"
   }

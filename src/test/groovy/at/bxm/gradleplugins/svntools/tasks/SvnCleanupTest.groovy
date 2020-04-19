@@ -1,6 +1,6 @@
 package at.bxm.gradleplugins.svntools.tasks
 
-import org.gradle.api.tasks.TaskExecutionException
+import org.gradle.api.InvalidUserDataException
 
 class SvnCleanupTest extends SvnWorkspaceTestSupport {
 
@@ -10,7 +10,7 @@ class SvnCleanupTest extends SvnWorkspaceTestSupport {
     when: "running the SvnCleanup task"
     def task = taskWithType(SvnCleanup)
     task.cleanup(workspace, new File(workspace, "dir"))
-    task.execute()
+    task.run()
 
     then: "no error"
   }
@@ -22,11 +22,11 @@ class SvnCleanupTest extends SvnWorkspaceTestSupport {
     when: "running the SvnCleanup task"
     def task = taskWithType(SvnCleanup)
     task.cleanup = workspaceFile
-    task.execute()
+    task.run()
 
     then: "exception"
-    def e = thrown TaskExecutionException
-    e.cause.message =~ "Not a directory: .*"
+    def e = thrown InvalidUserDataException
+    e.message =~ "Not a directory: .*"
   }
 
   def "cleanup a non-working-copy directory"() {
@@ -37,11 +37,11 @@ class SvnCleanupTest extends SvnWorkspaceTestSupport {
     when: "running the SvnCleanup task"
     def task = taskWithType(SvnCleanup)
     task.cleanup(unversioned)
-    task.execute()
+    task.run()
 
     then: "exception"
-    def e = thrown TaskExecutionException
-    def msg = e.cause.message.readLines()
+    def e = thrown InvalidUserDataException
+    def msg = e.message.readLines()
     msg[0] =~ "svn-cleanup failed for .*"
     msg[1] =~ "svn: E155007: .* is not a working copy directory"
   }

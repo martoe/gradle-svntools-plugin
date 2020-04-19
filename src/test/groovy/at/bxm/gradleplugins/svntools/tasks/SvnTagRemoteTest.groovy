@@ -2,7 +2,7 @@ package at.bxm.gradleplugins.svntools.tasks
 
 import at.bxm.gradleplugins.svntools.SvnTestSupport
 import org.gradle.api.Project
-import org.gradle.api.tasks.TaskExecutionException
+import org.gradle.api.InvalidUserDataException
 
 class SvnTagRemoteTest extends SvnTestSupport {
 
@@ -19,7 +19,7 @@ class SvnTagRemoteTest extends SvnTestSupport {
     when: "running the SvnTag task without workspace"
     task.svnUrl = localRepoUrl.appendPath("trunk", false)
     task.tagName = "my-tag"
-    task.execute()
+    task.run()
 
     then: "tag exists"
     def workspace = checkoutLocalRepo("tags/my-tag")
@@ -30,11 +30,10 @@ class SvnTagRemoteTest extends SvnTestSupport {
     when: "running the SvnTag task from module root"
     task.svnUrl = localRepoUrl
     task.tagName = "my-tag"
-    task.execute()
+    task.run()
 
     then: "exception"
-    def e = thrown TaskExecutionException
-    e.cause.message =~ "^java.net.MalformedURLException: .*"
+    thrown MalformedURLException
   }
 
   def "both remote and local source is set"() {
@@ -45,32 +44,32 @@ class SvnTagRemoteTest extends SvnTestSupport {
     task.workspaceDir = workspace
     task.svnUrl = localRepoUrl
     task.tagName = "my-tag"
-    task.execute()
+    task.run()
 
     then: "exception"
-    def e = thrown TaskExecutionException
-    e.cause.message == "Either 'svnUrl' or 'workspaceDir' may be set"
+    def e = thrown InvalidUserDataException
+    e.message == "Either 'svnUrl' or 'workspaceDir' may be set"
   }
 
   def "remote tag with invalid url"() {
     when: "running the SvnTag task with an invalid url"
     task.svnUrl = "blah"
     task.tagName = "my-tag"
-    task.execute()
+    task.run()
 
     then: "exception"
-    def e = thrown TaskExecutionException
-    e.cause.message == "Invalid svnUrl value: blah"
+    def e = thrown InvalidUserDataException
+    e.message == "Invalid svnUrl value: blah"
   }
 
   def "remote tag with non-existing url"() {
     when: "running the SvnTag task with a non-existing url"
     task.svnUrl = "http://localhost:7654/foo/bar/trunk/"
     task.tagName = "my-tag"
-    task.execute()
+    task.run()
 
     then: "exception"
-    def e = thrown TaskExecutionException
-    e.cause.message =~ "^svn-copy failed for /foo/bar/tags/my-tag.*"
+    def e = thrown InvalidUserDataException
+    e.message =~ "^svn-copy failed for /foo/bar/tags/my-tag.*"
   }
 }
