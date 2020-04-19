@@ -12,7 +12,7 @@ git merge --no-ff develop
 
 4. commit and push gradle.properties
 ```
-git commit -am "Release 0.0"
+git commit -am "Release 3.0"
 git push
 ```
 
