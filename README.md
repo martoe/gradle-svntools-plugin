@@ -10,8 +10,10 @@ Please report bugs and feature requests at the [Github issue page](https://githu
 
 Plugin version | Gradle version | Java version 
 -------------- | -------------- | -------------
-[up to 1.7](../gradle2/README.md) | 2.0 - 2.14     | 1.6 and above
-2.0 and above  | 3.0 and above  | 1.7 and above
+[up to 1.7](../gradle2/README.md) | 2.0 - 2.14     | 6 and above
+2.x            | 3.0 - 5.x      | 7 and above
+3.0 and above  | 6.0 and above  | 11 and above
+
 
 ## Usage
 

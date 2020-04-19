@@ -1,6 +1,6 @@
 package at.bxm.gradleplugins.svntools.tasks
 
-import org.gradle.api.tasks.TaskExecutionException
+import org.gradle.api.InvalidUserDataException
 
 class SvnCreatePatchTest extends SvnWorkspaceTestSupport {
 
@@ -13,7 +13,7 @@ class SvnCreatePatchTest extends SvnWorkspaceTestSupport {
     def task = taskWithType(SvnCreatePatch)
     task.source(file)
     task.patchFile = "myPatch.txt"
-    task.execute()
+    task.run()
 
     then: "patchfile contains one added line"
     def patchFile = project.file(task.patchFile)
@@ -32,12 +32,12 @@ class SvnCreatePatchTest extends SvnWorkspaceTestSupport {
     def task = taskWithType(SvnCreatePatch)
     task.source = file
     task.patchFile = "myPatch.txt"
-    task.execute()
+    task.run()
 
     then: "useful error message"
-    def exception = thrown TaskExecutionException
-    exception.cause.message.readLines().size() == 2
-    exception.cause.message.readLines()[1] == "Invalid source file or directory"
+    def exception = thrown InvalidUserDataException
+    exception.message.readLines().size() == 2
+    exception.message.readLines()[1] == "Invalid source file or directory"
   }
 
   def "patchfile already exists"() {
@@ -50,7 +50,7 @@ class SvnCreatePatchTest extends SvnWorkspaceTestSupport {
     def task = taskWithType(SvnCreatePatch)
     task.source(file)
     task.patchFile = patchFile
-    task.execute()
+    task.run()
 
     then: "patchfile is overwritten"
     patchFile.text.readLines().size() == 7

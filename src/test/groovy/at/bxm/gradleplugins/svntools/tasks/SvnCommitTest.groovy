@@ -1,8 +1,8 @@
 package at.bxm.gradleplugins.svntools.tasks
 
 import at.bxm.gradleplugins.svntools.SvnTestSupport
+import org.gradle.api.InvalidUserDataException
 import org.gradle.api.Project
-import org.gradle.api.tasks.TaskExecutionException
 import org.tmatesoft.svn.core.SVNDepth
 
 class SvnCommitTest extends SvnTestSupport {
@@ -24,7 +24,7 @@ class SvnCommitTest extends SvnTestSupport {
 
     when: "running the SvnCommit task"
     task.source << newFile
-    task.execute()
+    task.run()
 
     then: "file committed, new revision"
     getRevision(newFile) == 2
@@ -37,7 +37,7 @@ class SvnCommitTest extends SvnTestSupport {
 
     when: "running the SvnCommit task"
     task.source << newFile
-    task.execute()
+    task.run()
 
     then: "file committed, new revision"
     getRevision(newFile) == 2
@@ -50,7 +50,7 @@ class SvnCommitTest extends SvnTestSupport {
 
     when: "running the SvnCommit task"
     task.source << file
-    task.execute()
+    task.run()
 
     then: "file committed, new revision"
     getRevision(file) == 2
@@ -58,7 +58,7 @@ class SvnCommitTest extends SvnTestSupport {
 
   def "empty commit"() {
     when: "running the SvnCommit task"
-    task.execute()
+    task.run()
 
     then: "no new revision"
     getRevision(workspace) == 1
@@ -70,7 +70,7 @@ class SvnCommitTest extends SvnTestSupport {
 
     when: "running the SvnCommit task"
     task.source << file
-    task.execute()
+    task.run()
 
     then: "no new revision"
     getRevision(file) == 1
@@ -82,10 +82,10 @@ class SvnCommitTest extends SvnTestSupport {
 
     when: "running the SvnCommit task"
     task.source << newFile
-    task.execute()
+    task.run()
 
     then:
-    thrown TaskExecutionException
+    thrown InvalidUserDataException
   }
 
   def "commit a new file inside a new directory"() {
@@ -95,7 +95,7 @@ class SvnCommitTest extends SvnTestSupport {
 
     when: "running the SvnCommit task"
     task.source << newDir << newFile
-    task.execute()
+    task.run()
 
     then: "file committed, new revision"
     getRevision(newFile) == 2
@@ -109,7 +109,7 @@ class SvnCommitTest extends SvnTestSupport {
     when: "running the SvnCommit task"
     task.source << newDir
     task.recursive = true
-    task.execute()
+    task.run()
 
     then: "directory and file committed, new revision"
     getRevision(newDir) == 2
@@ -125,7 +125,7 @@ class SvnCommitTest extends SvnTestSupport {
     when: "running the SvnCommit task on the directory"
     task.source = [unchangedDir]
     task.recursive = true
-    task.execute()
+    task.run()
 
     then: "file committed, new revision"
     getRevision(unchangedDir) == 1
@@ -140,11 +140,11 @@ class SvnCommitTest extends SvnTestSupport {
     when: "running the SvnCommit task"
     task.source << newValidFile
     task.source << newInvalidFile
-    task.execute()
+    task.run()
 
     then: "file committed, new revision"
-    def e = thrown TaskExecutionException
-    e.cause.message =~ "svn-add failed for .*"
+    def e = thrown InvalidUserDataException
+    e.message =~ "svn-add failed for .*"
   }
 
   def "commit a deleted directory"(boolean deleteLocally) {
@@ -154,7 +154,7 @@ class SvnCommitTest extends SvnTestSupport {
 
     when: "running the SvnCommit task"
     task.source << deleteDir
-    task.execute()
+    task.run()
 
     then: "dir deleted, new revision"
     workspace.deleteDir()

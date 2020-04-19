@@ -13,7 +13,7 @@ class SvnVersionTest extends SvnWorkspaceTestSupport {
     def task = taskWithType(SvnVersion)
     task.sourcePath = workspace
     task.targetPropertyName = "myVersion"
-    task.execute()
+    task.run()
 
     then: "SVN version contains the single revision"
     def version = project.ext.myVersion as SvnVersionData
@@ -36,7 +36,7 @@ class SvnVersionTest extends SvnWorkspaceTestSupport {
     when: "running the SvnVersion task"
     def task = taskWithType(SvnVersion)
     task.sourcePath = workspace
-    task.execute()
+    task.run()
 
     then: "SVN version contains mixed revision"
     def version = project.ext.svnVersion as SvnVersionData
@@ -57,7 +57,7 @@ class SvnVersionTest extends SvnWorkspaceTestSupport {
     def task = taskWithType(SvnVersion)
     task.sourcePath = workspace
     task.targetPropertyName = "myVersion"
-    task.execute()
+    task.run()
 
     then: "SVN version contains the single revision"
     def version = project.ext.myVersion as SvnVersionData
@@ -77,7 +77,7 @@ class SvnVersionTest extends SvnWorkspaceTestSupport {
     when: "running the SvnVersion task"
     def task = taskWithType(SvnVersion)
     task.sourcePath = workspace
-    task.execute()
+    task.run()
 
     then: "SVN version contains a switched workspace"
     def version = project.ext.svnVersion as SvnVersionData
@@ -97,7 +97,7 @@ class SvnVersionTest extends SvnWorkspaceTestSupport {
     when: "running the SvnVersion task"
     def task = taskWithType(SvnVersion)
     task.sourcePath = workspace
-    task.execute()
+    task.run()
 
     then: "no modification"
     project.ext.svnVersion as String == "1"
@@ -110,7 +110,7 @@ class SvnVersionTest extends SvnWorkspaceTestSupport {
     when: "running the SvnVersion task"
     def task = taskWithType(SvnVersion)
     task.sourcePath = workspace
-    task.execute()
+    task.run()
 
     then: "modification"
     project.ext.svnVersion as String == "1M"
@@ -123,7 +123,7 @@ class SvnVersionTest extends SvnWorkspaceTestSupport {
     when: "running the SvnVersion task"
     def task = taskWithType(SvnVersion)
     task.sourcePath = workspace
-    task.execute()
+    task.run()
 
     then: "modification"
     project.ext.svnVersion as String == "1M"
@@ -136,7 +136,7 @@ class SvnVersionTest extends SvnWorkspaceTestSupport {
     when: "running the SvnVersion task"
     def task = taskWithType(SvnVersion)
     task.sourcePath = workspace
-    task.execute()
+    task.run()
 
     then: "modification"
     project.ext.svnVersion as String == "1M"
