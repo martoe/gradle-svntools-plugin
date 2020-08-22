@@ -10,7 +10,7 @@ abstract class SvnBaseTask extends DefaultTask {
   /** The SVN username - leave empty if no authentication is required (default: {@code project.svntools.username}) */
   @Internal String username
   /** The SVN password - leave empty if no authentication is required (default: {@code project.svntools.password}) */
-  @Internal char[] password
+  private char[] password
 
   SVNClientManager createSvnClientManager() {
     return SvnSupport.createSvnClientManager(getUsername(), getPassword(), proxy)
@@ -20,8 +20,17 @@ abstract class SvnBaseTask extends DefaultTask {
     return username ?: project.extensions.getByType(SvnToolsPluginExtension).username
   }
 
-  char[] getPassword() {
+  @Internal
+  Object getPassword() {
     return password ?: project.extensions.getByType(SvnToolsPluginExtension).password
+  }
+
+  void setPassword(Object password) {
+    if (password != null) {
+      this.password = password instanceof char[] ?: password.toString().chars
+    } else {
+      this.password = null
+    }
   }
 
   @Internal

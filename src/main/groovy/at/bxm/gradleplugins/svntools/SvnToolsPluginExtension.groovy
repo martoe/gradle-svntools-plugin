@@ -14,7 +14,7 @@ class SvnToolsPluginExtension {
 
   private final Project project
   String username
-  char[] password
+  private char[] password
   final SvnProxy proxy = new SvnProxy()
   SvnData info
   SvnVersionData version
@@ -23,7 +23,19 @@ class SvnToolsPluginExtension {
     this.project = project
   }
 
-  /** @return svn-info for the project directory (cached) */
+  Object getPassword() {
+    return password
+  }
+
+  void setPassword(Object password) {
+    if (password != null) {
+      this.password = password instanceof char[] ?: password.toString().chars
+    } else {
+      this.password = null
+    }
+  }
+  
+  /** @return svn-info for the project directory (cached)  */
   SvnData getInfo() {
     if (!info) {
       info = SvnSupport.createSvnData(project.projectDir, username, password, proxy, true)
@@ -36,7 +48,7 @@ class SvnToolsPluginExtension {
     return SvnSupport.createSvnData(file, username, password, proxy, false)
   }
 
-  /** @return svn-version for the project directory (cached) */
+  /** @return svn-version for the project directory (cached)  */
   SvnVersionData getVersion() {
     if (!version) {
       version = SvnSupport.createSvnVersionData(project.projectDir, username, password, proxy, true)
@@ -44,7 +56,7 @@ class SvnToolsPluginExtension {
     return version
   }
 
-  /** 
+  /**
    * Retrieves SVN status data for a path within a remote repository
    * @param repoUrl An SVN repository URL
    * @param filePath An optional path within the repository
