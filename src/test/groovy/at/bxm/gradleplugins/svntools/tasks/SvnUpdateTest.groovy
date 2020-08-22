@@ -1,8 +1,8 @@
 package at.bxm.gradleplugins.svntools.tasks
 
 import at.bxm.gradleplugins.svntools.SvnTestSupport
+import org.gradle.api.InvalidUserDataException
 import org.gradle.api.Project
-import org.gradle.api.tasks.TaskExecutionException
 
 class SvnUpdateTest extends SvnTestSupport {
 
@@ -23,7 +23,7 @@ class SvnUpdateTest extends SvnTestSupport {
 
   def "happy path"() {
     when: "updating to HEAD"
-    task.execute()
+    task.run()
 
     then: "update succeeded"
     getRevision(workspace) == 3
@@ -32,7 +32,7 @@ class SvnUpdateTest extends SvnTestSupport {
   def "update to revision"() {
     when: "updating to revision"
     task.revision = 1
-    task.execute()
+    task.run()
 
     then: "update succeeded"
     getRevision(workspace) == 1
@@ -45,10 +45,10 @@ class SvnUpdateTest extends SvnTestSupport {
 
     when: "updating"
     task.workspaceDir = workspaceDir
-    task.execute()
+    task.run()
 
     then:
-    def e = thrown TaskExecutionException
-    e.cause.message =~ ".* E155007: None of the targets are working copies"
+    def e = thrown InvalidUserDataException
+    e.message =~ ".* E155007: None of the targets are working copies"
   }
 }

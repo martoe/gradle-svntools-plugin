@@ -7,39 +7,60 @@ plugins {
   id "java-gradle-plugin"
   id "groovy"
   id "idea"
-  id "nu.studer.plugindev" version "1.0.6"
+  id "maven-publish"
+  id "com.jfrog.bintray" version "1.8.5"
+  id "com.gradle.plugin-publish" version "0.11.0"
   id "jacoco"
-  id "com.github.kt3k.coveralls" version "2.7.1"
+  id "com.github.kt3k.coveralls" version "2.10.1"
+}
+
+repositories {
+  jcenter()
 }
 
 group = "at.bxm.gradleplugins"
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
 dependencies {
-  compile "org.codehaus.groovy:groovy-all:2.4.7"
-  // TODO svnkit-1.8.15 references trilead-ssh2:1.0.0-build221 which is currently broken at jcenter
-  compile("org.tmatesoft.svnkit:svnkit:1.8.15") {
-    exclude module: "trilead-ssh2" 
-  }
-  compile "com.trilead:trilead-ssh2:1.0.0-build220" 
-  testCompile("org.spockframework:spock-core:1.0-groovy-2.4") {
+  implementation("org.tmatesoft.svnkit:svnkit:1.10.1")
+  testImplementation("org.spockframework:spock-core:1.3-groovy-2.5") {
     exclude group: "org.codehaus.groovy"
   }
 }
 
-plugindev { // https://github.com/etiennestuder/gradle-plugindev-plugin
-  pluginId "at.bxm.svntools"
-  pluginImplementationClass "at.bxm.gradleplugins.svntools.SvnToolsPlugin"
-  pluginDescription "Provides various Subversion tasks that operate on a local SVN workspace"
-  pluginLicenses "MIT"
-  pluginTags "subversion", "svn", "svnkit", "scm"
-  authorId "martoe"
-  authorName "Martin Ehrnhoefer"
-  authorEmail "martin@ehrnhoefer.com"
-  projectUrl "https://github.com/martoe/gradle-svntools-plugin"
-  projectInceptionYear "2014"
-  done()
+gradlePlugin {
+  plugins {
+    svnToolsPlugin {
+      id = "at.bxm.svntools"
+      implementationClass = "at.bxm.gradleplugins.svntools.SvnToolsPlugin"
+    }
+  }
+}
+
+pluginBundle {
+  description = "Provides various Subversion tasks that operate on a local SVN workspace"
+  tags = ["subversion", "svn", "svnkit", "scm"]
+  website = "https://github.com/martoe/gradle-svntools-plugin"
+  vcsUrl = "https://github.com/martoe/gradle-svntools-plugin"
+  plugins {
+    svnToolsPlugin {
+      displayName = 'Gradle SvnTools Plugin'
+    }
+  }
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+  publications {
+    mavenArtifacts(MavenPublication) {
+      from components.java
+    }
+  }
 }
 
 bintray { // https://github.com/bintray/gradle-bintray-plugin
@@ -51,8 +72,12 @@ bintray { // https://github.com/bintray/gradle-bintray-plugin
     key = "dummy"
     dryRun = true
   }
+  publications = ["mavenArtifacts"]
   pkg {
     repo = "gradle-plugins"
+    name = "gradle-svntools-plugin"
+    licenses = "MIT"
+    vcsUrl = "https://github.com/martoe/gradle-svntools-plugin"
     version {
       name = project.version
       desc = releaseNotes
@@ -61,7 +86,8 @@ bintray { // https://github.com/bintray/gradle-bintray-plugin
     }
   }
 }
-bintrayUpload.dependsOn check
+bintrayUpload.dependsOn build
+publishPlugins.dependsOn bintrayUpload
 
 test {
   if (project.hasProperty("ignoreTestFailures")) {
@@ -72,5 +98,11 @@ test {
 jacocoTestReport {
   reports {
     xml.enabled = true // coveralls plugin depends on xml format report
+  }
+}
+
+idea {
+  project {
+    jdkName = "11"
   }
 }

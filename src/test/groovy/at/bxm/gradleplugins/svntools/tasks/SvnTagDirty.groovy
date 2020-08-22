@@ -28,7 +28,7 @@ class SvnTagDirty extends SvnTestSupport {
     task.tagName = "dirty-tag"
     task.localChanges = true
     task.workspaceDir = workspace
-    task.execute()
+    task.run()
 
     then: "tag contains changed file"
     workspace.deleteDir()
@@ -50,7 +50,7 @@ class SvnTagDirty extends SvnTestSupport {
     when: "running the SvnTag task without local changes"
     task.tagName = "clean-tag"
     task.workspaceDir = workspace
-    task.execute()
+    task.run()
 
     then: "tag does not contain changed file"
     workspace.deleteDir()

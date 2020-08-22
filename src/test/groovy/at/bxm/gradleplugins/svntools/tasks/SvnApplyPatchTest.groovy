@@ -31,7 +31,7 @@ class SvnApplyPatchTest extends SvnTestSupport {
     when: "running the SvnApplyPatch task"
     task.patchFile = patchFile
     task.dir = workspace
-    task.execute()
+    task.run()
 
     then: "patch has been applied, but not committed"
     def patchedFile = new File(workspace, "test.txt")

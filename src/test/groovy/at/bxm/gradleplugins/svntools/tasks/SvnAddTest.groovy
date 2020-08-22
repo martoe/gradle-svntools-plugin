@@ -1,6 +1,6 @@
 package at.bxm.gradleplugins.svntools.tasks
 
-import org.gradle.api.tasks.TaskExecutionException
+import org.gradle.api.InvalidUserDataException
 
 class SvnAddTest extends SvnWorkspaceTestSupport {
 
@@ -11,7 +11,7 @@ class SvnAddTest extends SvnWorkspaceTestSupport {
     when: "running the SvnAdd task"
     def task = taskWithType(SvnAdd)
     task.add(newFile)
-    task.execute()
+    task.run()
 
     then: "one file added"
     status().added == [newFile]
@@ -25,7 +25,7 @@ class SvnAddTest extends SvnWorkspaceTestSupport {
     when: "running the SvnAdd task"
     def task = taskWithType(SvnAdd)
     task.add = newDir
-    task.execute()
+    task.run()
 
     then: "just the directory added"
     def status = status()
@@ -44,7 +44,7 @@ class SvnAddTest extends SvnWorkspaceTestSupport {
     def task = taskWithType(SvnAdd)
     task.add = dir
     task.recursive = true
-    task.execute()
+    task.run()
 
     then: "everything added"
     def status = status()
@@ -55,18 +55,18 @@ class SvnAddTest extends SvnWorkspaceTestSupport {
   def "no file to add - strict"() {
     when: "running the SvnAdd task without a file"
     def task = taskWithType(SvnAdd)
-    task.execute()
+    task.run()
 
     then: "exception"
-    def exception = thrown TaskExecutionException
-    exception.cause.message.readLines()[0] == "No files to add specified"
+    def exception = thrown InvalidUserDataException
+    exception.message.readLines()[0] == "No files to add specified"
   }
 
   def "no file to add - lenient"() {
     when: "running the SvnAdd task without a file"
     def task = taskWithType(SvnAdd)
     task.ignoreErrors = true
-    task.execute()
+    task.run()
 
     then: "nothing has happened"
     status().added == []
@@ -76,10 +76,10 @@ class SvnAddTest extends SvnWorkspaceTestSupport {
     when:
     def task = taskWithType(SvnAdd)
     task.add(new File(workspace, "invalid.file"))
-    task.execute()
+    task.run()
 
     then: "exception"
-    def exception = thrown TaskExecutionException
+    def exception = thrown InvalidUserDataException
     exception.cause.message.readLines()[0] =~ ".*svn: E155010: .* not found.*"
   }
 }

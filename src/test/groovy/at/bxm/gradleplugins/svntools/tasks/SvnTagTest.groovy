@@ -1,6 +1,6 @@
 package at.bxm.gradleplugins.svntools.tasks
 
-import org.gradle.api.tasks.TaskExecutionException
+import org.gradle.api.InvalidUserDataException
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory
 
 class SvnTagTest extends SvnWorkspaceTestSupport {
@@ -11,11 +11,11 @@ class SvnTagTest extends SvnWorkspaceTestSupport {
     when: "running the SvnTag task"
     def task = taskWithType(SvnTag)
     task.workspaceDir = workspace
-    task.execute()
+    task.run()
 
     then: "exception"
-    def e = thrown TaskExecutionException
-    e.cause.message == "tagName missing"
+    def e = thrown InvalidUserDataException
+    e.message == "tagName missing"
   }
 
   def "tag from trunk"() {
@@ -25,7 +25,7 @@ class SvnTagTest extends SvnWorkspaceTestSupport {
     def task = taskWithType(SvnTag)
     task.workspaceDir = workspace
     task.tagName = "my-tag"
-    task.execute()
+    task.run()
 
     then: "tag exists"
     switchLocalRepo("tags/my-tag")
@@ -40,7 +40,7 @@ class SvnTagTest extends SvnWorkspaceTestSupport {
     def task = taskWithType(SvnTag)
     task.workspaceDir = workspace
     task.tagName = "my.tag"
-    task.execute()
+    task.run()
 
     then: "tag exists"
     switchLocalRepo("tags/my.tag")
@@ -55,7 +55,7 @@ class SvnTagTest extends SvnWorkspaceTestSupport {
     def task = taskWithType(SvnTag)
     task.workspaceDir = workspace
     task.tagName = "myTag"
-    task.execute()
+    task.run()
 
     then: "tag exists"
     switchLocalRepo("tags/myTag")
@@ -69,11 +69,11 @@ class SvnTagTest extends SvnWorkspaceTestSupport {
     def task = taskWithType(SvnTag)
     task.workspaceDir = workspace
     task.tagName = param
-    task.execute()
+    task.run()
 
     then: "exception"
-    def e = thrown TaskExecutionException
-    e.cause.message == "tagName contains invalid chars: $param" as String
+    def e = thrown InvalidUserDataException
+    e.message == "tagName contains invalid chars: $param" as String
 
     where:
     param << ["blank ", "backslash\\"]
@@ -87,7 +87,7 @@ class SvnTagTest extends SvnWorkspaceTestSupport {
     task.workspaceDir = workspace
     task.tagName = param
     task.specialChars = true
-    task.execute()
+    task.run()
 
     then: "tag exists"
     switchLocalRepo("tags/$param")
@@ -111,7 +111,7 @@ class SvnTagTest extends SvnWorkspaceTestSupport {
     def task = taskWithType(SvnTag)
     task.workspaceDir = workspace
     task.tagName = "tag-subdir/new-tag"
-    task.execute()
+    task.run()
 
     then: "tag exists"
     switchLocalRepo("tags/tag-subdir/new-tag")
@@ -125,7 +125,7 @@ class SvnTagTest extends SvnWorkspaceTestSupport {
     def task = taskWithType(SvnTag)
     task.workspaceDir = workspace
     task.tagName = "tag-subdir/new-tag"
-    task.execute()
+    task.run()
 
     then: "tag exists"
     switchLocalRepo("tags/tag-subdir/new-tag")

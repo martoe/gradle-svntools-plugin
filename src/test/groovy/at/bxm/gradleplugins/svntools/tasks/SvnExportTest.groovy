@@ -2,7 +2,7 @@ package at.bxm.gradleplugins.svntools.tasks
 
 import at.bxm.gradleplugins.svntools.SvnTestSupport
 import org.gradle.api.Project
-import org.gradle.api.tasks.TaskExecutionException
+import org.gradle.api.InvalidUserDataException
 
 class SvnExportTest extends SvnTestSupport {
 
@@ -24,7 +24,7 @@ class SvnExportTest extends SvnTestSupport {
     when: "running the SvnExport task"
     task.svnUrl = localRepoUrl.appendPath("trunk", false)
     task.targetDir = targetDir
-    task.execute()
+    task.run()
 
     then: "targetDir exists"
     targetDir.exists()
@@ -35,11 +35,11 @@ class SvnExportTest extends SvnTestSupport {
     when: "running the SvnExport task"
     task.svnUrl = "$localRepoUrl/blah"
     task.targetDir = new File(tempDir, "targetDir")
-    task.execute()
+    task.run()
 
     then:
-    def e = thrown TaskExecutionException
-    e.cause.message =~ "svn-export failed for .*"
+    def e = thrown InvalidUserDataException
+    e.message =~ "svn-export failed for .*"
   }
 
   def "non-empty targetDir"() {
@@ -51,10 +51,10 @@ class SvnExportTest extends SvnTestSupport {
     when: "running the SvnExport task"
     task.svnUrl = "$localRepoUrl/trunk"
     task.targetDir = targetDir
-    task.execute()
+    task.run()
 
     then:
-    def e = thrown TaskExecutionException
-    e.cause.message =~ ".* must be an empty directory"
+    def e = thrown InvalidUserDataException
+    e.message =~ ".* must be an empty directory"
   }
 }

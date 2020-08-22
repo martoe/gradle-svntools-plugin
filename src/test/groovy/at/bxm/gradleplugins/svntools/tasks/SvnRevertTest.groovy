@@ -1,6 +1,6 @@
 package at.bxm.gradleplugins.svntools.tasks
 
-import org.gradle.api.tasks.TaskExecutionException
+import org.gradle.api.InvalidUserDataException
 
 class SvnRevertTest extends SvnWorkspaceTestSupport {
 
@@ -12,7 +12,7 @@ class SvnRevertTest extends SvnWorkspaceTestSupport {
     when: "running the SvnRevert task"
     def task = taskWithType(SvnRevert)
     task.revert file
-    task.execute()
+    task.run()
 
     then: "file reverted"
     file.text == ""
@@ -26,7 +26,7 @@ class SvnRevertTest extends SvnWorkspaceTestSupport {
     when: "running the SvnRevert task on the base directory only"
     def task = taskWithType(SvnRevert)
     task.revert = workspace
-    task.execute()
+    task.run()
 
     then: "file not reverted"
     file.text == "changed"
@@ -41,7 +41,7 @@ class SvnRevertTest extends SvnWorkspaceTestSupport {
     def task = taskWithType(SvnRevert)
     task.revert << workspace
     task.recursive = true
-    task.execute()
+    task.run()
 
     then: "file reverted"
     file.text == ""
@@ -51,11 +51,11 @@ class SvnRevertTest extends SvnWorkspaceTestSupport {
     when: "running the SvnRevert task outside a working copy"
     def task = taskWithType(SvnRevert)
     task.revert = tempDir
-    task.execute()
+    task.run()
 
     then: "exception"
-    def exception = thrown TaskExecutionException
-    exception.cause.message.readLines().size() == 2
-    exception.cause.message.readLines()[1] =~ "svn: E155007: .* is not a working copy"
+    def exception = thrown InvalidUserDataException
+    exception.message.readLines().size() == 2
+    exception.message.readLines()[1] =~ "svn: E155007: .* is not a working copy"
   }
 }

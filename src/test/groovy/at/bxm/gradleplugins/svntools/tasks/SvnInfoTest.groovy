@@ -2,7 +2,7 @@ package at.bxm.gradleplugins.svntools.tasks
 
 import at.bxm.gradleplugins.svntools.SvnTestSupport
 import at.bxm.gradleplugins.svntools.api.SvnData
-import org.gradle.api.tasks.TaskExecutionException
+import org.gradle.api.InvalidUserDataException
 
 class SvnInfoTest extends SvnTestSupport {
 
@@ -15,7 +15,7 @@ class SvnInfoTest extends SvnTestSupport {
     def project = projectWithPlugin()
     def task = project.task(type: SvnInfo, "info") as SvnInfo
     task.sourcePath = workspace
-    task.execute()
+    task.run()
 
     then: "SVN data are available"
     def svnData = project.ext.svnData as SvnData
@@ -36,7 +36,7 @@ class SvnInfoTest extends SvnTestSupport {
     def project = projectWithPlugin()
     def task = project.task(type: SvnInfo, "info") as SvnInfo
     task.sourcePath = workspace
-    task.execute()
+    task.run()
 
     then: "SVN data are available"
     def svnData = project.ext.svnData as SvnData
@@ -57,7 +57,7 @@ class SvnInfoTest extends SvnTestSupport {
     def project = projectWithPlugin()
     def task = project.task(type: SvnInfo, "info") as SvnInfo
     task.sourcePath = workspace
-    task.execute()
+    task.run()
 
     then: "SVN data are available"
     def svnData = project.ext.svnData as SvnData
@@ -79,7 +79,7 @@ class SvnInfoTest extends SvnTestSupport {
     def task = project.task(type: SvnInfo, "info") as SvnInfo
     task.sourcePath = workspace
     task.targetPropertyName = "myProp"
-    task.execute()
+    task.run()
 
     then: "SVN data are available with the right name"
     project.hasProperty("myProp")
@@ -95,7 +95,7 @@ class SvnInfoTest extends SvnTestSupport {
     def project = projectWithPlugin()
     def task = project.task(type: SvnInfo, "info") as SvnInfo
     task.sourcePath = new File(workspace, "test.txt")
-    task.execute()
+    task.run()
 
     then: "SVN data are available"
     project.ext.svnData.name == "trunk"
@@ -110,7 +110,7 @@ class SvnInfoTest extends SvnTestSupport {
     def project = projectWithPlugin()
     def task = project.task(type: SvnInfo, "info") as SvnInfo
     task.sourcePath = new File(workspace, "test.txt")
-    task.execute()
+    task.run()
 
     then: "SVN data are available"
     project.ext.svnData.name == "test-branch"
@@ -125,7 +125,7 @@ class SvnInfoTest extends SvnTestSupport {
     def project = projectWithPlugin()
     def task = project.task(type: SvnInfo, "info") as SvnInfo
     task.sourcePath = new File(workspace, "test.txt")
-    task.execute()
+    task.run()
 
     then: "SVN data are available"
     project.ext.svnData.name == "test-tag"
@@ -138,10 +138,10 @@ class SvnInfoTest extends SvnTestSupport {
     def project = projectWithPlugin()
     def task = project.task(type: SvnInfo, "info") as SvnInfo
     task.sourcePath = tempDir
-    task.execute()
+    task.run()
 
     then: "SVN data are available"
-    thrown TaskExecutionException
+    thrown InvalidUserDataException
   }
 
   // https://github.com/martoe/gradle-svntools-plugin/issues/11
@@ -154,7 +154,7 @@ class SvnInfoTest extends SvnTestSupport {
     when: "checking out trunk"
     def task = project.task(type: SvnInfo, "info1") as SvnInfo
     task.sourcePath = workspace
-    task.execute()
+    task.run()
 
     then: "trunk is at revision 1"
     project.ext.svnData.revisionNumber == 1
@@ -164,7 +164,7 @@ class SvnInfoTest extends SvnTestSupport {
     updateLocalRepo()
     task = project.task(type: SvnInfo, "info2") as SvnInfo
     task.sourcePath = workspace
-    task.execute()
+    task.run()
 
     then: "trunk is at revision 2"
     project.ext.svnData.revisionNumber == 2
@@ -173,7 +173,7 @@ class SvnInfoTest extends SvnTestSupport {
     switchLocalRepo("/")
     task = project.task(type: SvnInfo, "info3") as SvnInfo
     task.sourcePath = workspace
-    task.execute()
+    task.run()
 
     then: "root is at revision 2"
     project.ext.svnData.revisionNumber == 2
@@ -182,7 +182,7 @@ class SvnInfoTest extends SvnTestSupport {
     switchLocalRepo("branches/test-branch")
     task = project.task(type: SvnInfo, "info4") as SvnInfo
     task.sourcePath = workspace
-    task.execute()
+    task.run()
 
     then: "branch is still at revision 1"
     project.ext.svnData.revisionNumber == 1

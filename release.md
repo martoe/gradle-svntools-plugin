@@ -8,11 +8,11 @@ git merge --no-ff develop
 
 2. remove "-SNAPSHOT" and set release-notes in gradle.properties
 
-3. `gradlew clean publishPluginToBintray`
+3. `gradlew clean publishPlugins -PbintrayUser=*** -PbintrayApiKey=*** -Pgradle.publish.key=*** -Pgradle.publish.secret=***`
 
 4. commit and push gradle.properties
 ```
-git commit -am "Release 0.0"
+git commit -am "Release 3.0"
 git push
 ```
 
